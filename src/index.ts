@@ -213,7 +213,7 @@ app.delete("/bloggers/:id", (req: Request, res: Response) => {
     });
   }
   bloggers.splice(bloggerID - 1, 1);
-  res.status(204);
+  res.status(204).send("Deleted");
 });
 
 // Posts==========================================
