@@ -283,7 +283,7 @@ app.put("/posts/:id", (req: Request, res: Response) => {
       shortDescription: req.body.shortDescription,
       content: req.body.content,
       bloggerID: req.body.bloggerID,
-      bloggerName: post.bloggerName,
+      bloggerName: req.body.bloggerName,
     };
 
     posts.splice(postID - 1, 1, updatedPost);
