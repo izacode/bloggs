@@ -54,7 +54,7 @@ const posts = [
     shortDescription: "First post of Blogger-01",
     content:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus, deserunt!",
-    bloggerId: 1,
+    bloggerID: 1,
     bloggerName: "Blogger-01",
   },
   {
@@ -63,7 +63,7 @@ const posts = [
     shortDescription: "First post of Blogger-01",
     content:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus, deserunt!",
-    bloggerId: 2,
+    bloggerID: 2,
     bloggerName: "Blogger-02",
   },
   {
@@ -72,7 +72,7 @@ const posts = [
     shortDescription: "First post of Blogger-01",
     content:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus, deserunt!",
-    bloggerId: 3,
+    bloggerID: 3,
     bloggerName: "Blogger-03",
   },
   {
@@ -81,7 +81,7 @@ const posts = [
     shortDescription: "First post of Blogger-01",
     content:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus, deserunt!",
-    bloggerId: 4,
+    bloggerID: 4,
     bloggerName: "Blogger-04",
   },
   {
@@ -90,7 +90,7 @@ const posts = [
     shortDescription: "First post of Blogger-01",
     content:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus, deserunt!",
-    bloggerId: 5,
+    bloggerID: 5,
     bloggerName: "Blogger-05",
   },
   {
@@ -99,7 +99,7 @@ const posts = [
     shortDescription: "Second post of Blogger-01",
     content:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus, deserunt!",
-    bloggerId: 1,
+    bloggerID: 1,
     bloggerName: "Blogger-01",
   },
   {
@@ -108,7 +108,7 @@ const posts = [
     shortDescription: "Second post of Blogger-02",
     content:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus, deserunt!",
-    bloggerId: 2,
+    bloggerID: 2,
     bloggerName: "Blogger-02",
   },
   {
@@ -117,7 +117,7 @@ const posts = [
     shortDescription: "Second post of Blogger-03",
     content:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus, deserunt!",
-    bloggerId: 3,
+    bloggerID: 3,
     bloggerName: "Blogger-03",
   },
   {
@@ -126,7 +126,7 @@ const posts = [
     shortDescription: "Second post of Blogger-04",
     content:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus, deserunt!",
-    bloggerId: 4,
+    bloggerID: 4,
     bloggerName: "Blogger-04",
   },
   {
@@ -135,7 +135,7 @@ const posts = [
     shortDescription: "Second post of Blogger-05",
     content:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus, deserunt!",
-    bloggerId: 5,
+    bloggerID: 5,
     bloggerName: "Blogger-05",
   },
 ];
@@ -242,7 +242,7 @@ app.post("/posts", (req: Request, res: Response) => {
     shortDescription: req.body.shortDescription,
     content:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus, deserunt!",
-    bloggerId: req.body.bloggerID,
+    bloggerID: req.body.bloggerID,
     bloggerName: req.body.bloggerName,
   };
 
@@ -282,7 +282,7 @@ app.put("/posts/:id", (req: Request, res: Response) => {
       title: req.body.title,
       shortDescription: req.body.shortDescription,
       content: req.body.content,
-      bloggerId: req.body.bloggerId,
+      bloggerID: req.body.bloggerID,
       bloggerName: post.bloggerName,
     };
 
