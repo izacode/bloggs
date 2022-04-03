@@ -287,7 +287,12 @@ app.put("/posts/:id", (req: Request, res: Response) => {
     };
 
     posts.splice(postID - 1, 1, updatedPost);
-    res.status(204);
+    res.status(200).json({
+      status: "success",
+      data: {
+        updatedPost,
+      },
+    });
   }
 });
 
