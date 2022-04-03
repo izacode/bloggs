@@ -196,7 +196,7 @@ app.put("/bloggers/:id", (req: Request, res: Response) => {
     };
 
     bloggers.splice(bloggerID - 1, 1, updatedBlogger);
-    res.status(204);
+    res.status(204).send("Updated");
   } else {
     res.status(400).json({
       status: "fail",
