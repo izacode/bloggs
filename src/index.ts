@@ -4,7 +4,7 @@ import cors from "cors";
 
 const corsOptions = {
   origin: "*",
-  credentials: true, 
+  credentials: true,
   optionSuccessStatus: 200,
 };
 
@@ -23,27 +23,27 @@ const bloggers = [
   {
     id: 1,
     name: "Blogger-01",
-    youtubeUrl: "https://www.youtube.com/Blogger-01",
+    youtubeURI: "https://www.youtube.com/Blogger-01",
   },
   {
     id: 2,
     name: "Blogger-02",
-    youtubeUrl: "https://www.youtube.com/Blogger-02",
+    youtubeURI: "https://www.youtube.com/Blogger-02",
   },
   {
     id: 3,
     name: "Blogger-03",
-    youtubeUrl: "https://www.youtube.com/Blogger-03",
+    youtubeURI: "https://www.youtube.com/Blogger-03",
   },
   {
     id: 4,
     name: "Blogger-04",
-    youtubeUrl: "https://www.youtube.com/Blogger-04",
+    youtubeURI: "https://www.youtube.com/Blogger-04",
   },
   {
     id: 5,
     name: "Blogger-05",
-    youtubeUrl: "https://www.youtube.com/Blogger-05",
+    youtubeURI: "https://www.youtube.com/Blogger-05",
   },
 ];
 
@@ -158,7 +158,7 @@ app.post("/bloggers", (req: Request, res: Response) => {
     const newBlogger = {
       id: Number(bloggers.length + 1),
       name: req.body.name,
-      youtubeUrl: req.body.youtubeURI,
+      youtubeURI: req.body.youtubeURI,
     };
     if (!newBlogger.name) {
       return res.status(400).json({
@@ -192,7 +192,7 @@ app.put("/bloggers/:id", (req: Request, res: Response) => {
     const updatedBlogger = {
       id: bloggerID,
       name: req.body.name,
-      youtubeUrl: req.body.youtubeURI,
+      youtubeURI: req.body.youtubeURI,
     };
 
     bloggers.splice(bloggerID - 1, 1, updatedBlogger);
