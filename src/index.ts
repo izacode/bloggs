@@ -2,8 +2,14 @@ import express, { Request, Response } from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 
+const corsOptions = {
+  origin: "*",
+  credentials: true, //access-control-allow-credentials:true
+  optionSuccessStatus: 200,
+};
+
 const app = express();
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 const port = process.env.PORT || 5000;
 
