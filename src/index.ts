@@ -305,7 +305,7 @@ app.delete("/posts/:id", (req: Request, res: Response) => {
     });
   }
   posts.splice(postID - 1, 1);
-  res.status(204);
+  res.status(204).end();
 });
 
 app.listen(port, () => {
