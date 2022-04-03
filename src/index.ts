@@ -227,7 +227,7 @@ app.post("/posts", (req: Request, res: Response) => {
     req.body.title === "" ||
     req.body.shortDescription === "" ||
     req.body.content === "" ||
-    req.body.bloggerID === "" ||
+    isNaN(req.body.bloggerID) ||
     req.body.bloggerName === ""
   ) {
     return res.status(400).json({
