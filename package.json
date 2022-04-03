@@ -11,7 +11,7 @@
   "scripts": {
     "watch": "tsc -w",
     "dev": "nodemon --inspect dist/index.js",
-    "builld": "tsc",
+    "build": "tsc",
     "start": "node dist/index.js"
   },
   "devDependencies": {
