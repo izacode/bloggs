@@ -273,7 +273,7 @@ app.delete("/bloggers/:id", (req: Request, res: Response) => {
       message: "404 not found , Invalid ID",
     });
   }
-  bloggers.splice(blogger["id"], -1);
+  bloggers.splice(blogger["id"], 1);
   res.status(204).send("Deleted");
 });
 
