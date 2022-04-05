@@ -210,7 +210,7 @@ app.post("/bloggers", (req: Request, res: Response) => {
     };
     res.status(400).json(error);
     return;
-  } else if (!req.body.name) {
+  } else if (!req.body.name.trim()) {
     error = {
       data: {
         additionalProp1: req.body.youtubeURI,
@@ -273,7 +273,7 @@ app.put("/bloggers/:id", (req: Request, res: Response) => {
 });
 app.delete("/bloggers/:id", (req: Request, res: Response) => {
   const bloggerID = Number(req.params.id);
-  if (isNaN(bloggerID) || bloggers.length < bloggerID) {
+  if (isNaN(bloggerID) || !bloggers.find((b) => b.id === bloggerID)) {
     return res.status(404).json({
       status: "fail",
       message: "404 not found , Invalid ID",
