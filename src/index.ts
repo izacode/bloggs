@@ -50,12 +50,12 @@ type ErrorType = {
 
 let error: ErrorType = {
   data: {
-    additionalProp1: '',
-    additionalProp2: '',
+    additionalProp1: "",
+    additionalProp2: "",
   },
   errorsMessage: {
-    message: '',
-    field: '',
+    message: "",
+    field: "",
   },
   resultCode: 2,
 };
@@ -235,13 +235,6 @@ app.post("/bloggers", (req: Request, res: Response) => {
   }
 });
 
-
-
-
-
-
-
-
 app.put("/bloggers/:id", (req: Request, res: Response) => {
   const bloggerID = Number(req.params.id);
 
@@ -273,13 +266,14 @@ app.put("/bloggers/:id", (req: Request, res: Response) => {
 });
 app.delete("/bloggers/:id", (req: Request, res: Response) => {
   const bloggerID = Number(req.params.id);
+  const blogger: any = bloggers.find((b) => b.id === bloggerID);
   if (isNaN(bloggerID) || !bloggers.find((b) => b.id === bloggerID)) {
     return res.status(404).json({
       status: "fail",
       message: "404 not found , Invalid ID",
     });
   }
-  bloggers.splice(bloggerID - 1, 1);
+  bloggers.splice(blogger["id"], -1);
   res.status(204).send("Deleted");
 });
 
