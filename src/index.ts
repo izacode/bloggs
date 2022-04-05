@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
+import { videosRouter } from "./routes/videos-routes";
 
 const corsOptions = {
   origin: "*",
@@ -11,6 +12,7 @@ const corsOptions = {
 const app = express();
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
+app.use("/videos", videosRouter);
 const port = process.env.PORT || 5000;
 
 const re = /^https:\/\/([\w-]+\.)+[\w-]+(\/[\w-]+)*\/?$/;
@@ -19,7 +21,46 @@ const isValidYoutubeURI = (field: string, regex: any) => {
   return regex.test(field);
 };
 
-const bloggers = [
+type BloggerType = {
+  id: number;
+  name: string;
+  youtubeURI: string;
+};
+
+type PostType = {
+  id: number;
+  title: string;
+  shortDescription: string;
+  content: string;
+  bloggerID: number;
+  bloggerName?: string;
+};
+
+type ErrorType = {
+  data: {
+    additionalProp1: string;
+    additionalProp2: string;
+  };
+  errorsMessage: {
+    message: string;
+    field: string;
+  };
+  resultCode: number;
+};
+
+let error: ErrorType = {
+  data: {
+    additionalProp1: '',
+    additionalProp2: '',
+  },
+  errorsMessage: {
+    message: '',
+    field: '',
+  },
+  resultCode: 2,
+};
+
+const bloggers: BloggerType[] = [
   {
     id: 1,
     name: "Blogger-01",
@@ -47,7 +88,7 @@ const bloggers = [
   },
 ];
 
-const posts = [
+const posts: PostType[] = [
   {
     id: 1,
     title: "Post-01",
@@ -146,35 +187,61 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Hello there!!!!!!!!!!!!!!!!!");
 });
 app.get("/bloggers", (req: Request, res: Response) => {
-  res.status(200).json(bloggers);
+  res.json(bloggers);
 });
 app.get("/bloggers/:id", (req: Request, res: Response) => {
   const bloggerID = Number(req.params.id);
   const blogger = bloggers.find((b) => b.id === bloggerID);
-  res.status(200).json(blogger);
+  res.json(blogger);
 });
+
 app.post("/bloggers", (req: Request, res: Response) => {
-  if (isValidYoutubeURI(req.body.youtubeURI, re)) {
-    const newBlogger = {
+  if (!isValidYoutubeURI(req.body.youtubeURI, re)) {
+    error = {
+      data: {
+        additionalProp1: req.body.youtubeURI,
+        additionalProp2: req.body.name,
+      },
+      errorsMessage: {
+        message: "invalid youtube URI",
+        field: "youtubeURI",
+      },
+      resultCode: 1,
+    };
+    res.status(400).json(error);
+    return;
+  } else if (!req.body.name) {
+    error = {
+      data: {
+        additionalProp1: req.body.youtubeURI,
+        additionalProp2: req.body.name,
+      },
+      errorsMessage: {
+        message: "Blogger's name is missing, please add",
+        field: "name",
+      },
+      resultCode: 2,
+    };
+    res.status(400).json(error);
+    return;
+  } else {
+    const newBlogger: BloggerType = {
       id: Number(bloggers.length + 1),
       name: req.body.name,
       youtubeURI: req.body.youtubeURI,
     };
-    if (!newBlogger.name) {
-      return res.status(400).json({
-        status: "fail",
-        message: "Name is missing",
-      });
-    }
     bloggers.push(newBlogger);
     res.status(201).json(newBlogger);
-  } else {
-    res.status(400).json({
-      status: "fail",
-      message: "invalid youtube URI",
-    });
   }
 });
+
+
+
+
+
+
+
+
 app.put("/bloggers/:id", (req: Request, res: Response) => {
   const bloggerID = Number(req.params.id);
 
@@ -252,14 +319,14 @@ app.post("/posts", (req: Request, res: Response) => {
 });
 
 app.get("/posts/:id", (req: Request, res: Response) => {
-  const postID = Number(req.params.id);
-  const post = posts.find((p) => p.id === postID);
+  const postID: number = Number(req.params.id);
+  const post = posts.find((p) => +p.id === postID);
   res.status(200).json(post);
 });
 
 app.put("/posts/:id", (req: Request, res: Response) => {
   const postID = Number(req.params.id);
-  const post = posts.find((p) => p.id === postID);
+  const post = posts.find((p) => +p.id === postID);
 
   if (postID > posts.length || isNaN(postID)) {
     return res.status(404).json({
@@ -279,7 +346,7 @@ app.put("/posts/:id", (req: Request, res: Response) => {
       message: "Invalid input. Please fill up all fields",
     });
   } else if (post !== undefined) {
-    const updatedPost = {
+    const updatedPost: PostType = {
       id: postID,
       title: req.body.title,
       shortDescription: req.body.shortDescription,
