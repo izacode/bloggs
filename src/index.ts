@@ -447,7 +447,7 @@ app.delete("/posts/:id", (req: Request, res: Response) => {
     });
   }
   posts.splice(postIndex, 1);
-  res.sendStatus(204);
+  res.send(posts)
 });
 
 app.listen(port, () => {
