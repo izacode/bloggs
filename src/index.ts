@@ -365,7 +365,9 @@ app.get("/posts/:id", (req: Request, res: Response) => {
 
 app.put("/posts/:id", (req: Request, res: Response) => {
   const postID = Number(req.params.id);
-  const post = posts.find((p) => +p.id === postID);
+  const postWithBloggerName = posts
+    .map((p) => Object.assign(p, { bloggerName: bloggers.find((b) => b.id === p.bloggerID)?.name }))
+    .find((p) => p.id === postID);
 
   if (postID > posts.length || isNaN(postID)) {
     return res.status(404).json({
@@ -411,14 +413,15 @@ app.put("/posts/:id", (req: Request, res: Response) => {
       };
     }
 
-    return res.status(400).send(error)
-  } else if (post !== undefined) {
+    return res.status(400).send(error);
+  } else if (postWithBloggerName !== undefined) {
     const updatedPost: PostType = {
       id: postID,
       title: req.body.title,
       shortDescription: req.body.shortDescription,
       content: req.body.content,
       bloggerID: req.body.bloggerID,
+      bloggerName: postWithBloggerName?.bloggerName,
     };
 
     const postIndex = posts.findIndex((b) => b.id === postID);
