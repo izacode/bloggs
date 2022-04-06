@@ -193,7 +193,7 @@ app.post("/bloggers", (req: Request, res: Response) => {
       name: req.body.name,
       youtubeURI: req.body.youtubeURI,
     };
-    error.errorsMessage = {
+    error.errorMessage = {
       message: "invalid youtube URI",
       field: "youtubeURI",
     };
@@ -205,7 +205,7 @@ app.post("/bloggers", (req: Request, res: Response) => {
       name: req.body.name,
       youtubeURI: req.body.youtubeURI,
     };
-    error.errorsMessage = {
+    error.errorMessage = {
       message: "Blogger's name is missing, please add",
       field: "name",
     };
@@ -241,7 +241,7 @@ app.put("/bloggers/:id", (req: Request, res: Response) => {
       name: req.body.name,
       youtubeURI: req.body.youtubeURI,
     };
-    error.errorsMessage = {
+    error.errorMessage = {
       message: "invalid youtube URI",
       field: "youtubeURI",
     };
@@ -256,7 +256,7 @@ app.put("/bloggers/:id", (req: Request, res: Response) => {
       youtubeURI: req.body.youtubeURI,
     };
 
-    error.errorsMessage = {
+    error.errorMessage = {
       message: "Blogger's name is missing, please add",
       field: "name",
     };
