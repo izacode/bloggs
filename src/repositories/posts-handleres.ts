@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { posts, PostType, bloggers } from "./DB";
+import { posts, PostType, bloggers, BloggerType } from "./DB";
 
 
 
@@ -30,7 +30,7 @@ let error: ErrorType = {
 export const postsHandlers = {
   getAllPosts(req: Request, res: Response) {
     const postsWithBloggerNames: PostType[] = posts.map((p) =>
-      Object.assign(p, { bloggerName: bloggers.find((b) => b.id === p.bloggerID)?.name })
+      Object.assign(p, { bloggerName: bloggers.find((b:BloggerType) => b.id === p.bloggerID)?.name })
     );
     res.status(200).json(postsWithBloggerNames);
   },
@@ -38,8 +38,8 @@ export const postsHandlers = {
     const postID: number = Number(req.params.id);
 
     const post = posts
-      .map((p) => Object.assign(p, { bloggerName: bloggers.find((b) => b.id === p.bloggerID)?.name }))
-      .find((p) => +p.id === postID);
+      .map((p: PostType) => Object.assign(p, { bloggerName: bloggers.find((b: BloggerType) => b.id === p.bloggerID)?.name }))
+      .find((p: PostType) => +p.id === postID);
     res.status(200).json(post);
   },
 
@@ -102,8 +102,8 @@ export const postsHandlers = {
   updatePost(req: Request, res: Response) {
     const postID = Number(req.params.id);
     const postWithBloggerName = posts
-      .map((p) => Object.assign(p, { bloggerName: bloggers.find((b) => b.id === p.bloggerID)?.name }))
-      .find((p) => p.id === postID);
+      .map((p: PostType) => Object.assign(p, { bloggerName: bloggers.find((b: BloggerType) => b.id === p.bloggerID)?.name }))
+      .find((p: PostType) => p.id === postID);
 
     if (postID > posts.length || isNaN(postID)) {
       return res.status(404).json({
@@ -160,7 +160,7 @@ export const postsHandlers = {
         bloggerName: postWithBloggerName?.bloggerName,
       };
 
-      const postIndex = posts.findIndex((b) => b.id === postID);
+      const postIndex = posts.findIndex((p: PostType) => p.id === postID);
       posts.splice(postIndex, 1, updatedPost);
 
       res.status(200).json({
@@ -173,8 +173,8 @@ export const postsHandlers = {
   },
   deletePost(req: Request, res: Response) {
     const postID = Number(req.params.id);
-    const post = posts.find((b) => b.id === postID);
-    const postIndex = posts.findIndex((b) => b.id === postID);
+    const post = posts.find((p: PostType) => p.id === postID);
+    const postIndex = posts.findIndex((p: PostType) => p.id === postID);
     if (isNaN(postID) || !post) {
       return res.status(404).json({
         status: "fail",
