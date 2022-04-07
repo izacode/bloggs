@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { posts, PostType, bloggers, BloggerType } from "./DB";
+import { posts, PostType, bloggers, BloggerType } from "./db";
 
 type ErrorType = {
   data: {

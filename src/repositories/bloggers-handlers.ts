@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 
-import { BloggerType, bloggers } from "./DB"
-
+import { BloggerType, bloggers } from "./db";
 
 type ErrorType = {
   data: {
@@ -39,7 +38,7 @@ export const bloggersHandlers = {
   },
   getBlogger(req: Request, res: Response) {
     const bloggerID = Number(req.params.id);
-    const blogger = bloggers.find((b:BloggerType) => b.id === bloggerID);
+    const blogger = bloggers.find((b: BloggerType) => b.id === bloggerID);
     res.json(blogger);
   },
 
@@ -81,8 +80,8 @@ export const bloggersHandlers = {
   },
   updateBlogger(req: Request, res: Response) {
     const bloggerID = Number(req.params.id);
-    const blogger = bloggers.find((b:BloggerType) => b.id === bloggerID);
-    const bloggerIndex = bloggers.findIndex((b:BloggerType) => b.id === bloggerID);
+    const blogger = bloggers.find((b: BloggerType) => b.id === bloggerID);
+    const bloggerIndex = bloggers.findIndex((b: BloggerType) => b.id === bloggerID);
 
     if (isNaN(bloggerID) || !blogger) {
       return res.status(404).json({
@@ -130,8 +129,8 @@ export const bloggersHandlers = {
   },
   deleteBlogger(req: Request, res: Response) {
     const bloggerID = Number(req.params.id);
-    const blogger = bloggers.find((b:BloggerType) => b.id === bloggerID);
-    const bloggerIndex = bloggers.findIndex((b:BloggerType) => b.id === bloggerID);
+    const blogger = bloggers.find((b: BloggerType) => b.id === bloggerID);
+    const bloggerIndex = bloggers.findIndex((b: BloggerType) => b.id === bloggerID);
     if (isNaN(bloggerID) || !blogger) {
       return res.status(404).json({
         status: "fail",
