@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
 import { posts, PostType, bloggers, BloggerType } from "./DB";
 
-
-
 type ErrorType = {
   data: {
     id?: number;
@@ -29,8 +27,8 @@ let error: ErrorType = {
 
 export const postsHandlers = {
   getAllPosts(req: Request, res: Response) {
-    const postsWithBloggerNames: PostType[] = posts.map((p) =>
-      Object.assign(p, { bloggerName: bloggers.find((b:BloggerType) => b.id === p.bloggerID)?.name })
+    const postsWithBloggerNames: PostType[] = posts.map((p: PostType) =>
+      Object.assign(p, { bloggerName: bloggers.find((b: BloggerType) => b.id === p.bloggerID)?.name })
     );
     res.status(200).json(postsWithBloggerNames);
   },

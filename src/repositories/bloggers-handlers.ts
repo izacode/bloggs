@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
-import { BloggerType, bloggers } from "./DB";
+
+import { BloggerType, bloggers } from "./DB"
 
 
 type ErrorType = {
