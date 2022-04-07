@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { postsRepository } from "../repositories/posts-repository";
+import { postsHandlers } from "../repositories/posts-handleres";
 
 export const postsRouter = Router();
 
-postsRouter.get("/", postsRepository.getAllPosts)
-postsRouter.post("/", postsRepository.createPost);
-postsRouter.get("/:id", postsRepository.getPost);
-postsRouter.put("/:id", postsRepository.updatePost);
-postsRouter.delete("/:id", postsRepository.deletePost);
+postsRouter.get("/", postsHandlers.getAllPosts)
+postsRouter.post("/", postsHandlers.createPost);
+postsRouter.get("/:id", postsHandlers.getPost);
+postsRouter.put("/:id", postsHandlers.updatePost);
+postsRouter.delete("/:id", postsHandlers.deletePost);

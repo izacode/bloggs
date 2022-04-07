@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { postsRepository } from "../repositories/bloggers-repository";
+import { bloggersHandlers } from "../repositories/bloggers-handlers";
 
 export const bloggersRouter = Router();
 
-bloggersRouter.get("/", postsRepository.getAllBloggers);
-bloggersRouter.get("/:id", postsRepository.getBlogger);
-bloggersRouter.post("/", postsRepository.createBlogger);
-bloggersRouter.put("/:id", postsRepository.updateBlogger);
-bloggersRouter.delete("/:id", postsRepository.deleteBlogger);
+bloggersRouter.get("/", bloggersHandlers.getAllBloggers);
+bloggersRouter.get("/:id", bloggersHandlers.getBlogger);
+bloggersRouter.post("/", bloggersHandlers.createBlogger);
+bloggersRouter.put("/:id", bloggersHandlers.updateBlogger);
+bloggersRouter.delete("/:id", bloggersHandlers.deleteBlogger);

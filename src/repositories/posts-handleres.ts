@@ -27,7 +27,7 @@ let error: ErrorType = {
   resultCode: 0,
 };
 
-export const postsRepository = {
+export const postsHandlers = {
   getAllPosts(req: Request, res: Response) {
     const postsWithBloggerNames: PostType[] = posts.map((p) =>
       Object.assign(p, { bloggerName: bloggers.find((b) => b.id === p.bloggerID)?.name })

@@ -32,7 +32,7 @@ const isValidYoutubeURI = (field: string, regex: any) => {
   return regex.test(field);
 };
 
-export const postsRepository = {
+export const bloggersHandlers = {
   getAllBloggers(req: Request, res: Response) {
     res.json(bloggers);
   },
