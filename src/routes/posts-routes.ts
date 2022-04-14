@@ -26,8 +26,8 @@ const bloggerIDValidation = body("bloggerID")
 
 // Routes ===========================================================================
 
-postsRouter.get("/", (req: Request, res: Response) => {
-  const posts = postsHandlers.getAllPosts();
+postsRouter.get("/", async (req: Request, res: Response) => {
+  const posts = await postsHandlers.getAllPosts();
   res.json(posts);
 });
 

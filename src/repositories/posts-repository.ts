@@ -26,7 +26,7 @@ export let error: ErrorType = {
 };
 
 export const postsHandlers = {
-  getAllPosts() {
+  async getAllPosts() {
     const postsWithBloggerNames: PostType[] = posts.map((p: PostType) =>
       Object.assign(p, { bloggerName: bloggers.find((b: BloggerType) => b.id === p.bloggerID)?.name })
     );
