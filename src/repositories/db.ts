@@ -1,5 +1,5 @@
 export type PostType = {
-  id: number;
+  id?: number;
   title: string;
   shortDescription: string;
   content: string;
@@ -38,7 +38,7 @@ export const bloggers: BloggerType[] = [
     id: 5,
     name: "Blogger-05",
     youtubeURI: "https://www.youtube.com/Blogger-05",
-  },
+  }
 ];
 
 export const posts: PostType[] = [
@@ -111,5 +111,5 @@ export const posts: PostType[] = [
     shortDescription: "Second post of Blogger-05",
     content: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus, deserunt!",
     bloggerID: 5,
-  },
+  }
 ];

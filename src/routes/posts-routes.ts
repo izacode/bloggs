@@ -1,8 +1,8 @@
 import { Router, Request, Response, NextFunction } from "express";
-import { postsHandlers, error, ErrorType } from "../repositories/posts-repository";
+import { postsService } from "../domain/posts-service";
 import { body } from "express-validator";
 import { inputValidationMiddleware } from "../middleware/inputValidation";
-
+import { PostType } from "../repositories/db";
 
 export const postsRouter = Router();
 
@@ -27,7 +27,7 @@ const bloggerIDValidation = body("bloggerID")
 // Routes ===========================================================================
 
 postsRouter.get("/", async (req: Request, res: Response) => {
-  const posts = await postsHandlers.getAllPosts();
+  const posts: PostType[] = await postsService.getAllPosts();
   res.json(posts);
 });
 
@@ -40,15 +40,15 @@ postsRouter.post(
 
   inputValidationMiddleware,
 
-  (req: Request, res: Response) => {
-    const newPost = postsHandlers.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.bloggerID);
-    res.status(201).json(newPost);
+  async (req: Request, res: Response) => {
+    const createdPost = await postsService.createPost(req);
+    return res.status(201).json(createdPost);
   }
 );
 
-postsRouter.get("/:id", (req: Request, res: Response) => {
-  const post = postsHandlers.getPost(+req.params.id);
-  res.send(post);
+postsRouter.get("/:id", async (req: Request, res: Response) => {
+  const post = await postsService.getPost(+req.params.id);
+  post ? res.json(post) : res.sendStatus(404);
 });
 
 postsRouter.put(
@@ -61,23 +61,21 @@ postsRouter.put(
 
   inputValidationMiddleware,
 
-  (req: Request, res: Response) => {
-    const updatedPost = postsHandlers.updatePost(
+  async (req: Request, res: Response) => {
+    const isUpdated: boolean = await postsService.updatePost(
       +req.params.id,
       req.body.title,
       req.body.shortDescription,
       req.body.content,
       req.body.bloggerID
     );
-    res.status(200).json(updatedPost);
+
+    isUpdated ? res.sendStatus(204) : res.sendStatus(404);
   }
 );
 
-postsRouter.delete("/:id", (req: Request, res: Response) => {
-  const deletedPost = postsHandlers.deletePost(+req.params.id);
-  if(deletedPost===error){
-    res.status(404).json(error)
-    return;
-  }
-  res.status(200).json(deletedPost);
+postsRouter.delete("/:id", async (req: Request, res: Response) => {
+  const isDeleted = await postsService.deletePost(+req.params.id);
+ 
+  isDeleted ? res.sendStatus(204) : res.sendStatus(404);
 });

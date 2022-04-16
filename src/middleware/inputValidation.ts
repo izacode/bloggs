@@ -1,13 +1,24 @@
 import { Request, Response, NextFunction } from "express";
-import { validationResult} from "express-validator";
+import { validationResult } from "express-validator";
 
-export const inputValidationMiddleware = (req: Request, res: Response, next: NextFunction) => {
+export const inputValidationMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const errors = validationResult(req);
+
   if (!errors.isEmpty()) {
-    res.status(400).json({ errors: errors.array() });
+    
+    const myErrors = errors.array().map((e) => {
+      return {
+        message: e.msg,
+        field: e.param,
+      };
+    });
+
+    res.status(400).json({ errorsMessages: myErrors });
   } else {
     next();
   }
 };
-
-
