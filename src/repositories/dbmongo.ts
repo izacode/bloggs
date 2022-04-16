@@ -1,7 +1,7 @@
 import { MongoClient } from "mongodb";
 import { PostType, BloggerType } from "./db";
 
-const mongoUri ="mongodb://localhost:27017";
+const mongoUri = process.env.mongoURI || "mongodb://localhost:27017";
 // const mongoUri =
 //   process.env.mongoURI ||
 //   "mongodb://localhost:27017";
