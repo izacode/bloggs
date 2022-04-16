@@ -3,7 +3,7 @@ import { PostType, BloggerType } from "./db";
 
 const mongoUri =
   process.env.mongoURI ||
-  "mongodb://localhost:27017/?maxPoolSize=20&w=majority";
+  "mongodb://localhost:27017/";
 
 const client = new MongoClient(mongoUri);
 let db = client.db("bloggz");

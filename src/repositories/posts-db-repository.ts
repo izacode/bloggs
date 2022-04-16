@@ -1,17 +1,7 @@
-import { PostType, BloggerType } from "./db";
+import { PostType } from "./db";
 import { postsCollection } from "./dbmongo";
 
 export type ErrorType = {
-  data: {
-    id?: number;
-    name?: string;
-    youtubeURI?: string;
-    title?: string;
-    shortDescription?: string;
-    content?: string;
-    bloggerID?: number;
-    bloggerName?: string;
-  };
   errorMessage: {
     message?: string;
     field?: string;
@@ -20,7 +10,6 @@ export type ErrorType = {
 };
 
 export let error: ErrorType = {
-  data: {},
   errorMessage: {},
   resultCode: 0,
 };
