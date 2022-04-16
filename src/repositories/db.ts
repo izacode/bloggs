@@ -8,7 +8,7 @@ export type PostType = {
 };
 
 export type BloggerType = {
-  id: number;
+  id?: number;
   name: string;
   youtubeURI: string;
 };

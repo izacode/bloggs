@@ -1,45 +1,60 @@
 import { Router, Request, Response } from "express";
-import { bloggersRepository, error } from "../repositories/bloggers-repository";
+import { bloggersService } from "../domain/bloggers-service";
 import { body, param } from "express-validator";
 import { inputValidationMiddleware } from "../middleware/inputValidation";
 
 export const bloggersRouter = Router();
-const errorCheck = (value: any, res: Response) => {
-  if (value.hasOwnProperty("error")) {
-    return res.status(400).json(value);
-  } else {
-    return res.status(201).json(value);
-  }
-};
+
+//  Inputs validations=========================================================================================================
+const re = /^https:\/\/([\w-]+\.)+[\w-]+(\/[\w-]+)*\/?$/;
 
 const bloggerIDValidation = param("id")
   .isInt({ gt: 0 })
   .withMessage("Invalid ID, it shoud be a number greater then 0,without symbols or letters");
 
-const nameValidation = body("name").trim().isLength({ min: 1 }).withMessage("blogger name should contain at least one character");
+const nameValidation = body("name")
+  .trim()
+  .isLength({ min: 1 })
+  .withMessage("blogger name should contain at least one character");
 
-bloggersRouter.get("/", (req: Request, res: Response) => {
-  const bloggers = bloggersRepository.getAllBloggers();
+const youtubeURIValidation = body("youtubeURI").trim().matches(re).withMessage("Invalid youtubeURI");
+
+//  Routes =====================================================================================================================
+
+bloggersRouter.get("/", async (req: Request, res: Response) => {
+  const bloggers = await bloggersService.getAllBloggers();
   res.json(bloggers);
 });
 
-bloggersRouter.post("/", nameValidation, inputValidationMiddleware, (req: Request, res: Response) => {
-  const newBlogger = bloggersRepository.createBlogger(req.body.name, req.body.youtubeURI);
-  errorCheck(newBlogger, res);
+bloggersRouter.post(
+  "/",
+  nameValidation,
+  youtubeURIValidation,
+  inputValidationMiddleware,
+  async (req: Request, res: Response) => {
+    const newBlogger = await bloggersService.createBlogger(req.body.name, req.body.youtubeURI);
+    res.json(newBlogger);
+  }
+);
+
+bloggersRouter.get("/:id", async (req: Request, res: Response) => {
+  const blogger = await bloggersService.getBlogger(+req.params.id);
+  blogger ? res.json(blogger) : res.sendStatus(404);
 });
 
-bloggersRouter.get("/:id", (req: Request, res: Response) => {
-  const blogger = bloggersRepository.getBlogger(+req.params.id);
-  res.json(blogger);
-});
+bloggersRouter.put(
+  "/:id",
+  bloggerIDValidation,
+  nameValidation,
+  youtubeURIValidation,
+  inputValidationMiddleware,
+  async (req: Request, res: Response) => {
+    const isdUpdated: boolean = await bloggersService.updateBlogger(+req.params.id, req.body.name, req.body.youtubeURI);
+    isdUpdated ? res.sendStatus(204) : res.sendStatus(404);
+  }
+);
 
-bloggersRouter.put("/:id", bloggerIDValidation, nameValidation, inputValidationMiddleware, (req: Request, res: Response) => {
-  const updatedBlogger = bloggersRepository.updateBlogger(+req.params.id, req.body.name, req.body.youtubeURI);
-
-  errorCheck(updatedBlogger, res);
-});
-
-bloggersRouter.delete("/:id", (req: Request, res: Response) => {
-  const bloggers = bloggersRepository.deleteBlogger(+req.params.id);
-  errorCheck(bloggers, res);
+bloggersRouter.delete("/:id", async (req: Request, res: Response) => {
+  const isDeleted: boolean = await bloggersService.deleteBlogger(+req.params.id);
+  isDeleted ? res.sendStatus(204) : res.sendStatus(404);
 });
