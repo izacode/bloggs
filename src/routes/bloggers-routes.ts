@@ -9,8 +9,14 @@ export const bloggersRouter = Router();
 const re = /^https:\/\/([\w-]+\.)+[\w-]+(\/[\w-]+)*\/?$/;
 
 const bloggerIDValidation = param("id")
+  .trim()
   .isInt({ gt: 0 })
   .withMessage("Invalid ID, it shoud be a number greater then 0,without symbols or letters");
+
+const bloggerIDBodyValidation = body("id")
+  .trim()
+  .isInt({ gt: 0 })
+  .withMessage("Invalid ID!, it shoud be a number greater then 0,without symbols or letters");
 
 const nameValidation = body("name")
   .trim()
@@ -19,28 +25,27 @@ const nameValidation = body("name")
 
 const youtubeURIValidation = body("youtubeURI").trim().matches(re).withMessage("Invalid youtubeURI");
 const queryValidation = query("p")
-  .toInt()
   .isInt({ gt: 0 })
   .withMessage("Invalid query, it shoud be a number greater then 0,without symbols or letters");
 
 //  Routes =====================================================================================================================
 
-bloggersRouter.get("/",queryValidation,inputValidationMiddleware, async (req: Request, res: Response) => {
-  // console.log("p check: ",+req.query.p)
+bloggersRouter.get("/p?", queryValidation, inputValidationMiddleware, async (req: Request, res: Response) => {
   const pageNumber = req.query.p || 1;
-  const pageSize = 4;
+  const pageSize = 10;
   const bloggers = await bloggersService.getAllBloggers(pageNumber, pageSize);
   res.json(bloggers);
 });
 
 bloggersRouter.post(
   "/",
+  bloggerIDBodyValidation,
   nameValidation,
   youtubeURIValidation,
   inputValidationMiddleware,
   async (req: Request, res: Response) => {
-    const newBlogger = await bloggersService.createBlogger(req.body.name, req.body.youtubeURI);
-    res.json(newBlogger);
+    const newBlogger = await bloggersService.createBlogger(+req.body.id, req.body.name, req.body.youtubeURI);
+    res.status(201).json(newBlogger);
   }
 );
 
@@ -56,12 +61,13 @@ bloggersRouter.put(
   youtubeURIValidation,
   inputValidationMiddleware,
   async (req: Request, res: Response) => {
+
     const isdUpdated: boolean = await bloggersService.updateBlogger(+req.params.id, req.body.name, req.body.youtubeURI);
     isdUpdated ? res.sendStatus(204) : res.sendStatus(404);
   }
 );
 
-bloggersRouter.delete("/:id", async (req: Request, res: Response) => {
+bloggersRouter.delete("/:id", bloggerIDValidation, inputValidationMiddleware, async (req: Request, res: Response) => {
   const isDeleted: boolean = await bloggersService.deleteBlogger(+req.params.id);
   isDeleted ? res.sendStatus(204) : res.sendStatus(404);
 });

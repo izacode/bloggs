@@ -10,11 +10,11 @@ export const bloggersService = {
     return bloggersRepository.getBlogger(id);
   },
 
-  async createBlogger(name: string, youtubeURI: string) {
+  async createBlogger(id: number, name: string, youtubeURI: string) {
     const newBlogger = {
-    
-      name: name,
-      youtubeURI: youtubeURI,
+      id,
+      name,
+      youtubeURI
     };
     return await bloggersRepository.createBlogger(newBlogger);
   },
