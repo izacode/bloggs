@@ -1,29 +1,14 @@
 import { bloggersCollection } from "./dbmongo";
 
-import { BloggerType} from "./db";
-
-type ErrorType = {
-  errorMessage: {
-    message?: string;
-    field?: string;
-  };
-  resultCode: number;
-};
-
-export let error: ErrorType = {
-  errorMessage: {},
-  resultCode: 0,
-};
-
-// const re = /^https:\/\/([\w-]+\.)+[\w-]+(\/[\w-]+)*\/?$/;
-
-// const isValidYoutubeURI = (field: string, regex: any) => {
-//   return regex.test(field);
-// };
+import { BloggerType } from "./db";
 
 export const bloggersRepository = {
-  async getAllBloggers() {
-    return await bloggersCollection.find().toArray();
+  async getAllBloggers(pageNumber: any, pageSize: any) {
+    return await bloggersCollection
+      .find({}, { projection: { _id: 0 } })
+      .skip((pageNumber - 1) * pageSize)
+      .limit(pageSize)
+      .toArray();
   },
   async getBlogger(id: number) {
     const blogger = await bloggersCollection.findOne({ id: id });

@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import { bloggersService } from "../domain/bloggers-service";
-import { body, param } from "express-validator";
+import { body, param, query } from "express-validator";
 import { inputValidationMiddleware } from "../middleware/inputValidation";
 
 export const bloggersRouter = Router();
@@ -18,11 +18,18 @@ const nameValidation = body("name")
   .withMessage("blogger name should contain at least one character");
 
 const youtubeURIValidation = body("youtubeURI").trim().matches(re).withMessage("Invalid youtubeURI");
+const queryValidation = query("p")
+  .toInt()
+  .isInt({ gt: 0 })
+  .withMessage("Invalid query, it shoud be a number greater then 0,without symbols or letters");
 
 //  Routes =====================================================================================================================
 
-bloggersRouter.get("/", async (req: Request, res: Response) => {
-  const bloggers = await bloggersService.getAllBloggers();
+bloggersRouter.get("/",queryValidation,inputValidationMiddleware, async (req: Request, res: Response) => {
+  // console.log("p check: ",+req.query.p)
+  const pageNumber = req.query.p || 1;
+  const pageSize = 4;
+  const bloggers = await bloggersService.getAllBloggers(pageNumber, pageSize);
   res.json(bloggers);
 });
 

@@ -15,9 +15,9 @@ export const postsService = {
       content: req.body.content,
       bloggerID: req.body.bloggerID,
     };
-    const createdPost = await postsRepository.createPost(newPost);
+    return postsRepository.createPost(newPost);
 
-    return createdPost;
+    
   },
 
   async getPost(postID: number): Promise<PostType | null> {
@@ -33,6 +33,7 @@ export const postsService = {
   ): Promise<boolean> {
     return postsRepository.updatePost(postID, title, shortDescription, content, bloggerID);
   },
+  
   async deletePost(postID: number): Promise<boolean> {
     return postsRepository.deletePost(postID);
   },
