@@ -46,8 +46,9 @@ export const bloggersRepository = {
     return blogger !== null ? customResponse : false;
   },
   async getBlogger(id: number) {
-    const blogger = await bloggersCollection.findOne({ id }, { projection: { _id: 0 } });
-    return blogger;
+    // const blogger = await bloggersCollection.findOne({ id }, { projection: { _id: 0 } });
+    // return blogger;
+    return { id: 1 };
   },
 
   async createBlogger(newBlogger: BloggerType) {
