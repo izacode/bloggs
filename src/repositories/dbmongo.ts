@@ -2,7 +2,8 @@ import { MongoClient } from "mongodb";
 import { PostType, BloggerType } from "./db";
 
 // const mongoUri = process.env.mongoURI || "mongodb://localhost:27017";
-const mongoUri = "mongodb://localhost:27017";
+// const mongoUri = "mongodb://localhost:27017";
+const mongoUri = "mongodb+srv://thug:test1234@clusterblogg.gub0i.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
 const client = new MongoClient(mongoUri);
 let db = client.db("bloggz");
