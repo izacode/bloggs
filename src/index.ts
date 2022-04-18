@@ -1,4 +1,4 @@
-import express from "express";
+import express,{Request,Response} from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import {bloggersRouter} from "./routes/bloggers-routes"
@@ -16,6 +16,9 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
 const port = process.env.PORT || 5000;
+app.get("/", (req:Request,res:Response)=>{
+  res.json({id:1})
+})
 
 app.use("/bloggers", bloggersRouter);
 app.use("/posts", postsRouter);
