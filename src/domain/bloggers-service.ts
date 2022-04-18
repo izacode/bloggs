@@ -11,7 +11,8 @@ export const bloggersService = {
     return bloggersRepository.getAllBloggerPosts(bloggerId,pageNumber, pageSize);
   },
   async getBlogger(id: number) {
-    return bloggersRepository.getBlogger(id);
+    // return bloggersRepository.getBlogger(id);
+    return { id: 1 };
   },
 
   async createBlogger(id: number, name: string, youtubeURI: string) {

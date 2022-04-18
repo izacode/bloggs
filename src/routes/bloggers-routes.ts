@@ -41,9 +41,9 @@ bloggersRouter.post(
 );
 
 bloggersRouter.get("/:id", async (req: Request, res: Response) => {
-  // const blogger = await bloggersService.getBlogger(+req.params.id);
-  // blogger ? res.json(blogger) : res.sendStatus(404);
-  res.json({ id: 1 });
+  const blogger = await bloggersService.getBlogger(+req.params.id);
+  blogger ? res.json(blogger) : res.sendStatus(404);
+  
 });
 
 bloggersRouter.put(
