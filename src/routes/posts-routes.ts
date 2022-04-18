@@ -1,43 +1,40 @@
 import { Router, Request, Response, NextFunction } from "express";
 import { postsService } from "../domain/posts-service";
-import { body } from "express-validator";
-import { inputValidationMiddleware } from "../middleware/inputValidation";
-import { PostType } from "../repositories/db";
+
+import {
+  inputValidationMiddleware,
+  postIDBodyValidation,
+  titleValidation,
+  shortDescriptionValidation,
+  contentValidation,
+  bloggerIDValidation,
+  queryValidation,
+  postIDValidation,
+} from "../middleware/inputValidation";
+
 
 export const postsRouter = Router();
 
 // Validatiion =====================================================================
 
-const titleValidation = body("title")
-  .trim()
-  .isLength({ min: 1 })
-  .withMessage("Title is missing,please add, it should contain at least one character");
-const shortDescriptionValidation = body("shortDescription")
-  .trim()
-  .isLength({ min: 1 })
-  .withMessage("ShortDescription is missing,it should contain at least one character");
-const contentValidation = body("content")
-  .trim()
-  .isLength({ min: 1 })
-  .withMessage("Content is missing,it should contain at least one character");
-const bloggerIDValidation = body("bloggerID")
-  .isInt({ gt: 0 })
-  .withMessage("Invalid ID, it shoud be a number greater then 0,without symbols or letters");
+
 
 // Routes ===========================================================================
 
-postsRouter.get("/", async (req: Request, res: Response) => {
-  const posts: PostType[] = await postsService.getAllPosts();
+postsRouter.get("/", queryValidation, inputValidationMiddleware, async (req: Request, res: Response) => {
+  const pageNumber = req.query.p || 1;
+  const pageSize: number = 10;
+  const posts = await postsService.getAllPosts(pageNumber, pageSize);
   res.json(posts);
 });
 
 postsRouter.post(
   "/",
+  postIDBodyValidation,
   titleValidation,
   shortDescriptionValidation,
   contentValidation,
   bloggerIDValidation,
-
   inputValidationMiddleware,
 
   async (req: Request, res: Response) => {
@@ -46,7 +43,7 @@ postsRouter.post(
   }
 );
 
-postsRouter.get("/:id", async (req: Request, res: Response) => {
+postsRouter.get("/:id", postIDValidation, inputValidationMiddleware, async (req: Request, res: Response) => {
   const post = await postsService.getPost(+req.params.id);
   post ? res.json(post) : res.sendStatus(404);
 });
@@ -58,7 +55,6 @@ postsRouter.put(
   shortDescriptionValidation,
   contentValidation,
   bloggerIDValidation,
-
   inputValidationMiddleware,
 
   async (req: Request, res: Response) => {
@@ -74,8 +70,7 @@ postsRouter.put(
   }
 );
 
-postsRouter.delete("/:id", async (req: Request, res: Response) => {
+postsRouter.delete("/:id", postIDValidation, inputValidationMiddleware, async (req: Request, res: Response) => {
   const isDeleted = await postsService.deletePost(+req.params.id);
- 
   isDeleted ? res.sendStatus(204) : res.sendStatus(404);
 });

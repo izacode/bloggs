@@ -1,32 +1,20 @@
 import { Router, Request, Response } from "express";
 import { bloggersService } from "../domain/bloggers-service";
-import { body, param, query } from "express-validator";
-import { inputValidationMiddleware } from "../middleware/inputValidation";
+import { postsService } from "../domain/posts-service";
+import {
+  inputValidationMiddleware,
+  queryValidation,
+  bloggerIDBodyValidation,
+  nameValidation,
+  youtubeURIValidation,
+  bloggerIDValidation,
+  titleValidation,
+  shortDescriptionValidation,
+  contentValidation,
+  postIDBodyValidation,
+} from "../middleware/inputValidation";
 
 export const bloggersRouter = Router();
-
-//  Inputs validations=========================================================================================================
-const re = /^https:\/\/([\w-]+\.)+[\w-]+(\/[\w-]+)*\/?$/;
-
-const bloggerIDValidation = param("id")
-  .trim()
-  .isInt({ gt: 0 })
-  .withMessage("Invalid ID, it shoud be a number greater then 0,without symbols or letters");
-
-const bloggerIDBodyValidation = body("id")
-  .trim()
-  .isInt({ gt: 0 })
-  .withMessage("Invalid ID!, it shoud be a number greater then 0,without symbols or letters");
-
-const nameValidation = body("name")
-  .trim()
-  .isLength({ min: 1 })
-  .withMessage("blogger name should contain at least one character");
-
-const youtubeURIValidation = body("youtubeURI").trim().matches(re).withMessage("Invalid youtubeURI");
-const queryValidation = query("p")
-  .isInt({ gt: 0 })
-  .withMessage("Invalid query, it shoud be a number greater then 0,without symbols or letters");
 
 //  Routes =====================================================================================================================
 
@@ -61,7 +49,6 @@ bloggersRouter.put(
   youtubeURIValidation,
   inputValidationMiddleware,
   async (req: Request, res: Response) => {
-
     const isdUpdated: boolean = await bloggersService.updateBlogger(+req.params.id, req.body.name, req.body.youtubeURI);
     isdUpdated ? res.sendStatus(204) : res.sendStatus(404);
   }
@@ -71,3 +58,24 @@ bloggersRouter.delete("/:id", bloggerIDValidation, inputValidationMiddleware, as
   const isDeleted: boolean = await bloggersService.deleteBlogger(+req.params.id);
   isDeleted ? res.sendStatus(204) : res.sendStatus(404);
 });
+
+bloggersRouter.get("/:bloggerId/posts", async (req: Request, res: Response) => {
+  const pageNumber = req.query.p || 1;
+  const pageSize = 10;
+  const bloggerPosts = await bloggersService.getAllBloggerPosts(+req.params.bloggerId, pageNumber, pageSize);
+  bloggerPosts ? res.json(bloggerPosts) : res.sendStatus(404);
+});
+bloggersRouter.post(
+  "/:id/posts",
+  bloggerIDValidation,
+  postIDBodyValidation,
+  titleValidation,
+  shortDescriptionValidation,
+  contentValidation,
+  inputValidationMiddleware,
+  async (req: Request, res: Response) => {
+    const newPost = await postsService.createPost(req);
+    
+    newPost ? res.status(201).json(newPost) : res.sendStatus(404);
+  }
+);

@@ -1,4 +1,4 @@
-import { bloggersCollection } from "./dbmongo";
+import { bloggersCollection, postsCollection } from "./dbmongo";
 
 import { BloggerType } from "./db";
 
@@ -10,18 +10,40 @@ export const bloggersRepository = {
       .limit(pageSize)
       .toArray();
 
-    let totalCount: number = (await bloggersCollection.find().toArray()).length
+    let totalCount: number = (await bloggersCollection.find().toArray()).length;
 
-    const customeResponse = {
+    const customResponse = {
       pagesCount: Math.ceil(totalCount / pageSize),
       page: +pageNumber,
       pageSize,
       totalCount,
       items: bloggers,
     };
-    
-    return customeResponse;
-    // return bloggers
+
+    return customResponse;
+  },
+  async getAllBloggerPosts(bloggerId: number, pageNumber: any, pageSize: any) {
+    const blogger = await bloggersCollection.findOne({ id: bloggerId });
+    console.log(blogger);
+    const posts = (
+      await postsCollection
+        .find({ bloggerID: bloggerId }, { projection: { _id: 0 } })
+        .skip((pageNumber - 1) * pageSize)
+        .limit(pageSize)
+        .toArray()
+    ).map((p) => Object.assign(p, { bloggerName: blogger?.name }));
+
+    let totalCount: number = posts.length;
+
+    const customResponse = {
+      pagesCount: Math.ceil(totalCount / pageSize),
+      page: +pageNumber,
+      pageSize,
+      totalCount,
+      items: posts,
+    };
+
+    return blogger !== null ? customResponse : false;
   },
   async getBlogger(id: number) {
     const blogger = await bloggersCollection.findOne({ id }, { projection: { _id: 0 } });
