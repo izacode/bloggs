@@ -17,10 +17,7 @@ import {
 export const bloggersRouter = Router();
 
 //  Routes =====================================================================================================================
-bloggersRouter.get("/",  async (req: Request, res: Response) => {
-  
-  res.json({ id: 1 });
-});
+
 
 
 
@@ -44,8 +41,9 @@ bloggersRouter.post(
 );
 
 bloggersRouter.get("/:id", async (req: Request, res: Response) => {
-  const blogger = await bloggersService.getBlogger(+req.params.id);
-  blogger ? res.json(blogger) : res.sendStatus(404);
+  // const blogger = await bloggersService.getBlogger(+req.params.id);
+  // blogger ? res.json(blogger) : res.sendStatus(404);
+  res.json({ id: 1 });
 });
 
 bloggersRouter.put(
