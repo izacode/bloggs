@@ -16,9 +16,9 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
 const port = process.env.PORT || 5000;
-app.get("/", (req:Request,res:Response)=>{
-  res.json({id:1})
-})
+// app.get("/", (req:Request,res:Response)=>{
+//   res.json({id:1})
+// })
 
 app.use("/bloggers", bloggersRouter);
 app.use("/posts", postsRouter);

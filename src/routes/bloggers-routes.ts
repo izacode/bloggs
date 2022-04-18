@@ -17,6 +17,12 @@ import {
 export const bloggersRouter = Router();
 
 //  Routes =====================================================================================================================
+bloggersRouter.get("/",  async (req: Request, res: Response) => {
+  
+  res.json({ id: 1 });
+});
+
+
 
 bloggersRouter.get("/p?", queryValidation, inputValidationMiddleware, async (req: Request, res: Response) => {
   const pageNumber = req.query.p || 1;
