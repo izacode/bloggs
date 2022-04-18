@@ -4,7 +4,6 @@ import { postsCollection, bloggersCollection } from "./dbmongo";
 export const postsRepository = {
   async getAllPosts(pageNumber: any, pageSize: any) {
     const bloggers = await bloggersCollection.find({}, { projection: { _id: 0 } }).toArray();
-
     const posts = (
       await postsCollection
         .find({}, { projection: { _id: 0 } })
@@ -22,19 +21,13 @@ export const postsRepository = {
       totalCount,
       items: posts,
     };
-
     return customResponse;
   },
 
   async createPost(newPost: PostType): Promise<PostType | null> {
     const bloggers = await bloggersCollection.find().toArray();
-    // const bloggers = await bloggersCollection.find({}, { projection: { _id: 0 } }).toArray();
-
     await postsCollection.insertOne(newPost);
-
     const createdPost = await postsCollection.findOne({ title: newPost.title }, { projection: { _id: 0 } });
-    console.log(createdPost);
-
     return Object.assign(createdPost, { bloggerName: bloggers.find((b) => b.id === newPost.bloggerID)?.name });
   },
 

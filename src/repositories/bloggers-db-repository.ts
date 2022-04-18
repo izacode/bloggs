@@ -22,7 +22,7 @@ export const bloggersRepository = {
 
     return customResponse;
   },
-  async getAllBloggerPosts(bloggerId: number, pageNumber: any, pageSize: any) {
+  async getAllBloggerPosts(bloggerId: number, pageNumber: number, pageSize: number) {
     const blogger = await bloggersCollection.findOne({ id: bloggerId });
     console.log(blogger);
     const posts = (
