@@ -2,24 +2,21 @@ import { bloggersRepository } from "../repositories/bloggers-db-repository";
 
 
 export const bloggersService = {
-  async getAllBloggers(pageNumber:any, pageSize:any) {
-    
-    return bloggersRepository.getAllBloggers(pageNumber, pageSize);
+  async getAllBloggers(nameSearch:any,pageNumber: any, pageSize: any) {
+    return bloggersRepository.getAllBloggers(nameSearch,pageNumber, pageSize);
   },
-  async getAllBloggerPosts(bloggerId:number,pageNumber:any, pageSize:number) {
-    
-    return bloggersRepository.getAllBloggerPosts(bloggerId,pageNumber, pageSize);
+  async getAllBloggerPosts(bloggerId: number, pageNumber: any, pageSize: number) {
+    return bloggersRepository.getAllBloggerPosts(bloggerId, pageNumber, pageSize);
   },
   async getBlogger(id: number) {
     return bloggersRepository.getBlogger(id);
-    
   },
 
   async createBlogger(id: number, name: string, youtubeURI: string) {
     const newBlogger = {
       id,
       name,
-      youtubeURI
+      youtubeURI,
     };
     return await bloggersRepository.createBlogger(newBlogger);
   },

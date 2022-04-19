@@ -3,19 +3,29 @@ import { bloggersCollection, postsCollection } from "./dbmongo";
 import { BloggerType } from "./db";
 
 export const bloggersRepository = {
-  async getAllBloggers(pageNumber: any, pageSize: any) {
-    const bloggers = await bloggersCollection
-      .find({}, { projection: { _id: 0 } })
-      .skip((pageNumber - 1) * pageSize)
-      .limit(pageSize)
-      .toArray();
-
-    let totalCount: number = (await bloggersCollection.find().toArray()).length;
+  async getAllBloggers(nameSearch: any, pageNumber: any, pageSize: any) {
+    let bloggers;
+    let totalCount;
+    if (nameSearch === null) {
+      bloggers = await bloggersCollection
+        .find({}, { projection: { _id: 0 } })
+        .skip((pageNumber - 1) * +pageSize)
+        .limit(+pageSize)
+        .toArray();
+      totalCount = (await bloggersCollection.find().toArray()).length;
+    } else {
+      bloggers = await bloggersCollection
+        .find({ name: { $regex: nameSearch } }, { projection: { _id: 0 } })
+        .skip((pageNumber - 1) * +pageSize)
+        .limit(+pageSize)
+        .toArray();
+      totalCount = (await bloggersCollection.find({ name: { $regex: nameSearch } }).toArray()).length;
+    }
 
     const customResponse = {
       pagesCount: Math.ceil(totalCount / pageSize),
       page: +pageNumber,
-      pageSize,
+      pageSize: +pageSize,
       totalCount,
       items: bloggers,
     };
@@ -48,7 +58,6 @@ export const bloggersRepository = {
   async getBlogger(id: number) {
     const blogger = await bloggersCollection.findOne({ id }, { projection: { _id: 0 } });
     return blogger;
-    
   },
 
   async createBlogger(newBlogger: BloggerType) {

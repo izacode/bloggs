@@ -18,15 +18,16 @@ export const bloggersRouter = Router();
 
 //  Routes =====================================================================================================================
 
-
-
-
-bloggersRouter.get("/p?", queryValidation, inputValidationMiddleware, async (req: Request, res: Response) => {
-  const pageNumber = req.query.p || 1;
-  const pageSize = 10;
-  const bloggers = await bloggersService.getAllBloggers(pageNumber, pageSize);
-  res.json(bloggers);
-});
+// queryValidation,
+//   inputValidationMiddleware,
+  bloggersRouter.get("/", async (req: Request, res: Response) => {
+    const nameSerch = req.query.SearchNameTerm || null
+    const pageNumber = req.query.PageNumber || 1;
+    const pageSize = req.query.PageSize || 10;
+    
+    const bloggers = await bloggersService.getAllBloggers(nameSerch,pageNumber, pageSize);
+    res.json(bloggers);
+  });
 
 bloggersRouter.post(
   "/",

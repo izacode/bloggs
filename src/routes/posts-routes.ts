@@ -22,8 +22,8 @@ export const postsRouter = Router();
 // Routes ===========================================================================
 
 postsRouter.get("/", queryValidation, inputValidationMiddleware, async (req: Request, res: Response) => {
-  const pageNumber = req.query.p || 1;
-  const pageSize: number = 10;
+  const pageNumber = req.query.PageNumber || 1;
+  const pageSize = req.query.PageSize || 10;
   const posts = await postsService.getAllPosts(pageNumber, pageSize);
   res.json(posts);
 });

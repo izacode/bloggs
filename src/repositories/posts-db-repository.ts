@@ -7,17 +7,17 @@ export const postsRepository = {
     const posts = (
       await postsCollection
         .find({}, { projection: { _id: 0 } })
-        .skip((pageNumber - 1) * pageSize)
-        .limit(pageSize)
+        .skip((pageNumber - 1) * +pageSize)
+        .limit(+pageSize)
         .toArray()
     ).map((p) => Object.assign(p, { bloggerName: bloggers.find((b) => b.id === p.bloggerID)?.name }));
 
     let totalCount: number = (await postsCollection.find().toArray()).length;
 
     const customResponse = {
-      pagesCount: Math.ceil(totalCount / pageSize),
+      pagesCount: Math.ceil(totalCount / +pageSize),
       page: +pageNumber,
-      pageSize,
+      pageSize: +pageSize,
       totalCount,
       items: posts,
     };
