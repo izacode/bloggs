@@ -1,19 +1,33 @@
-import { PostType } from "./db";
+import { BloggerType, PostType } from "./db";
 import { postsCollection, bloggersCollection } from "./dbmongo";
 
 export const postsRepository = {
-  async getAllPosts(pageNumber: any, pageSize: any) {
-    const bloggers = await bloggersCollection.find({}, { projection: { _id: 0 } }).toArray();
-    const posts = (
-      await postsCollection
-        .find({}, { projection: { _id: 0 } })
-        .skip((pageNumber - 1) * +pageSize)
-        .limit(+pageSize)
-        .toArray()
-    ).map((p) => Object.assign(p, { bloggerName: bloggers.find((b) => b.id === p.bloggerID)?.name }));
+  async getAllPosts(SearchTitleTerm: string, pageNumber: any, pageSize: any) {
+    const bloggers: BloggerType[] = await bloggersCollection.find({}, { projection: { _id: 0 } }).toArray();
+    let posts: PostType[];
+    let totalCount: number;
 
-    let totalCount: number = (await postsCollection.find().toArray()).length;
+    if (SearchTitleTerm === null) {
+      posts = (
+        await postsCollection
+          .find({}, { projection: { _id: 0 } })
+          .skip((pageNumber - 1) * +pageSize)
+          .limit(+pageSize)
+          .toArray()
+      ).map((p) => Object.assign(p, { bloggerName: bloggers.find((b) => b.id === p.bloggerID)?.name }));
 
+      totalCount = (await postsCollection.find().toArray()).length;
+    } else {
+      posts = (
+        await postsCollection
+          .find({ title: { $regex: SearchTitleTerm } }, { projection: { _id: 0 } })
+          .skip((pageNumber - 1) * +pageSize)
+          .limit(+pageSize)
+          .toArray()
+      ).map((p) => Object.assign(p, { bloggerName: bloggers.find((b) => b.id === p.bloggerID)?.name }));
+      totalCount = (await postsCollection.find({ title: { $regex: SearchTitleTerm } }).toArray()).length;
+    }
+    
     const customResponse = {
       pagesCount: Math.ceil(totalCount / +pageSize),
       page: +pageNumber,
@@ -28,7 +42,8 @@ export const postsRepository = {
     const bloggers = await bloggersCollection.find().toArray();
     await postsCollection.insertOne(newPost);
     const createdPost = await postsCollection.findOne({ title: newPost.title }, { projection: { _id: 0 } });
-    return Object.assign(createdPost, { bloggerName: bloggers.find((b) => b.id === newPost.bloggerID)?.name });
+    const createdPostWithBloggerName = Object.assign(createdPost, { bloggerName: bloggers.find((b) => b.id === newPost.bloggerID)?.name });
+    return createdPostWithBloggerName;
   },
 
   async getPost(postID: number): Promise<PostType | null> {

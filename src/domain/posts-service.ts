@@ -1,19 +1,23 @@
 import { PostType } from "../repositories/db";
 import { Request } from "express";
 import { postsRepository } from "../repositories/posts-db-repository";
+import { bloggersRepository } from "../repositories/bloggers-db-repository";
 
 export const postsService = {
-  async getAllPosts(pageNumber: any, pageSize: any) {
-    return postsRepository.getAllPosts(pageNumber, pageSize);
+  async getAllPosts(SearchTitleTerm: any, pageNumber: any, pageSize: any) {
+    return postsRepository.getAllPosts(SearchTitleTerm, pageNumber, pageSize);
   },
 
   async createPost(req: Request): Promise<PostType | null> {
+    const bloggerID = req.body.bloggerID || +req.params.id;
+    const blogger = await bloggersRepository.getBlogger(bloggerID);
+    if (!blogger) return null;
     const newPost: PostType = {
       id: +req.body.id,
       title: req.body.title,
       shortDescription: req.body.shortDescription,
       content: req.body.content,
-      bloggerID: req.body.bloggerID || +req.params.id,
+      bloggerID,
     };
 
     return postsRepository.createPost(newPost);

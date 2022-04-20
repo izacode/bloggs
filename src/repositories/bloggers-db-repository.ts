@@ -3,9 +3,9 @@ import { bloggersCollection, postsCollection } from "./dbmongo";
 import { BloggerType } from "./db";
 
 export const bloggersRepository = {
-  async getAllBloggers(nameSearch: any, pageNumber: any, pageSize: any) {
-    let bloggers;
-    let totalCount;
+  async getAllBloggers(nameSearch: string, pageNumber: number, pageSize: number) {
+    let bloggers: BloggerType[];
+    let totalCount: number;
     if (nameSearch === null) {
       bloggers = await bloggersCollection
         .find({}, { projection: { _id: 0 } })

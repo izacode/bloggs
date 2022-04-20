@@ -1,4 +1,4 @@
-import { Router, Request, Response, NextFunction } from "express";
+import { Router, Request, Response} from "express";
 import { postsService } from "../domain/posts-service";
 
 import {
@@ -15,16 +15,14 @@ import {
 
 export const postsRouter = Router();
 
-// Validatiion =====================================================================
-
-
 
 // Routes ===========================================================================
 
 postsRouter.get("/", queryValidation, inputValidationMiddleware, async (req: Request, res: Response) => {
+  const SearchTitleTerm = req.query.titleSearch || null;
   const pageNumber = req.query.PageNumber || 1;
   const pageSize = req.query.PageSize || 10;
-  const posts = await postsService.getAllPosts(pageNumber, pageSize);
+  const posts = await postsService.getAllPosts(SearchTitleTerm, pageNumber, pageSize);
   res.json(posts);
 });
 
@@ -34,7 +32,7 @@ postsRouter.post(
   titleValidation,
   shortDescriptionValidation,
   contentValidation,
-  bloggerIDValidation,
+  
   inputValidationMiddleware,
 
   async (req: Request, res: Response) => {

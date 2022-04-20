@@ -8,7 +8,7 @@ const re = /^https:\/\/([\w-]+\.)+[\w-]+(\/[\w-]+)*\/?$/;
 export const bloggerIDValidation = param("id")
   .trim()
   .isInt({ gt: 0 })
-  .withMessage("Invalid ID, it shoud be a number greater then 0,without symbols or letters");
+  .withMessage("Invalid query bloggerID, it shoud be a number greater then 0,without symbols or letters");
 
 export const bloggerIDBodyValidation = body("id")
   .trim()
