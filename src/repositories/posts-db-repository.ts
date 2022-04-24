@@ -39,6 +39,7 @@ export const postsRepository = {
   },
 
   async createPost(newPost: PostType): Promise<PostType | null> {
+    console.log('Test')
     const bloggers = await bloggersCollection.find().toArray();
     
     await postsCollection.insertOne(newPost);
