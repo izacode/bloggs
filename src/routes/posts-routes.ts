@@ -24,12 +24,8 @@ type GetPostsQueryType = {
 };
 
 postsRouter.get("/", queryValidation, inputValidationMiddleware, async (req: Request, res: Response) => {
-  // const { SearchTitleTerm = null, pageNumber = 1, pageSize = 10 } = req.query as GetPostsQueryType;
-  const query = req.query as GetPostsQueryType;
-  const SearchTitleTerm = query.SearchTitleTerm || null;
-  const pageNumber = query.pageNumber || 1;
-  const pageSize = query.pageSize || 10;
-
+  
+  const { SearchTitleTerm = null, pageNumber = 1, pageSize = 10 } = req.query as GetPostsQueryType;
   const posts = await postsService.getAllPosts(SearchTitleTerm, pageNumber, pageSize);
   res.json(posts);
 });

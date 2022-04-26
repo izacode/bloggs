@@ -4,7 +4,7 @@ import { postsRepository } from "../repositories/posts-db-repository";
 import { bloggersRepository } from "../repositories/bloggers-db-repository";
 
 export const postsService = {
-  async getAllPosts(SearchTitleTerm: any, pageNumber: any, pageSize: any) {
+  async getAllPosts(SearchTitleTerm: string | null, pageNumber: any, pageSize: any) {
     return postsRepository.getAllPosts(SearchTitleTerm, pageNumber, pageSize);
   },
 
