@@ -1,6 +1,7 @@
 import { Router, Request, Response } from "express";
 import { bloggersService } from "../domain/bloggers-service";
 import { postsService } from "../domain/posts-service";
+import { GetBloggersQueryType } from "../types/types";
 import {
   inputValidationMiddleware,
   queryValidation,
@@ -18,16 +19,11 @@ export const bloggersRouter = Router();
 
 //  Routes =====================================================================================================================
 
-// queryValidation,
-//   inputValidationMiddleware,
-  bloggersRouter.get("/", async (req: Request, res: Response) => {
-    const nameSerch = req.query.SearchNameTerm || null
-    const pageNumber = req.query.PageNumber || 1;
-    const pageSize = req.query.PageSize || 10;
-    
-    const bloggers = await bloggersService.getAllBloggers(nameSerch,pageNumber, pageSize);
-    res.json(bloggers);
-  });
+bloggersRouter.get("/", async (req: Request, res: Response) => {
+  const { SearchNameTerm = null, pageNumber = 1, pageSize = 10 } = req.query as GetBloggersQueryType;
+  const bloggers = await bloggersService.getAllBloggers(SearchNameTerm, pageNumber, pageSize);
+  res.json(bloggers);
+});
 
 bloggersRouter.post(
   "/",
@@ -36,7 +32,8 @@ bloggersRouter.post(
   youtubeURIValidation,
   inputValidationMiddleware,
   async (req: Request, res: Response) => {
-    const newBlogger = await bloggersService.createBlogger(+req.body.id, req.body.name, req.body.youtubeURI);
+    const { id, name, youtubeUrl} = req.body
+    const newBlogger = await bloggersService.createBlogger(+id, name, youtubeUrl);
     res.status(201).json(newBlogger);
   }
 );
@@ -44,7 +41,6 @@ bloggersRouter.post(
 bloggersRouter.get("/:id", async (req: Request, res: Response) => {
   const blogger = await bloggersService.getBlogger(+req.params.id);
   blogger ? res.json(blogger) : res.sendStatus(404);
-  
 });
 
 bloggersRouter.put(
@@ -80,7 +76,7 @@ bloggersRouter.post(
   inputValidationMiddleware,
   async (req: Request, res: Response) => {
     const newPost = await postsService.createPost(req);
-    
+
     newPost ? res.status(201).json(newPost) : res.sendStatus(404);
   }
 );

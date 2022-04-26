@@ -1,7 +1,8 @@
-import { PostType } from "../repositories/db";
+
 import { Request } from "express";
 import { postsRepository } from "../repositories/posts-db-repository";
 import { bloggersRepository } from "../repositories/bloggers-db-repository";
+import { PostType } from "../types/types";
 
 export const postsService = {
   async getAllPosts(SearchTitleTerm: string | null, pageNumber: any, pageSize: any) {

@@ -2,8 +2,8 @@ import { bloggersRepository } from "../repositories/bloggers-db-repository";
 
 
 export const bloggersService = {
-  async getAllBloggers(nameSearch:any,pageNumber: any, pageSize: any) {
-    return bloggersRepository.getAllBloggers(nameSearch,pageNumber, pageSize);
+  async getAllBloggers(SearchNameTerm: any, pageNumber: any, pageSize: any) {
+    return bloggersRepository.getAllBloggers(SearchNameTerm, pageNumber, pageSize);
   },
   async getAllBloggerPosts(bloggerId: number, pageNumber: any, pageSize: number) {
     return bloggersRepository.getAllBloggerPosts(bloggerId, pageNumber, pageSize);
@@ -12,13 +12,13 @@ export const bloggersService = {
     return bloggersRepository.getBlogger(id);
   },
 
-  async createBlogger(id: number, name: string, youtubeURI: string) {
+  async createBlogger(id: number, name: string, youtubeUrl: string) {
     const newBlogger = {
       id,
       name,
-      youtubeURI,
+      youtubeUrl,
     };
-    return await bloggersRepository.createBlogger(newBlogger);
+    return bloggersRepository.createBlogger(newBlogger);
   },
 
   async updateBlogger(id: number, name: string, youtubeURI: string) {

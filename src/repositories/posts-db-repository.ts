@@ -1,9 +1,9 @@
-import { BloggerType, PostType } from "./db";
+
+import { BloggerType, PostType } from "../types/types";
 import { postsCollection, bloggersCollection } from "./dbmongo";
 
 export const postsRepository = {
-  async getAllPosts(SearchTitleTerm: string | null, pageNumber: any, pageSize: any) {
-    debugger;
+  async getAllPosts(SearchTitleTerm: string | null, pageNumber: any, pageSize:any) {
     const bloggers: BloggerType[] = await bloggersCollection.find({}, { projection: { _id: 0 } }).toArray();
     let filter = SearchTitleTerm === null ? {} : { title: { $regex: SearchTitleTerm } };
     const posts: PostType[] = (
@@ -14,7 +14,7 @@ export const postsRepository = {
         .toArray()
     ).map((p) => Object.assign(p, { bloggerName: bloggers.find((b) => b.id === p.bloggerID)?.name }));
 
-    const totalCount: number = (await postsCollection.find(filter).toArray()).length;
+    const totalCount: number = await postsCollection.countDocuments(filter);
 
     const customResponse = {
       pagesCount: Math.ceil(totalCount / +pageSize),

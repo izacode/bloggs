@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import { postsService } from "../domain/posts-service";
-
+import { GetPostsQueryType } from "../types/types";
 import {
   inputValidationMiddleware,
   postIDBodyValidation,
@@ -12,22 +12,19 @@ import {
   postIDValidation,
 } from "../middleware/inputValidation";
 
-// googl.com?GetPostsQueryType=1&GetPostsQueryType=2
+
 export const postsRouter = Router();
 
 // Routes ===========================================================================
 
-type GetPostsQueryType = {
-  SearchTitleTerm: string | null;
-  pageNumber: string | null;
-  pageSize: string | null;
-};
+
 
 postsRouter.get("/", queryValidation, inputValidationMiddleware, async (req: Request, res: Response) => {
   
   const { SearchTitleTerm = null, pageNumber = 1, pageSize = 10 } = req.query as GetPostsQueryType;
   const posts = await postsService.getAllPosts(SearchTitleTerm, pageNumber, pageSize);
   res.json(posts);
+
 });
 
 postsRouter.post(
