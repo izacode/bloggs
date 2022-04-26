@@ -4,23 +4,14 @@ import { BloggerType } from "./db";
 
 export const bloggersRepository = {
   async getAllBloggers(nameSearch: string, pageNumber: number, pageSize: number) {
-    let bloggers: BloggerType[];
-    let totalCount: number;
-    if (nameSearch === null) {
-      bloggers = await bloggersCollection
-        .find({}, { projection: { _id: 0 } })
+    
+    let filter = nameSearch===null? {} : { name: { $regex: nameSearch }};
+    const bloggers:BloggerType[] = await bloggersCollection
+        .find(filter, { projection: { _id: 0 } })
         .skip((pageNumber - 1) * +pageSize)
         .limit(+pageSize)
-        .toArray();
-      totalCount = (await bloggersCollection.find().toArray()).length;
-    } else {
-      bloggers = await bloggersCollection
-        .find({ name: { $regex: nameSearch } }, { projection: { _id: 0 } })
-        .skip((pageNumber - 1) * +pageSize)
-        .limit(+pageSize)
-        .toArray();
-      totalCount = (await bloggersCollection.find({ name: { $regex: nameSearch } }).toArray()).length;
-    }
+        .toArray()
+    const totalCount: number = (await bloggersCollection.find(filter).toArray()).length
 
     const customResponse = {
       pagesCount: Math.ceil(totalCount / pageSize),

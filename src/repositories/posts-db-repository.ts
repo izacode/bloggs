@@ -2,31 +2,20 @@ import { BloggerType, PostType } from "./db";
 import { postsCollection, bloggersCollection } from "./dbmongo";
 
 export const postsRepository = {
+
   async getAllPosts(SearchTitleTerm: string, pageNumber: any, pageSize: any) {
+
     const bloggers: BloggerType[] = await bloggersCollection.find({}, { projection: { _id: 0 } }).toArray();
-    let posts: PostType[];
-    let totalCount: number;
+    let filter = SearchTitleTerm === null ? {} : { title: { $regex: SearchTitleTerm } };
+    const posts: PostType[] = (
+      await postsCollection
+        .find(filter, { projection: { _id: 0 } })
+        .skip((pageNumber - 1) * +pageSize)
+        .limit(+pageSize)
+        .toArray()
+    ).map((p) => Object.assign(p, { bloggerName: bloggers.find((b) => b.id === p.bloggerID)?.name }));
 
-    if (SearchTitleTerm === null) {
-      posts = (
-        await postsCollection
-          .find({}, { projection: { _id: 0 } })
-          .skip((pageNumber - 1) * +pageSize)
-          .limit(+pageSize)
-          .toArray()
-      ).map((p) => Object.assign(p, { bloggerName: bloggers.find((b) => b.id === p.bloggerID)?.name }));
-
-      totalCount = (await postsCollection.find().toArray()).length;
-    } else {
-      posts = (
-        await postsCollection
-          .find({ title: { $regex: SearchTitleTerm } }, { projection: { _id: 0 } })
-          .skip((pageNumber - 1) * +pageSize)
-          .limit(+pageSize)
-          .toArray()
-      ).map((p) => Object.assign(p, { bloggerName: bloggers.find((b) => b.id === p.bloggerID)?.name }));
-      totalCount = (await postsCollection.find({ title: { $regex: SearchTitleTerm } }).toArray()).length;
-    }
+    const totalCount: number = (await postsCollection.find(filter).toArray()).length;
     
     const customResponse = {
       pagesCount: Math.ceil(totalCount / +pageSize),

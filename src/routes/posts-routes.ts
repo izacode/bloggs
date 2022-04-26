@@ -1,4 +1,4 @@
-import { Router, Request, Response} from "express";
+import { Router, Request, Response } from "express";
 import { postsService } from "../domain/posts-service";
 
 import {
@@ -12,16 +12,24 @@ import {
   postIDValidation,
 } from "../middleware/inputValidation";
 
-
+// googl.com?GetPostsQueryType=1&GetPostsQueryType=2
 export const postsRouter = Router();
-
 
 // Routes ===========================================================================
 
+type GetPostsQueryType = {
+  SearchTitleTerm: string | null;
+  pageNumber: string | null;
+  pageSize: string | null;
+};
+
 postsRouter.get("/", queryValidation, inputValidationMiddleware, async (req: Request, res: Response) => {
-  const SearchTitleTerm = req.query.titleSearch || null;
-  const pageNumber = req.query.PageNumber || 1;
-  const pageSize = req.query.PageSize || 10;
+  // const { SearchTitleTerm = null, pageNumber = 1, pageSize = 10 } = req.query as GetPostsQueryType;
+  const query = req.query as GetPostsQueryType;
+  const SearchTitleTerm = query.SearchTitleTerm || null;
+  const pageNumber = query.pageNumber || 1;
+  const pageSize = query.pageSize || 10;
+
   const posts = await postsService.getAllPosts(SearchTitleTerm, pageNumber, pageSize);
   res.json(posts);
 });
@@ -32,7 +40,7 @@ postsRouter.post(
   titleValidation,
   shortDescriptionValidation,
   contentValidation,
-  
+
   inputValidationMiddleware,
 
   async (req: Request, res: Response) => {
