@@ -1,26 +1,18 @@
+import { BloggerType } from "../types/types";
 import { bloggersCollection, postsCollection } from "./dbmongo";
 
-import { BloggerType } from "./db";
+
 
 export const bloggersRepository = {
-  async getAllBloggers(nameSearch: string, pageNumber: number, pageSize: number) {
-    let bloggers: BloggerType[];
-    let totalCount: number;
-    if (nameSearch === null) {
-      bloggers = await bloggersCollection
-        .find({}, { projection: { _id: 0 } })
-        .skip((pageNumber - 1) * +pageSize)
-        .limit(+pageSize)
-        .toArray();
-      totalCount = (await bloggersCollection.find().toArray()).length;
-    } else {
-      bloggers = await bloggersCollection
-        .find({ name: { $regex: nameSearch } }, { projection: { _id: 0 } })
-        .skip((pageNumber - 1) * +pageSize)
-        .limit(+pageSize)
-        .toArray();
-      totalCount = (await bloggersCollection.find({ name: { $regex: nameSearch } }).toArray()).length;
-    }
+  async getAllBloggers(SearchNameTerm: string, pageNumber: number, pageSize: number) {
+    let filter = SearchNameTerm === null ? {} : { name: { $regex: SearchNameTerm } };
+    debugger;
+    const bloggers: BloggerType[] = await bloggersCollection
+      .find(filter, { projection: { _id: 0 } })
+      .skip((pageNumber - 1) * +pageSize)
+      .limit(+pageSize)
+      .toArray();
+    const totalCount: number = await bloggersCollection.countDocuments(filter);
 
     const customResponse = {
       pagesCount: Math.ceil(totalCount / pageSize),
@@ -66,8 +58,8 @@ export const bloggersRepository = {
     return createdBlogger;
   },
 
-  async updateBlogger(id: number, name: string, youtubeURI: string): Promise<boolean> {
-    const blogger = await bloggersCollection.updateOne({ id }, { $set: { name, youtubeURI } });
+  async updateBlogger(id: number, name: string, youtubeUrl: string): Promise<boolean> {
+    const blogger = await bloggersCollection.updateOne({ id }, { $set: { name, youtubeUrl } });
     return blogger.matchedCount === 1;
   },
 

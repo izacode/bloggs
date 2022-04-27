@@ -1,4 +1,4 @@
-import { Router, Request, Response} from "express";
+import { Router, Request, Response } from "express";
 import { postsService } from "../domain/posts-service";
 
 import {
@@ -11,17 +11,17 @@ import {
   queryValidation,
   postIDValidation,
 } from "../middleware/inputValidation";
+import { GetPostsQueryType } from "../types/types";
 
 
 export const postsRouter = Router();
 
-
 // Routes ===========================================================================
 
+
 postsRouter.get("/", queryValidation, inputValidationMiddleware, async (req: Request, res: Response) => {
-  const SearchTitleTerm = req.query.titleSearch || null;
-  const pageNumber = req.query.PageNumber || 1;
-  const pageSize = req.query.PageSize || 10;
+  const { SearchTitleTerm = null, pageNumber = 1, pageSize = 10 } = req.query as GetPostsQueryType;
+
   const posts = await postsService.getAllPosts(SearchTitleTerm, pageNumber, pageSize);
   res.json(posts);
 });
@@ -32,11 +32,12 @@ postsRouter.post(
   titleValidation,
   shortDescriptionValidation,
   contentValidation,
-  
+
   inputValidationMiddleware,
 
   async (req: Request, res: Response) => {
-    const createdPost = await postsService.createPost(req);
+    const {body,params} =req
+    const createdPost = await postsService.createPost(body, params);
     return res.status(201).json(createdPost);
   }
 );
