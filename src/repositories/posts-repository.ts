@@ -1,23 +1,6 @@
-import { posts, PostType, bloggers, BloggerType } from "./db";
+import { BloggerType, ErrorType, PostType } from "../types/types";
+import { posts, bloggers } from "./db";
 
-
-export type ErrorType = {
-  data: {
-    id?: number;
-    name?: string;
-    youtubeURI?: string;
-    title?: string;
-    shortDescription?: string;
-    content?: string;
-    bloggerID?: number;
-    bloggerName?: string;
-  };
-  errorMessage: {
-    message?: string;
-    field?: string;
-  };
-  resultCode: number;
-};
 
 export let error: ErrorType = {
   data: {},

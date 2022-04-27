@@ -24,3 +24,21 @@ export type BloggerType = {
   name: string;
   youtubeUrl: string;
 };
+
+export type ErrorType = {
+  data: {
+    id?: number;
+    name?: string;
+    youtubeURI?: string;
+    title?: string;
+    shortDescription?: string;
+    content?: string;
+    bloggerID?: string;
+    bloggerName?: string;
+  };
+  errorMessage: {
+    message?: string;
+    field?: string;
+  };
+  resultCode: number;
+};

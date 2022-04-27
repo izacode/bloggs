@@ -1,24 +1,6 @@
-import { Request, Response } from "express";
+import { BloggerType, ErrorType } from "../types/types";
+import { bloggers } from "./db";
 
-import { BloggerType, bloggers } from "./db";
-
-type ErrorType = {
-  data: {
-    id?: number;
-    name?: string;
-    youtubeURI?: string;
-    title?: string;
-    shortDescription?: string;
-    content?: string;
-    bloggerID?: string;
-    bloggerName?: string;
-  };
-  errorMessage: {
-    message?: string;
-    field?: string;
-  };
-  resultCode: number;
-};
 
 export let error: ErrorType = {
   data: {},
@@ -41,10 +23,10 @@ export const bloggersRepository = {
     return blogger;
   },
 
-  createBlogger(name: string, youtubeURI: string) {
-    if (!isValidYoutubeURI(youtubeURI, re)) {
+  createBlogger(name: string, youtubeUrl: string) {
+    if (!isValidYoutubeURI(youtubeUrl, re)) {
       error.data = {
-        youtubeURI: youtubeURI,
+        youtubeURI: youtubeUrl,
       };
       error.errorMessage = {
         message: "invalid youtube URI",
@@ -57,14 +39,14 @@ export const bloggersRepository = {
       const newBlogger: BloggerType = {
         id: Number(bloggers.length + 1),
         name: name,
-        youtubeURI: youtubeURI,
+        youtubeUrl: youtubeUrl,
       };
       bloggers.push(newBlogger);
       return newBlogger;
     }
   },
 
-  updateBlogger(id: number, name: string, youtubeURI: string) {
+  updateBlogger(id: number, name: string, youtubeUrl: string) {
     const blogger = bloggers.find((b: BloggerType) => b.id === id);
     const bloggerIndex = bloggers.findIndex((b: BloggerType) => b.id === id);
 
@@ -74,17 +56,17 @@ export const bloggersRepository = {
         field: "id",
       };
       return error;
-    } else if (!isValidYoutubeURI(youtubeURI, re)) {
+    } else if (!isValidYoutubeURI(youtubeUrl, re)) {
       error.errorMessage = {
         message: "invalid youtube URI",
-        field: "youtubeURI",
+        field: "youtubeUrl",
       };
       return error;
     } else {
       const updatedBlogger: BloggerType = {
         id,
         name,
-        youtubeURI,
+        youtubeUrl,
       };
 
       bloggers.splice(bloggerIndex, 1, updatedBlogger);
