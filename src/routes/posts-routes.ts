@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import { postsService } from "../domain/posts-service";
-import { GetPostsQueryType } from "../types/types";
+
 import {
   inputValidationMiddleware,
   postIDBodyValidation,
@@ -11,6 +11,7 @@ import {
   queryValidation,
   postIDValidation,
 } from "../middleware/inputValidation";
+import { GetPostsQueryType } from "../types/types";
 
 
 export const postsRouter = Router();
@@ -18,13 +19,11 @@ export const postsRouter = Router();
 // Routes ===========================================================================
 
 
-
 postsRouter.get("/", queryValidation, inputValidationMiddleware, async (req: Request, res: Response) => {
-  
   const { SearchTitleTerm = null, pageNumber = 1, pageSize = 10 } = req.query as GetPostsQueryType;
+
   const posts = await postsService.getAllPosts(SearchTitleTerm, pageNumber, pageSize);
   res.json(posts);
-
 });
 
 postsRouter.post(
@@ -37,7 +36,8 @@ postsRouter.post(
   inputValidationMiddleware,
 
   async (req: Request, res: Response) => {
-    const createdPost = await postsService.createPost(req);
+    const {body,params} =req
+    const createdPost = await postsService.createPost(body, params);
     return res.status(201).json(createdPost);
   }
 );

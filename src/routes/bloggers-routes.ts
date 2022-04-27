@@ -33,7 +33,7 @@ bloggersRouter.post(
   inputValidationMiddleware,
   async (req: Request, res: Response) => {
     const { id, name, youtubeUrl} = req.body
-    const newBlogger = await bloggersService.createBlogger(+id, name, youtubeUrl);
+    const newBlogger = await bloggersService.createBlogger(+id, req.body.name, req.body.youtubeUrl);
     res.status(201).json(newBlogger);
   }
 );
@@ -75,7 +75,8 @@ bloggersRouter.post(
   contentValidation,
   inputValidationMiddleware,
   async (req: Request, res: Response) => {
-    const newPost = await postsService.createPost(req);
+    const {body,params} = req
+    const newPost = await postsService.createPost(body, params);
 
     newPost ? res.status(201).json(newPost) : res.sendStatus(404);
   }
