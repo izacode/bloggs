@@ -4,6 +4,7 @@ import cors from "cors";
 import {bloggersRouter} from "./routes/bloggers-routes"
 import {postsRouter} from "./routes/posts-routes"
 import { runDb } from "./repositories/dbmongo";
+import { usersRouter } from "./routes/users-routes";
 
 const corsOptions = {
   origin: "*",
@@ -16,12 +17,10 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
 const port = process.env.PORT || 5000;
-// app.get("/", (req:Request,res:Response)=>{
-//   res.json({id:1})
-// })
 
 app.use("/bloggers", bloggersRouter);
 app.use("/posts", postsRouter);
+app.use("/users", usersRouter);
 
 
 const startApp = async () => {

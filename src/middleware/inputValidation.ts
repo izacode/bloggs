@@ -20,11 +20,7 @@ export const nameValidation = body("name")
   .isLength({ min: 1, max: 15 })
   .withMessage("blogger name should contain at least one character");
 
-export const youtubeURIValidation = body("youtubeURI")
-  .trim()
-  .isLength({ min: 1, max: 100 })
-  .matches(re)
-  .withMessage("Invalid youtubeURI");
+export const youtubeURIValidation = body("youtubeURI").trim().isLength({ min: 1, max: 100 }).matches(re).withMessage("Invalid youtubeURI");
 export const queryValidation = query("p")
   .isInt({ gt: 0 })
   .withMessage("Invalid query, it shoud be a number greater then 0,without symbols or letters");
@@ -43,16 +39,26 @@ export const postIDBodyValidation = body("id")
 
 export const titleValidation = body("title")
   .trim()
-  .isLength({ min: 1,max: 30 })
+  .isLength({ min: 1, max: 30 })
   .withMessage("Title is missing,please add, it should contain at least one character");
 export const shortDescriptionValidation = body("shortDescription")
   .trim()
-  .isLength({ min: 1,max: 100 })
+  .isLength({ min: 1, max: 100 })
   .withMessage("ShortDescription is missing,it should contain at least one character");
 export const contentValidation = body("content")
   .trim()
-  .isLength({ min: 1,max: 1000 })
+  .isLength({ min: 1, max: 1000 })
   .withMessage("Content is missing,it should contain at least one character");
+
+export const userLoginValidation = body("login")
+  .trim()
+  .isLength({ min: 3, max: 10 })
+  .withMessage("Login should be at least 3 charachters long, and up to 10");
+
+export const userPasswordValidation = body("password")
+  .trim()
+  .isLength({ min: 6, max: 20 })
+  .withMessage("Password should be from 6 to 20 charachters long");
 
 // ==============================================================================================================
 
@@ -69,6 +75,6 @@ export const inputValidationMiddleware = (req: Request, res: Response, next: Nex
       };
     });
 
-    res.status(400).json({ errorsMessages: myErrors, resultCode: 0 });
+    res.status(400).json({ errorsMessages: myErrors, resultCode: 1 });
   }
 };

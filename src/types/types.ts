@@ -4,6 +4,11 @@ export type GetBloggersQueryType = {
   pageSize: string | null;
 };
 
+export type GetUsersQueryType = {
+  pageSize: string | null;
+  pageNumber: string | null;
+};
+
 export type GetPostsQueryType = {
   SearchTitleTerm: string | null;
   pageNumber: string | null;
@@ -25,6 +30,13 @@ export type BloggerType = {
   youtubeUrl: string;
 };
 
+export type UserType = {
+  id: string;
+  login: string;
+  passwordHash?: string;
+  passwordSalt?: string;
+};
+
 export type ErrorType = {
   data: {
     id?: number;
@@ -41,4 +53,12 @@ export type ErrorType = {
     field?: string;
   };
   resultCode: number;
+};
+
+export type CustomResponseType = {
+  pagesCount: number;
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  items: BloggerType[] | PostType[] | UserType[];
 };
