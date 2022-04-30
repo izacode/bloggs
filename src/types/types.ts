@@ -1,3 +1,5 @@
+import { ObjectId } from "mongodb";
+
 export type GetBloggersQueryType = {
   SearchNameTerm: string | null;
   pageNumber: string | null;
@@ -31,6 +33,7 @@ export type BloggerType = {
 };
 
 export type UserType = {
+  _id?: ObjectId;
   id: string;
   login: string;
   passwordHash?: string;
@@ -62,3 +65,8 @@ export type CustomResponseType = {
   totalCount: number;
   items: BloggerType[] | PostType[] | UserType[];
 };
+
+export type CommentType ={
+  content: string;
+  id: ObjectId
+}

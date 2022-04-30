@@ -1,10 +1,11 @@
-import express,{Request,Response} from "express";
+import express, { Request, Response } from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
-import {bloggersRouter} from "./routes/bloggers-routes"
-import {postsRouter} from "./routes/posts-routes"
+import { bloggersRouter } from "./routes/bloggers-routes";
+import { postsRouter } from "./routes/posts-routes";
 import { runDb } from "./repositories/dbmongo";
 import { usersRouter } from "./routes/users-routes";
+import { authRouter } from "./routes/auth-router";
 
 const corsOptions = {
   origin: "*",
@@ -21,7 +22,7 @@ const port = process.env.PORT || 5000;
 app.use("/bloggers", bloggersRouter);
 app.use("/posts", postsRouter);
 app.use("/users", usersRouter);
-
+app.use("/auth", authRouter);
 
 const startApp = async () => {
   await runDb();
@@ -31,9 +32,3 @@ const startApp = async () => {
 };
 
 startApp();
-
-
-
-
-
-

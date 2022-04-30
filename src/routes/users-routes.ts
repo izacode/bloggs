@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express";
 import { usersService } from "../domain/users-service";
+import { authMiddleware } from "../middleware/authMiddleware";
 import { inputValidationMiddleware, userLoginValidation, userPasswordValidation } from "../middleware/inputValidation";
 import { GetUsersQueryType } from "../types/types";
 
@@ -11,12 +12,11 @@ usersRouter.get("/", async (req: Request, res: Response) => {
   res.json(users);
 });
 
-usersRouter.post("/",userLoginValidation,userPasswordValidation,inputValidationMiddleware, async (req: Request, res: Response) => {
+usersRouter.post("/",userLoginValidation,userPasswordValidation,inputValidationMiddleware,authMiddleware, async (req: Request, res: Response) => {
   const newUser = await usersService.createUser(req.body.id, req.body.login, req.body.password);
   res.status(201).json(newUser);
 });
-usersRouter.delete("/:id", async (req: Request, res: Response) => {
-    debugger;
+usersRouter.delete("/:id",authMiddleware, async (req: Request, res: Response) => {
   const isDeleted = await usersService.deleteUser(+ req.params.id);
   isDeleted ? res.sendStatus(204) : res.sendStatus(404);
 });
