@@ -1,18 +1,8 @@
 import { ObjectId } from "mongodb";
 
-export type GetBloggersQueryType = {
-  SearchNameTerm: string | null;
-  pageNumber: string | null;
-  pageSize: string | null;
-};
-
-export type GetUsersQueryType = {
-  pageSize: string | null;
-  pageNumber: string | null;
-};
-
-export type GetPostsQueryType = {
-  SearchTitleTerm: string | null;
+export type QueryType = {
+  SearchNameTerm?: string | null;
+  SearchTitleTerm?: string | null;
   pageNumber: string | null;
   pageSize: string | null;
 };
@@ -67,6 +57,33 @@ export type CustomResponseType = {
 };
 
 export type CommentType ={
+  postId: number;
   content: string;
-  id: ObjectId
+  userId: ObjectId;
+  login: string;
+  createdAt: string
 }
+
+// ==============================================================================================
+
+
+// export type GetBloggersQueryType = {
+//   SearchNameTerm: string | null;
+//   pageNumber: string | null;
+//   pageSize: string | null;
+// };
+
+// export type GetUsersQueryType = {
+//   pageSize: string | null;
+//   pageNumber: string | null;
+// };
+
+// export type GetPostsQueryType = {
+//   SearchTitleTerm: string | null;
+//   pageNumber: string | null;
+//   pageSize: string | null;
+// };
+// export type GetPostCommentsQueryType = {
+//   pageNumber: string | null;
+//   pageSize: string | null;
+// };

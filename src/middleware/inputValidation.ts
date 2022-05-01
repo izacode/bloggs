@@ -1,6 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import { validationResult, body, param, query } from "express-validator";
 
+// Comment validation ==============================================================================================================
+
+
 // Blogger validation ==============================================================================================================
 
 const re = /^https:\/\/([\w-]+\.)+[\w-]+(\/[\w-]+)*\/?$/;

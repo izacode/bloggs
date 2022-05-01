@@ -6,6 +6,7 @@ import { postsRouter } from "./routes/posts-routes";
 import { runDb } from "./repositories/dbmongo";
 import { usersRouter } from "./routes/users-routes";
 import { authRouter } from "./routes/auth-router";
+import { commentsRouter } from "./routes/comments-router";
 
 const corsOptions = {
   origin: "*",
@@ -23,6 +24,7 @@ app.use("/bloggers", bloggersRouter);
 app.use("/posts", postsRouter);
 app.use("/users", usersRouter);
 app.use("/auth", authRouter);
+app.use("/comments", commentsRouter)
 
 const startApp = async () => {
   await runDb();

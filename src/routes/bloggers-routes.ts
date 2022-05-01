@@ -1,10 +1,9 @@
 import { Router, Request, Response } from "express";
 import { bloggersService } from "../domain/bloggers-service";
 import { postsService } from "../domain/posts-service";
-import { GetBloggersQueryType } from "../types/types";
+import { QueryType } from "../types/types";
 import {
   inputValidationMiddleware,
-  queryValidation,
   bloggerIDBodyValidation,
   nameValidation,
   youtubeURIValidation,
@@ -20,7 +19,7 @@ export const bloggersRouter = Router();
 //  Routes =====================================================================================================================
 
 bloggersRouter.get("/", async (req: Request, res: Response) => {
-  const { SearchNameTerm = null, pageNumber = 1, pageSize = 10 } = req.query as GetBloggersQueryType;
+  const { SearchNameTerm = null, pageNumber = 1, pageSize = 10 } = req.query as QueryType;
   const bloggers = await bloggersService.getAllBloggers(SearchNameTerm, pageNumber, pageSize);
   res.json(bloggers);
 });
@@ -33,7 +32,7 @@ bloggersRouter.post(
   inputValidationMiddleware,
   async (req: Request, res: Response) => {
     const { id, name, youtubeUrl} = req.body
-    const newBlogger = await bloggersService.createBlogger(+id, req.body.name, req.body.youtubeUrl);
+    const newBlogger = await bloggersService.createBlogger(+id, name, youtubeUrl);
     res.status(201).json(newBlogger);
   }
 );
