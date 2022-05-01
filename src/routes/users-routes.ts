@@ -2,18 +2,18 @@ import { Router, Request, Response } from "express";
 import { usersService } from "../domain/users-service";
 import { authMiddleware } from "../middleware/authMiddleware";
 import { inputValidationMiddleware, userLoginValidation, userPasswordValidation } from "../middleware/inputValidation";
-import { GetUsersQueryType } from "../types/types";
+import { QueryType } from "../types/types";
 
 export const usersRouter = Router();
 
 usersRouter.get("/", async (req: Request, res: Response) => {
-  const { pageNumber = 1, pageSize = 10 } = req.query as GetUsersQueryType;
+  const { pageNumber = 1, pageSize = 10 } = req.query as QueryType;
   const users = await usersService.getAllUsers(pageNumber, pageSize);
   res.json(users);
 });
 
 usersRouter.post("/",userLoginValidation,userPasswordValidation,inputValidationMiddleware,authMiddleware, async (req: Request, res: Response) => {
-  const newUser = await usersService.createUser(req.body.id, req.body.login, req.body.password);
+  const newUser = await usersService.createUser(req.body.login, req.body.password);
   res.status(201).json(newUser);
 });
 usersRouter.delete("/:id",authMiddleware, async (req: Request, res: Response) => {

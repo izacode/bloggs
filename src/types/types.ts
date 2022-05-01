@@ -24,7 +24,6 @@ export type BloggerType = {
 
 export type UserType = {
   _id?: ObjectId;
-  id: string;
   login: string;
   passwordHash?: string;
   passwordSalt?: string;

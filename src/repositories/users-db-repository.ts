@@ -24,8 +24,8 @@ export const usersRepository = {
   async createUser(newUser: UserType): Promise<UserType | null> {
     await usersCollection.insertOne(newUser);
     const createdUser = usersCollection.findOne(
-      { id: newUser.id },
-      { projection: { _id: 0, password: 0, passwordHash: 0, passwordSalt: 0 } }
+      { login:newUser.login },
+      { projection: {password: 0, passwordHash: 0, passwordSalt: 0 } }
     );
     return createdUser;
   },

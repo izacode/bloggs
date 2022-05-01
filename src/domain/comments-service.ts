@@ -9,7 +9,7 @@ export const commentsService = {
     return postComments
   },
 
-  async getCommentById(id: number){
+  async getCommentById(id: string):Promise<CommentType|null>{
     const comment = await commentsRepository.getCommentById(id)
     return comment
   },
@@ -20,18 +20,18 @@ export const commentsService = {
       content,
       userId,
       login,
-      createdAt: new Date().toDateString(),
+      createdAt: new Date().toISOString(),
     };
 
     const createdComment = await commentsRepository.createComment(newComment);
     return createdComment;
   },
 
-  async updateComment(id: number, content: string){    
+  async updateComment(id: string, content: string){    
       const isUpdated = commentsRepository.updateComment(id,content)
       return isUpdated
   },
-  async deleteComment(id:number){
+  async deleteComment(id:string){
       const isDeleted = commentsRepository.deleteComment(id)
       return isDeleted
   }

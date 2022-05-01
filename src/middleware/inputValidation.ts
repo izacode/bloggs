@@ -2,7 +2,10 @@ import { Request, Response, NextFunction } from "express";
 import { validationResult, body, param, query } from "express-validator";
 
 // Comment validation ==============================================================================================================
-
+export const mongoIdValidation = param("id")
+  .trim()
+  .matches(/^[a-z0-9]{24}$/, "i")
+  .withMessage("Id should be of Mongo Id type, 24 charachters,lowercase latin letters and numbers");
 
 // Blogger validation ==============================================================================================================
 

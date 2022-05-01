@@ -1,21 +1,28 @@
 import { Router, Request, Response } from "express";
 import { commentsService } from "../domain/comments-service";
 import { authMiddleware } from "../middleware/authMiddleware";
-import { contentValidation, inputValidationMiddleware } from "../middleware/inputValidation";
+import { contentValidation, inputValidationMiddleware, mongoIdValidation } from "../middleware/inputValidation";
+import { CommentType } from "../types/types";
 
 export const commentsRouter = Router();
 
-commentsRouter.get("/:id", authMiddleware, async (req: Request, res: Response) => {
-  const comment = await commentsService.getCommentById(+req.params.id);
-  res.status(201).send(comment);
+commentsRouter.get("/:id", mongoIdValidation, inputValidationMiddleware, async (req: Request, res: Response) => {
+  const comment: CommentType | null = await commentsService.getCommentById(req.params.id);
+  comment ? res.send(comment) : res.sendStatus(404);
 });
 
-commentsRouter.put("/:id",authMiddleware, contentValidation, inputValidationMiddleware, async (req: Request, res: Response) => {
-  const isUpdated = await commentsService.updateComment(+req.params.id, req.body.content);
+commentsRouter.put("/:id", authMiddleware, contentValidation, inputValidationMiddleware, async (req: Request, res: Response) => {
+  const commentToUpdate = await commentsService.getCommentById(req.params.id);
+  if (!commentToUpdate) return res.sendStatus(404);
+  if (commentToUpdate.userId.toString() !== req.context.user._id.toString()) return res.sendStatus(403);
+  const isUpdated = await commentsService.updateComment(req.params.id, req.body.content);
   isUpdated ? res.sendStatus(204) : res.sendStatus(404);
 });
 
-commentsRouter.delete("/:id", async (req: Request, res: Response) => {
-  const isDeleted = await commentsService.deleteComment(+req.params.id);
+commentsRouter.delete("/:id", authMiddleware, async (req: Request, res: Response) => {
+  const commentToDelete = await commentsService.getCommentById(req.params.id);
+  if (!commentToDelete) return res.sendStatus(404);
+  if (commentToDelete.userId.toString() !== req.context.user._id.toString()) return res.sendStatus(403);
+  const isDeleted = await commentsService.deleteComment(req.params.id);
   isDeleted ? res.sendStatus(204) : res.sendStatus(404);
 });
