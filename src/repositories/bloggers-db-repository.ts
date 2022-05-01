@@ -1,8 +1,6 @@
 import { BloggerType, CustomResponseType } from "../types/types";
 import { bloggersCollection, postsCollection } from "./dbmongo";
 
-
-
 export const bloggersRepository = {
   async getAllBloggers(SearchNameTerm: string, pageNumber: number, pageSize: number): Promise<CustomResponseType> {
     let filter = SearchNameTerm === null ? {} : { name: { $regex: SearchNameTerm } };
@@ -46,12 +44,12 @@ export const bloggersRepository = {
 
     return blogger !== null ? customResponse : false;
   },
-  async getBlogger(id: number) {
+  async getBlogger(id: number): Promise<BloggerType | null> {
     const blogger = await bloggersCollection.findOne({ id }, { projection: { _id: 0 } });
     return blogger;
   },
 
-  async createBlogger(newBlogger: BloggerType):Promise<BloggerType|null> {
+  async createBlogger(newBlogger: BloggerType): Promise<BloggerType | null> {
     await bloggersCollection.insertOne(newBlogger);
     const createdBlogger = await bloggersCollection.findOne({ name: newBlogger.name }, { projection: { _id: 0 } });
     return createdBlogger;

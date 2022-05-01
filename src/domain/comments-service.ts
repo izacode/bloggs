@@ -3,7 +3,7 @@ import { commentsRepository } from "../repositories/comments-db-repository";
 import { CommentType } from "../types/types";
 
 export const commentsService = {
-  async getAllPostComments(postId: number) {
+  async getAllPostComments(postId: number):Promise<CommentType[]|null> {
 
     const postComments = await commentsRepository.getAllPostComments(postId)
     return postComments
@@ -14,7 +14,7 @@ export const commentsService = {
     return comment
   },
 
-  async createComment(postId: number, content: string, userId: ObjectId, login: string) {
+  async createComment(postId: number, content: string, userId: ObjectId, login: string):Promise<CommentType> {
     const newComment: CommentType = {
       postId,
       content,
@@ -27,11 +27,11 @@ export const commentsService = {
     return createdComment;
   },
 
-  async updateComment(id: string, content: string){    
+  async updateComment(id: string, content: string):Promise<boolean>{    
       const isUpdated = commentsRepository.updateComment(id,content)
       return isUpdated
   },
-  async deleteComment(id:string){
+  async deleteComment(id:string):Promise<boolean>{
       const isDeleted = commentsRepository.deleteComment(id)
       return isDeleted
   }

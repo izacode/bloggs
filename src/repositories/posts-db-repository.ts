@@ -1,9 +1,9 @@
 
-import { BloggerType, PostType } from "../types/types";
+import { BloggerType, CustomResponseType, PostType } from "../types/types";
 import { postsCollection, bloggersCollection } from "./dbmongo";
 
 export const postsRepository = {
-  async getAllPosts(SearchTitleTerm: string | null, pageNumber: any, pageSize:any) {
+  async getAllPosts(SearchTitleTerm: string | null, pageNumber: any, pageSize:any):Promise<CustomResponseType> {
     const bloggers: BloggerType[] = await bloggersCollection.find({}, { projection: { _id: 0 } }).toArray();
     let filter = SearchTitleTerm === null ? {} : { title: { $regex: SearchTitleTerm } };
     const posts: PostType[] = (
@@ -46,7 +46,7 @@ export const postsRepository = {
     const post = await postsCollection.updateOne({ id: postID }, { $set: { title, shortDescription, content, bloggerID } });
     return post.matchedCount === 1;
   },
-  async deletePost(postID: number) {
+  async deletePost(postID: number):Promise<boolean> {
     const deletedPost = await postsCollection.deleteOne({ id: postID });
     return deletedPost.deletedCount === 1;
   },

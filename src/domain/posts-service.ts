@@ -1,10 +1,13 @@
-
 import { postsRepository } from "../repositories/posts-db-repository";
 import { bloggersRepository } from "../repositories/bloggers-db-repository";
-import { PostType } from "../types/types";
+import { CustomResponseType, PostType } from "../types/types";
 
 export const postsService = {
-  async getAllPosts(SearchTitleTerm: any, pageNumber: any, pageSize: any) {
+  async getAllPosts(
+    SearchTitleTerm: string | null,
+    pageNumber: string | number | null,
+    pageSize: string | number | null
+  ): Promise<CustomResponseType> {
     return postsRepository.getAllPosts(SearchTitleTerm, pageNumber, pageSize);
   },
 

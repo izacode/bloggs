@@ -34,7 +34,7 @@ export const usersRepository = {
     const user = await usersCollection.findOne({ login });
     return user;
   },
-  async findUserById(userId: ObjectId) {
+  async findUserById(userId: ObjectId):Promise<UserType|null> {
     const user = await usersCollection.findOne({ _id: userId });
     return user;
   },

@@ -20,24 +20,21 @@ export const usersService = {
     return usersRepository.createUser(newUser);
   },
   async checkCredentials(login: string, password: string): Promise<UserType | null> {
-    //   1) FIND USER
     const user = await usersRepository.findUserByLogin(login);
     if (!user) return null;
-    //   2) CHECK PASSWORD
     const passwordHash = await this._generateHash(password, user.passwordSalt!);
-
     if (passwordHash !== user.passwordHash) return null;
     return user;
   },
-  async findUserById(id: ObjectId) {
+  async findUserById(id: ObjectId): Promise<UserType | null> {
     const user = await usersRepository.findUserById(id);
     return user;
   },
-  async findUserIdByToken(token: string) {
+  async findUserIdByToken(token: string): Promise<UserType | null> {
     try {
       const result: any = jwt.verify(token, settings.JWT_SECRET);
       const user = await this.findUserById(result._id);
-      return user
+      return user;
     } catch (error) {
       return null;
     }
