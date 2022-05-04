@@ -30,7 +30,6 @@ export const usersRepository = {
     return createdUser;
   },
   async findUserByLogin(login: string): Promise<UserType | null> {
-    debugger;
     const user = await usersCollection.findOne({ login });
     return user;
   },
@@ -40,7 +39,6 @@ export const usersRepository = {
   },
   async deleteUser(id: any): Promise<boolean> {
     const isDeleted = await usersCollection.deleteOne({ id });
-    debugger;
     return isDeleted.deletedCount === 1;
   },
 };
