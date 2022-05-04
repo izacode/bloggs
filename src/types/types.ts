@@ -1,13 +1,13 @@
 export type GetBloggersQueryType = {
   SearchNameTerm: string | null;
-  pageNumber: string | null;
-  pageSize: string | null;
+  PageNumber: string | null;
+  PageSize: string | null;
 };
 
 export type GetPostsQueryType = {
   SearchTitleTerm: string | null;
-  pageNumber: string | null;
-  pageSize: string | null;
+  PageNumber: string | null;
+  PageSize: string | null;
 };
 
 export type PostType = {

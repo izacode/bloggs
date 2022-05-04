@@ -21,9 +21,9 @@ export const postsRouter = Router();
 
 
 postsRouter.get("/", queryValidation, inputValidationMiddleware, async (req: Request, res: Response) => {
-  const { SearchTitleTerm = null, pageNumber = 1, pageSize = 10 } = req.query as GetPostsQueryType;
+  const { SearchTitleTerm = null, PageNumber = 1, PageSize = 10 } = req.query as GetPostsQueryType;
 
-  const posts = await postsService.getAllPosts(SearchTitleTerm, pageNumber, pageSize);
+  const posts = await postsService.getAllPosts(SearchTitleTerm, PageNumber, PageSize);
   res.json(posts);
 });
 

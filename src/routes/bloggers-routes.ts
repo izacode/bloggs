@@ -21,8 +21,8 @@ export const bloggersRouter = Router();
 //  Routes =====================================================================================================================
 
 bloggersRouter.get("/", async (req: Request, res: Response) => {
-  const { SearchNameTerm = null, pageNumber = 1, pageSize = 10 } = req.query as GetBloggersQueryType;
-  const bloggers = await bloggersService.getAllBloggers(SearchNameTerm, pageNumber, pageSize);
+  const { SearchNameTerm = null, PageNumber = 1, PageSize = 10 } = req.query as GetBloggersQueryType;
+  const bloggers = await bloggersService.getAllBloggers(SearchNameTerm, PageNumber, PageSize);
   res.json(bloggers);
 });
 
