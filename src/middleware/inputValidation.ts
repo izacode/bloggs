@@ -20,7 +20,7 @@ export const nameValidation = body("name")
   .isLength({ min: 1, max: 15 })
   .withMessage("blogger name should contain at least one character");
 
-export const youtubeURIValidation = body("youtubeUrl").trim().isLength({max: 100 }).matches(re).withMessage("Invalid youtubeUrl");
+export const youtubeURIValidation = body("youtubeUrl").trim().isLength({ max: 100 }).matches(re).withMessage("Invalid youtubeUrl");
 export const queryValidation = query("p")
   .isInt({ gt: 0 })
   .withMessage("Invalid query, it shoud be a number greater then 0,without symbols or letters");
@@ -37,10 +37,7 @@ export const postIDBodyValidation = body("id")
   .isInt({ gt: 0 })
   .withMessage("Invalid ID, it shoud be a number greater then 0,without symbols or letters");
 
-export const titleValidation = body("title")
-  .trim()
-  .isLength({ min: 1, max: 30 })
-  .withMessage("Title is missing,please add, it should contain at least one character");
+export const titleValidation = body("title").trim().isLength({ min: 1, max: 30 }).withMessage("Title should be from 1 to 30 charachters");
 export const shortDescriptionValidation = body("shortDescription")
   .trim()
   .isLength({ min: 1, max: 100 })

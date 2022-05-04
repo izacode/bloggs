@@ -30,7 +30,6 @@ postsRouter.get("/", queryValidation, inputValidationMiddleware, async (req: Req
 postsRouter.post(
   "/",
   checkCredentials,
-  postIDBodyValidation,
   titleValidation,
   shortDescriptionValidation,
   contentValidation,
@@ -64,7 +63,7 @@ postsRouter.put(
       req.body.title,
       req.body.shortDescription,
       req.body.content,
-      req.body.bloggerID
+      req.body.bloggerId
     );
 
     isUpdated ? res.sendStatus(204) : res.sendStatus(404);

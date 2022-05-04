@@ -13,7 +13,7 @@ export const postsService = {
     const blogger = await bloggersRepository.getBlogger(bloggerID);
     if (!blogger) return null;
     const newPost: PostType = {
-      id: +body.id,
+      id: +(new Date),
       title: body.title,
       shortDescription: body.shortDescription,
       content: body.content,
@@ -27,8 +27,8 @@ export const postsService = {
     return postsRepository.getPost(postID);
   },
 
-  async updatePost(postID: number, title: string, shortDescription: string, content: string, bloggerID: number): Promise<boolean> {
-    return postsRepository.updatePost(postID, title, shortDescription, content, bloggerID);
+  async updatePost(postID: number, title: string, shortDescription: string, content: string, bloggerId: number): Promise<boolean> {
+    return postsRepository.updatePost(postID, title, shortDescription, content, bloggerId);
   },
 
   async deletePost(postID: number): Promise<boolean> {
