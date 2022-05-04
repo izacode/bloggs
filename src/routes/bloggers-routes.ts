@@ -10,7 +10,7 @@ import {
   titleValidation,
   shortDescriptionValidation,
   contentValidation,
-  postIDBodyValidation,
+ 
 } from "../middleware/inputValidation";
 import { checkCredentials } from "../middleware/authMiddleware";
 
@@ -70,7 +70,6 @@ bloggersRouter.post(
   "/:id/posts",
   checkCredentials,
   bloggerIDValidation,
-  postIDBodyValidation,
   titleValidation,
   shortDescriptionValidation,
   contentValidation,
