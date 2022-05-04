@@ -35,7 +35,7 @@ bloggersRouter.post(
   inputValidationMiddleware,
   async (req: Request, res: Response) => {
     const { id, name, youtubeUrl } = req.body;
-    const newBlogger = await bloggersService.createBlogger(+id, req.body.name, req.body.youtubeUrl);
+    const newBlogger = await bloggersService.createBlogger(+id, name, youtubeUrl);
     res.status(201).json(newBlogger);
   }
 );
@@ -53,7 +53,7 @@ bloggersRouter.put(
   youtubeURIValidation,
   inputValidationMiddleware,
   async (req: Request, res: Response) => {
-    const isdUpdated: boolean = await bloggersService.updateBlogger(+req.params.id, req.body.name, req.body.youtubeURI);
+    const isdUpdated: boolean = await bloggersService.updateBlogger(+req.params.id, req.body.name, req.body.youtubeUrl);
     isdUpdated ? res.sendStatus(204) : res.sendStatus(404);
   }
 );

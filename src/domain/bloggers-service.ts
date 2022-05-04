@@ -21,8 +21,8 @@ export const bloggersService = {
     return bloggersRepository.createBlogger(newBlogger);
   },
 
-  async updateBlogger(id: number, name: string, youtubeURI: string) {
-    return bloggersRepository.updateBlogger(id, name, youtubeURI);
+  async updateBlogger(id: number, name: string, youtubeUrl: string) {
+    return bloggersRepository.updateBlogger(id, name, youtubeUrl);
   },
 
   async deleteBlogger(id: number) {
