@@ -14,6 +14,7 @@ import {
   contentValidation,
   postIDBodyValidation,
 } from "../middleware/inputValidation";
+import { checkCredentials } from "../middleware/authMiddleware";
 
 export const bloggersRouter = Router();
 
@@ -27,12 +28,13 @@ bloggersRouter.get("/", async (req: Request, res: Response) => {
 
 bloggersRouter.post(
   "/",
+  checkCredentials,
   bloggerIDBodyValidation,
   nameValidation,
   youtubeURIValidation,
   inputValidationMiddleware,
   async (req: Request, res: Response) => {
-    const { id, name, youtubeUrl} = req.body
+    const { id, name, youtubeUrl } = req.body;
     const newBlogger = await bloggersService.createBlogger(+id, req.body.name, req.body.youtubeUrl);
     res.status(201).json(newBlogger);
   }
@@ -45,6 +47,7 @@ bloggersRouter.get("/:id", async (req: Request, res: Response) => {
 
 bloggersRouter.put(
   "/:id",
+  checkCredentials,
   bloggerIDValidation,
   nameValidation,
   youtubeURIValidation,
@@ -55,7 +58,7 @@ bloggersRouter.put(
   }
 );
 
-bloggersRouter.delete("/:id", bloggerIDValidation, inputValidationMiddleware, async (req: Request, res: Response) => {
+bloggersRouter.delete("/:id", checkCredentials, bloggerIDValidation, inputValidationMiddleware, async (req: Request, res: Response) => {
   const isDeleted: boolean = await bloggersService.deleteBlogger(+req.params.id);
   isDeleted ? res.sendStatus(204) : res.sendStatus(404);
 });
@@ -68,6 +71,7 @@ bloggersRouter.get("/:bloggerId/posts", async (req: Request, res: Response) => {
 });
 bloggersRouter.post(
   "/:id/posts",
+  checkCredentials,
   bloggerIDValidation,
   postIDBodyValidation,
   titleValidation,
@@ -75,7 +79,7 @@ bloggersRouter.post(
   contentValidation,
   inputValidationMiddleware,
   async (req: Request, res: Response) => {
-    const {body,params} = req
+    const { body, params } = req;
     const newPost = await postsService.createPost(body, params);
 
     newPost ? res.status(201).json(newPost) : res.sendStatus(404);

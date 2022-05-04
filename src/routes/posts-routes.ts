@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express";
 import { postsService } from "../domain/posts-service";
+import { checkCredentials } from "../middleware/authMiddleware";
 
 import {
   inputValidationMiddleware,
@@ -28,6 +29,7 @@ postsRouter.get("/", queryValidation, inputValidationMiddleware, async (req: Req
 
 postsRouter.post(
   "/",
+  checkCredentials,
   postIDBodyValidation,
   titleValidation,
   shortDescriptionValidation,
@@ -49,7 +51,7 @@ postsRouter.get("/:id", postIDValidation, inputValidationMiddleware, async (req:
 
 postsRouter.put(
   "/:id",
-
+  checkCredentials,
   titleValidation,
   shortDescriptionValidation,
   contentValidation,
@@ -69,7 +71,7 @@ postsRouter.put(
   }
 );
 
-postsRouter.delete("/:id", postIDValidation, inputValidationMiddleware, async (req: Request, res: Response) => {
+postsRouter.delete("/:id", checkCredentials, postIDValidation, inputValidationMiddleware, async (req: Request, res: Response) => {
   const isDeleted = await postsService.deletePost(+req.params.id);
   isDeleted ? res.sendStatus(204) : res.sendStatus(404);
 });
