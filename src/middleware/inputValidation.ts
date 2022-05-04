@@ -24,7 +24,7 @@ export const youtubeURIValidation = body("youtubeURI")
   .trim()
   .isLength({ min: 1, max: 100 })
   .matches(re)
-  .withMessage("Invalid youtubeURI");
+  .withMessage("Invalid youtubeUrl");
 export const queryValidation = query("p")
   .isInt({ gt: 0 })
   .withMessage("Invalid query, it shoud be a number greater then 0,without symbols or letters");
@@ -69,6 +69,6 @@ export const inputValidationMiddleware = (req: Request, res: Response, next: Nex
       };
     });
 
-    res.status(400).json({ errorsMessages: myErrors, resultCode: 0 });
+    res.status(400).json({ errorsMessages: myErrors, resultCode: 1 });
   }
 };
