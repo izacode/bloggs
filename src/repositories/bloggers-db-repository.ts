@@ -1,8 +1,6 @@
 import { BloggerType } from "../types/types";
 import { bloggersCollection, postsCollection } from "./dbmongo";
 
-
-
 export const bloggersRepository = {
   async getAllBloggers(SearchNameTerm: string, pageNumber: number, pageSize: number) {
     let filter = SearchNameTerm === null ? {} : { name: { $regex: SearchNameTerm } };

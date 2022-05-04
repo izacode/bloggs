@@ -1,7 +1,6 @@
 import { MongoClient } from "mongodb";
 import { BloggerType, PostType } from "../types/types";
 
-
 // const mongoUri = process.env.mongoURI || "mongodb://localhost:27017";
 // const mongoUri = "mongodb://localhost:27017";
 const mongoUri = "mongodb+srv://thug:test1234@clusterblogg.gub0i.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
@@ -23,6 +22,5 @@ export async function runDb() {
     await client.close();
   }
 }
-
 
 // new MongoClient(mongoUri).db("bloggz").collection<BloggerType>("bloggers");

@@ -4,8 +4,6 @@ import { postsService } from "../domain/posts-service";
 import { GetBloggersQueryType } from "../types/types";
 import {
   inputValidationMiddleware,
-  queryValidation,
-  bloggerIDBodyValidation,
   nameValidation,
   youtubeURIValidation,
   bloggerIDValidation,
@@ -29,13 +27,12 @@ bloggersRouter.get("/", async (req: Request, res: Response) => {
 bloggersRouter.post(
   "/",
   checkCredentials,
-  bloggerIDBodyValidation,
   nameValidation,
   youtubeURIValidation,
   inputValidationMiddleware,
   async (req: Request, res: Response) => {
-    const { id, name, youtubeUrl } = req.body;
-    const newBlogger = await bloggersService.createBlogger(+id, name, youtubeUrl);
+    const { name, youtubeUrl } = req.body;
+    const newBlogger = await bloggersService.createBlogger(name, youtubeUrl);
     res.status(201).json(newBlogger);
   }
 );
