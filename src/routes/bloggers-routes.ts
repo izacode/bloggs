@@ -61,9 +61,10 @@ bloggersRouter.delete("/:id", checkCredentials, bloggerIDValidation, inputValida
 });
 
 bloggersRouter.get("/:bloggerId/posts", async (req: Request, res: Response) => {
-  const pageNumber = req.query.p || 1;
-  const pageSize = 10;
-  const bloggerPosts = await bloggersService.getAllBloggerPosts(+req.params.bloggerId, pageNumber, pageSize);
+  const { PageNumber = 1, PageSize = 10 } = req.query as GetBloggersQueryType;
+  // const pageNumber = req.query.p || 1;
+  // const pageSize = 10;
+  const bloggerPosts = await bloggersService.getAllBloggerPosts(+req.params.bloggerId, PageNumber, PageSize);
   bloggerPosts ? res.json(bloggerPosts) : res.sendStatus(404);
 });
 bloggersRouter.post(

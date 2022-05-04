@@ -24,7 +24,6 @@ export const bloggersRepository = {
   },
   async getAllBloggerPosts(bloggerId: number, pageNumber: number, pageSize: number) {
     const blogger = await bloggersCollection.findOne({ id: bloggerId });
-    console.log(blogger);
     const posts = (
       await postsCollection
         .find({ bloggerID: bloggerId }, { projection: { _id: 0 } })
