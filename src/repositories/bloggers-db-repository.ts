@@ -23,17 +23,18 @@ export const bloggersRepository = {
     return customResponse;
   },
   async getAllBloggerPosts(bloggerId: number, pageNumber: number, pageSize: number) {
+    
     const blogger = await bloggersCollection.findOne({ id: bloggerId });
     const posts = (
       await postsCollection
-        .find({bloggerId }, { projection: { _id: 0 } })
+        .find({ bloggerId }, { projection: { _id: 0 } })
         .skip((pageNumber - 1) * pageSize)
         .limit(pageSize)
         .toArray()
     ).map((p) => Object.assign(p, { bloggerName: blogger?.name }));
+    const totalCount: number = await postsCollection.countDocuments({ bloggerId });
 
-    let totalCount: number = posts.length;
-
+  
     const customResponse = {
       pagesCount: Math.ceil(totalCount / pageSize),
       page: +pageNumber,
@@ -51,7 +52,7 @@ export const bloggersRepository = {
 
   async createBlogger(newBlogger: BloggerType) {
     await bloggersCollection.insertOne(newBlogger);
-    const createdBlogger = await bloggersCollection.findOne({ name: newBlogger.name }, { projection: { _id: 0 } });
+    const createdBlogger = await bloggersCollection.findOne({ id: newBlogger.id }, { projection: { _id: 0 } });
     return createdBlogger;
   },
 
