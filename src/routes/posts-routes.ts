@@ -11,6 +11,7 @@ import {
   bloggerIDValidation,
   queryValidation,
   postIDValidation,
+  bloggerIdError,
 } from "../middleware/inputValidation";
 import { GetPostsQueryType } from "../types/types";
 
@@ -39,7 +40,7 @@ postsRouter.post(
   async (req: Request, res: Response) => {
     const {body,params} =req
     const createdPost = await postsService.createPost(body, params);
-    return res.status(201).json(createdPost);
+    createdPost ? res.status(201).json(createdPost) : res.status(400).json(bloggerIdError);
   }
 );
 
@@ -47,6 +48,7 @@ postsRouter.get("/:id", postIDValidation, inputValidationMiddleware, async (req:
   const post = await postsService.getPost(+req.params.id);
   post ? res.json(post) : res.sendStatus(404);
 });
+
 
 postsRouter.put(
   "/:id",

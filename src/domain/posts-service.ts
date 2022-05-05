@@ -9,7 +9,8 @@ export const postsService = {
   },
 
   async createPost(body: any, params: any): Promise<PostType | null> {
-    const bloggerID = body.bloggerID || +params.id;
+    debugger;
+    const bloggerID = body.bloggerId || +params.id;
     const blogger = await bloggersRepository.getBlogger(bloggerID);
     if (!blogger) return null;
     const newPost: PostType = {
@@ -17,7 +18,7 @@ export const postsService = {
       title: body.title,
       shortDescription: body.shortDescription,
       content: body.content,
-      bloggerID,
+      bloggerId: bloggerID,
     };
 
     return postsRepository.createPost(newPost);

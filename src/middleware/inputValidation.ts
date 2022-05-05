@@ -65,3 +65,7 @@ export const inputValidationMiddleware = (req: Request, res: Response, next: Nex
     res.status(400).json({ errorsMessages: myErrors, resultCode: 1 });
   }
 };
+export const bloggerIdError = {
+  message: "invalid bloggerId or blogger doesn't exists",
+  field: "bloggerId",
+};

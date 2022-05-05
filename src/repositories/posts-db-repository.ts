@@ -12,7 +12,7 @@ export const postsRepository = {
         .skip((pageNumber - 1) * +pageSize)
         .limit(+pageSize)
         .toArray()
-    ).map((p) => Object.assign(p, { bloggerName: bloggers.find((b) => b.id === p.bloggerID)?.name }));
+    ).map((p) => Object.assign(p, { bloggerName: bloggers.find((b) => b.id === p.bloggerId)?.name }));
 
     const totalCount: number = await postsCollection.countDocuments(filter);
 
@@ -27,19 +27,19 @@ export const postsRepository = {
   },
 
   async createPost(newPost: PostType): Promise<PostType | null> {
-    
+    debugger;
     const bloggers = await bloggersCollection.find().toArray();
     
     await postsCollection.insertOne(newPost);
     const createdPost = await postsCollection.findOne({ title: newPost.title }, { projection: { _id: 0 } });
-    const createdPostWithBloggerName = Object.assign(createdPost, { bloggerName: bloggers.find((b) => b.id === newPost.bloggerID)?.name });
+    const createdPostWithBloggerName = Object.assign(createdPost, { bloggerName: bloggers.find((b) => b.id === newPost.bloggerId)?.name });
     return createdPostWithBloggerName;
   },
 
   async getPost(postID: number): Promise<PostType | null> {
     const bloggers = await bloggersCollection.find({}, { projection: { _id: 0 } }).toArray();
     const post = await postsCollection.findOne({ id: postID }, { projection: { _id: 0 } });
-    return Object.assign(post, { bloggerName: bloggers.find((b) => b.id === post?.bloggerID)?.name });
+    return Object.assign(post, { bloggerName: bloggers.find((b) => b.id === post?.bloggerId)?.name });
   },
 
   async updatePost(postID: number, title: string, shortDescription: string, content: string, bloggerID: number): Promise<boolean> {
