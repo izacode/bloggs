@@ -6,7 +6,7 @@ export const bloggersService = {
     return bloggersRepository.getAllBloggers(SearchNameTerm, pageNumber, pageSize);
   },
   async getAllBloggerPosts(bloggerId: number, pageNumber: any, pageSize: any) {
-    return bloggersRepository.getAllBloggerPosts(bloggerId, +pageNumber, pageSize);
+    return bloggersRepository.getAllBloggerPosts(bloggerId, +pageNumber, +pageSize);
   },
   async getBlogger(id: number) {
     return bloggersRepository.getBlogger(id);
