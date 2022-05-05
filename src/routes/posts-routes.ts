@@ -11,7 +11,7 @@ import {
   bloggerIDValidation,
   queryValidation,
   postIDValidation,
-  bloggerIdError,
+  bloggerIdFail,
   bloggerIDBodyValidation,
 } from "../middleware/inputValidation";
 import { GetPostsQueryType } from "../types/types";
@@ -35,13 +35,13 @@ postsRouter.post(
   titleValidation,
   shortDescriptionValidation,
   contentValidation,
-
+  bloggerIDValidation,
   inputValidationMiddleware,
 
   async (req: Request, res: Response) => {
     const {body,params} =req
     const createdPost = await postsService.createPost(body, params);
-    createdPost ? res.status(201).json(createdPost) : res.status(404).json(bloggerIdError);
+    createdPost ? res.status(201).json(createdPost) : bloggerIdFail;
   }
 );
 
