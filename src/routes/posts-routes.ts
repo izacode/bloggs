@@ -61,7 +61,7 @@ postsRouter.put(
   inputValidationMiddleware,
 
   async (req: Request, res: Response) => {
-    console.log(req.body.bloggerId);
+    
     const isUpdated: boolean = await postsService.updatePost(
       +req.params.id,
       req.body.title,

@@ -67,6 +67,7 @@ bloggersRouter.get("/:bloggerId/posts", async (req: Request, res: Response) => {
   const bloggerPosts = await bloggersService.getAllBloggerPosts(+req.params.bloggerId, PageNumber, PageSize);
   bloggerPosts ? res.json(bloggerPosts) : res.sendStatus(404);
 });
+
 bloggersRouter.post(
   "/:id/posts",
   checkCredentials,

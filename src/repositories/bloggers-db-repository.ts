@@ -26,7 +26,7 @@ export const bloggersRepository = {
     const blogger = await bloggersCollection.findOne({ id: bloggerId });
     const posts = (
       await postsCollection
-        .find({ bloggerID: bloggerId }, { projection: { _id: 0 } })
+        .find({bloggerId }, { projection: { _id: 0 } })
         .skip((pageNumber - 1) * pageSize)
         .limit(pageSize)
         .toArray()

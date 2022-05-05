@@ -40,6 +40,7 @@ export const postsRepository = {
     const bloggers = await bloggersCollection.find({}, { projection: { _id: 0 } }).toArray();
     const post = await postsCollection.findOne({ id: postID }, { projection: { _id: 0 } });
     if(!post) return null
+   
     return Object.assign(post, { bloggerName: bloggers.find((b) => b.id === post?.bloggerId)?.name });
   },
 
