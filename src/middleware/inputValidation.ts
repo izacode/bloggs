@@ -12,8 +12,9 @@ export const bloggerIDValidation = param("id")
 
 export const bloggerIDBodyValidation = body("bloggerId")
   .trim()
-  .isInt({ gt: 11})
-  .withMessage("Invalid ID!!, it shoud be a number greater then 0,without symbols or letters");
+  .isInt({ gt: 0})
+  .isLength({min:9})
+  .withMessage("Invalid BloggerId !!it shoud be a number greater then 0,without symbols or letters or bogger doesn't exists");
 
 export const nameValidation = body("name")
   .trim()
