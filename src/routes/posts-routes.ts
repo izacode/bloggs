@@ -40,7 +40,7 @@ postsRouter.post(
   async (req: Request, res: Response) => {
     const {body,params} =req
     const createdPost = await postsService.createPost(body, params);
-    createdPost ? res.status(201).json(createdPost) : res.status(400).json(bloggerIdError);
+    createdPost ? res.status(201).json(createdPost) : res.status(404).json(bloggerIdError);
   }
 );
 
