@@ -10,10 +10,10 @@ export const bloggerIDValidation = param("id")
   .isInt({ gt: 0 })
   .withMessage("Invalid query bloggerID, it shoud be a number greater then 0,without symbols or letters");
 
-export const bloggerIDBodyValidation = body("id")
+export const bloggerIDBodyValidation = body("bloggerId")
   .trim()
-  .isInt({ gt: 0 })
-  .withMessage("Invalid ID!, it shoud be a number greater then 0,without symbols or letters");
+  .isInt({ gt: 11})
+  .withMessage("Invalid ID!!, it shoud be a number greater then 0,without symbols or letters");
 
 export const nameValidation = body("name")
   .trim()
@@ -66,9 +66,11 @@ export const inputValidationMiddleware = (req: Request, res: Response, next: Nex
   }
 };
 export const bloggerIdError = {
-  errorsMessages: {
-    message: "invalid bloggerId or blogger doesn't exists",
-    field: "bloggerId",
-  },
+  errorsMessages: [
+    {
+      message: "invalid bloggerId or blogger doesn't exists",
+      field: "bloggerId",
+    },
+  ],
   resultCode: 1,
 };

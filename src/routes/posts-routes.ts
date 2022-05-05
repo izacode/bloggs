@@ -12,6 +12,7 @@ import {
   queryValidation,
   postIDValidation,
   bloggerIdError,
+  bloggerIDBodyValidation,
 } from "../middleware/inputValidation";
 import { GetPostsQueryType } from "../types/types";
 
@@ -56,10 +57,11 @@ postsRouter.put(
   titleValidation,
   shortDescriptionValidation,
   contentValidation,
-  bloggerIDValidation,
+  bloggerIDBodyValidation,
   inputValidationMiddleware,
 
   async (req: Request, res: Response) => {
+    console.log(req.body.bloggerId);
     const isUpdated: boolean = await postsService.updatePost(
       +req.params.id,
       req.body.title,
