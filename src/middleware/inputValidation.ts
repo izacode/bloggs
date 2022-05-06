@@ -1,6 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 import { validationResult, body, param, query } from "express-validator";
 
+// Comment validation ==============================================================================================================
+export const mongoIdValidation = param("id")
+  .trim()
+  .matches(/^[a-z0-9]{24}$/, "i")
+  .withMessage("Id should be of Mongo Id type, 24 charachters,lowercase latin letters and numbers");
+
 // Blogger validation ==============================================================================================================
 
 const re = /^https:\/\/([\w-]+\.)+[\w-]+(\/[\w-]+)*\/?$/;
@@ -47,7 +53,15 @@ export const contentValidation = body("content")
   .trim()
   .isLength({ min: 1, max: 1000 })
   .withMessage("Content is missing,it should contain at least one character");
+export const userLoginValidation = body("login")
+  .trim()
+  .isLength({ min: 3, max: 10 })
+  .withMessage("Login should be at least 3 charachters long, and up to 10");
 
+export const userPasswordValidation = body("password")
+  .trim()
+  .isLength({ min: 6, max: 20 })
+  .withMessage("Password should be from 6 to 20 charachters long");
 // ==============================================================================================================
 
 export const inputValidationMiddleware = (req: Request, res: Response, next: NextFunction) => {
@@ -76,6 +90,3 @@ export const bloggerIdError =  {
   resultCode: 1,
 };
 
-// export const bloggerIdFail= (res:Response)=>{
-//   return res.status(400).json(bloggerIdError)
-// }

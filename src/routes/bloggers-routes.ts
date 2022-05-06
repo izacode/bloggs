@@ -1,7 +1,7 @@
 import { Router, Request, Response } from "express";
 import { bloggersService } from "../domain/bloggers-service";
 import { postsService } from "../domain/posts-service";
-import { GetBloggersQueryType } from "../types/types";
+import { QueryType } from "../types/types";
 import {
   inputValidationMiddleware,
   nameValidation,
@@ -11,21 +11,21 @@ import {
   shortDescriptionValidation,
   contentValidation,
 } from "../middleware/inputValidation";
-import { checkCredentials } from "../middleware/authMiddleware";
+import { authorization } from "../middleware/authMiddleware";
 
 export const bloggersRouter = Router();
 
 //  Routes =====================================================================================================================
 
 bloggersRouter.get("/", async (req: Request, res: Response) => {
-  const { SearchNameTerm = null, PageNumber = 1, PageSize = 10 } = req.query as GetBloggersQueryType;
+  const { SearchNameTerm = null, PageNumber = 1, PageSize = 10 } = req.query as QueryType;
   const bloggers = await bloggersService.getAllBloggers(SearchNameTerm, PageNumber, PageSize);
   res.json(bloggers);
 });
 
 bloggersRouter.post(
   "/",
-  checkCredentials,
+  authorization,
   nameValidation,
   youtubeURIValidation,
   inputValidationMiddleware,
@@ -43,7 +43,7 @@ bloggersRouter.get("/:id", async (req: Request, res: Response) => {
 
 bloggersRouter.put(
   "/:id",
-  checkCredentials,
+  authorization,
   bloggerIDValidation,
   nameValidation,
   youtubeURIValidation,
@@ -54,20 +54,20 @@ bloggersRouter.put(
   }
 );
 
-bloggersRouter.delete("/:id", checkCredentials, bloggerIDValidation, inputValidationMiddleware, async (req: Request, res: Response) => {
+bloggersRouter.delete("/:id", authorization, bloggerIDValidation, inputValidationMiddleware, async (req: Request, res: Response) => {
   const isDeleted: boolean = await bloggersService.deleteBlogger(+req.params.id);
   isDeleted ? res.sendStatus(204) : res.sendStatus(404);
 });
 
 bloggersRouter.get("/:bloggerId/posts", async (req: Request, res: Response) => {
-  const { PageNumber = 1, PageSize = 10 } = req.query as GetBloggersQueryType;
+  const { PageNumber = 1, PageSize = 10 } = req.query as QueryType;
   const bloggerPosts = await bloggersService.getAllBloggerPosts(+req.params.bloggerId, PageNumber, PageSize);
   bloggerPosts ? res.json(bloggerPosts) : res.sendStatus(404);
 });
 
 bloggersRouter.post(
   "/:id/posts",
-  checkCredentials,
+  authorization,
   bloggerIDValidation,
   titleValidation,
   shortDescriptionValidation,
