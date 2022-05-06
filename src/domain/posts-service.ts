@@ -29,7 +29,6 @@ export const postsService = {
   },
 
   async updatePost(postID: number, title: string, shortDescription: string, content: string, bloggerId: number): Promise<boolean> {
-    debugger;
     return postsRepository.updatePost(postID, title, shortDescription, content, bloggerId);
   },
 

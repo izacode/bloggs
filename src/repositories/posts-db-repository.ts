@@ -45,7 +45,6 @@ export const postsRepository = {
   },
 
   async updatePost(postID: number, title: string, shortDescription: string, content: string, bloggerId: number): Promise<boolean> {
-    debugger;
     const post = await postsCollection.updateOne({ id: postID }, { $set: { title, shortDescription, content, bloggerId } });
     return post.matchedCount === 1;
   },

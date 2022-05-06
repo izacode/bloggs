@@ -61,7 +61,6 @@ postsRouter.put(
   inputValidationMiddleware,
 
   async (req: Request, res: Response) => {
-    debugger;
     const isUpdated: boolean = await postsService.updatePost(
       +req.params.id,
       req.body.title,
