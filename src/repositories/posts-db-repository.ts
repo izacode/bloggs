@@ -1,9 +1,8 @@
-
 import { BloggerType, PostType } from "../types/types";
 import { postsCollection, bloggersCollection } from "./dbmongo";
 
 export const postsRepository = {
-  async getAllPosts(SearchTitleTerm: string | null, pageNumber: any, pageSize:any) {
+  async getAllPosts(SearchTitleTerm: string | null, pageNumber: any, pageSize: any) {
     const bloggers: BloggerType[] = await bloggersCollection.find({}, { projection: { _id: 0 } }).toArray();
     let filter = SearchTitleTerm === null ? {} : { title: { $regex: SearchTitleTerm } };
     const posts: PostType[] = (
@@ -28,21 +27,27 @@ export const postsRepository = {
 
   async createPost(newPost: PostType): Promise<PostType | null> {
     const bloggers = await bloggersCollection.find().toArray();
-    
+
     await postsCollection.insertOne(newPost);
-    
+
     const createdPost = await postsCollection.findOne({ id: newPost.id }, { projection: { _id: 0 } });
     debugger;
-    const createdPostWithBloggerName = Object.assign(createdPost, { bloggerName: bloggers.find((b) => b.id === (newPost.bloggerId.toString()))?.name });
+    const createdPostWithBloggerName = Object.assign(createdPost, {
+      bloggerId: +newPost.bloggerId,
+      bloggerName: bloggers.find((b) => b.id === newPost.bloggerId.toString())?.name,
+    });
     return createdPostWithBloggerName;
   },
 
   async getPost(postID: string): Promise<PostType | null> {
     const bloggers = await bloggersCollection.find({}, { projection: { _id: 0 } }).toArray();
     const post = await postsCollection.findOne({ id: postID }, { projection: { _id: 0 } });
-    if(!post) return null
-   
-    return Object.assign(post, { bloggerName: bloggers.find((b) => b.id === post?.bloggerId.toString())?.name });
+    if (!post) return null;
+
+    return Object.assign(post, {
+      bloggerId: +post.bloggerId,
+      bloggerName: bloggers.find((b) => b.id === post?.bloggerId.toString())?.name,
+    });
   },
 
   async updatePost(postID: string, title: string, shortDescription: string, content: string, bloggerId: number): Promise<boolean> {
