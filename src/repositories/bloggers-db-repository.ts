@@ -23,8 +23,8 @@ export const bloggersRepository = {
     return customResponse;
   },
   async getAllBloggerPosts(bloggerId: string, pageNumber: number, pageSize: number) {
-    
     const blogger = await bloggersCollection.findOne({ id: bloggerId });
+    debugger;
     const posts = (
       await postsCollection
         .find({ bloggerId }, { projection: { _id: 0 } })
@@ -35,7 +35,6 @@ export const bloggersRepository = {
 
     const totalCount: number = await postsCollection.countDocuments({ bloggerId });
 
-  
     const customResponse = {
       pagesCount: Math.ceil(totalCount / pageSize),
       page: +pageNumber,

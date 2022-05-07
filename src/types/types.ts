@@ -12,7 +12,7 @@ export type PostType = {
   title: string;
   shortDescription: string;
   content: string;
-  bloggerId: number;
+  bloggerId: number | string;
   bloggerName?: string;
 };
 
