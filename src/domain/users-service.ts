@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import { CustomResponseType, UserType } from "../types/types";
 import jwt from "jsonwebtoken";
 import { settings } from "../settings/settings";
-import { ObjectId } from "mongodb";
+
 
 export const usersService = {
   async getAllUsers(pageNumber: any, pageSize: any): Promise<CustomResponseType> {

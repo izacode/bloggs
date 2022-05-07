@@ -1,4 +1,4 @@
-import { ObjectId } from "mongodb";
+
 import { CustomResponseType, UserType } from "../types/types";
 import { usersCollection } from "./dbmongo";
 

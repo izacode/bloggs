@@ -1,6 +1,6 @@
 import { commentsCollection } from "./dbmongo";
 import { CommentType, CustomResponseType } from "../types/types";
-import { ObjectId } from "mongodb";
+
 
 export const commentsRepository = {
   async getAllPostComments(postId: number, PageNumber: number, PageSize: number): Promise<CustomResponseType> {

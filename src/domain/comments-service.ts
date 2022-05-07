@@ -1,4 +1,4 @@
-import { ObjectId } from "mongodb";
+
 import { commentsRepository } from "../repositories/comments-db-repository";
 import { CommentType, CustomResponseType } from "../types/types";
 
