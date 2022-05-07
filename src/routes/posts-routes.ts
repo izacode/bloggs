@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express";
 import { commentsService } from "../domain/comments-service";
+
 import { postsService } from "../domain/posts-service";
 import { authentication, authorization } from "../middleware/authMiddleware";
 
@@ -34,18 +35,19 @@ postsRouter.post(
   titleValidation,
   shortDescriptionValidation,
   contentValidation,
+  bloggerIDBodyValidation,
 
   inputValidationMiddleware,
 
   async (req: Request, res: Response) => {
     const { body, params } = req;
     const createdPost = await postsService.createPost(body, params);
-    createdPost ? res.status(201).json(createdPost) : res.status(400).json(bloggerIdError);
+    createdPost ? res.status(201).json(createdPost) : res.sendStatus(404);
   }
 );
 
 postsRouter.get("/:id", postIDValidation, inputValidationMiddleware, async (req: Request, res: Response) => {
-  const post = await postsService.getPost(+req.params.id);
+  const post = await postsService.getPost(req.params.id);
   post ? res.json(post) : res.sendStatus(404);
 });
 
@@ -60,11 +62,11 @@ postsRouter.put(
 
   async (req: Request, res: Response) => {
     const isUpdated: boolean = await postsService.updatePost(
-      +req.params.id,
+      req.params.id,
       req.body.title,
       req.body.shortDescription,
       req.body.content,
-      +req.body.bloggerId
+      req.body.bloggerId
     );
 
     isUpdated ? res.sendStatus(204) : res.sendStatus(404);
@@ -72,7 +74,7 @@ postsRouter.put(
 );
 
 postsRouter.delete("/:id", authorization, postIDValidation, inputValidationMiddleware, async (req: Request, res: Response) => {
-  const isDeleted = await postsService.deletePost(+req.params.id);
+  const isDeleted = await postsService.deletePost(req.params.id);
   isDeleted ? res.sendStatus(204) : res.sendStatus(404);
 });
 
@@ -80,15 +82,15 @@ postsRouter.delete("/:id", authorization, postIDValidation, inputValidationMiddl
 // =============    Comments   =======================
 postsRouter.get("/:id/comments", async (req: Request, res: Response) => {
   const { PageNumber = 1, PageSize = 10 } = req.query as QueryType;
-  const post = await postsService.getPost(+req.params.id);
+  const post = await postsService.getPost(req.params.id);
   if (!post) return res.sendStatus(404);
   const postComments = await commentsService.getAllPostComments(post.id!, PageNumber, PageSize);
   res.send(postComments);
 });
 
-postsRouter.post("/:id/comments", authentication, async (req: Request, res: Response) => {
-  const post = await postsService.getPost(+req.params.id);
+postsRouter.post("/:id/comments", authentication,contentValidation,inputValidationMiddleware, async (req: Request, res: Response) => {
+  const post = await postsService.getPost(req.params.id);
   if (!post) return res.sendStatus(404);
-  const newComment = await commentsService.createComment(+req.params.id, req.body.content, req.context.user!.id, req.context.user!.login);
+  const newComment = await commentsService.createComment(req.params.id, req.body.content, req.context.user!.id, req.context.user!.login);
   res.status(201).send(newComment);
 });

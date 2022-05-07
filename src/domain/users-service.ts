@@ -4,7 +4,6 @@ import { CustomResponseType, UserType } from "../types/types";
 import jwt from "jsonwebtoken";
 import { settings } from "../settings/settings";
 
-
 export const usersService = {
   async getAllUsers(pageNumber: any, pageSize: any): Promise<CustomResponseType> {
     return usersRepository.getAllUsers(+pageNumber, +pageSize);
@@ -13,7 +12,7 @@ export const usersService = {
     const passwordSalt = await bcrypt.genSalt(10);
     const passwordHash = await this._generateHash(password, passwordSalt);
     const newUser = {
-      id: (new Date).toString(),
+      id: (+new Date()).toString(),
       login,
       passwordHash,
       passwordSalt,

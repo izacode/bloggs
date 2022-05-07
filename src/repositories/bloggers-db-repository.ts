@@ -22,7 +22,7 @@ export const bloggersRepository = {
 
     return customResponse;
   },
-  async getAllBloggerPosts(bloggerId: number, pageNumber: number, pageSize: number) {
+  async getAllBloggerPosts(bloggerId: string, pageNumber: number, pageSize: number) {
     
     const blogger = await bloggersCollection.findOne({ id: bloggerId });
     const posts = (
@@ -46,7 +46,7 @@ export const bloggersRepository = {
 
     return blogger !== null ? customResponse : false;
   },
-  async getBlogger(id: number) {
+  async getBlogger(id: string) {
     const blogger = await bloggersCollection.findOne({ id }, { projection: { _id: 0 } });
     return blogger;
   },
@@ -57,12 +57,12 @@ export const bloggersRepository = {
     return createdBlogger;
   },
 
-  async updateBlogger(id: number, name: string, youtubeUrl: string): Promise<boolean> {
+  async updateBlogger(id: string, name: string, youtubeUrl: string): Promise<boolean> {
     const blogger = await bloggersCollection.updateOne({ id }, { $set: { name, youtubeUrl } });
     return blogger.matchedCount === 1;
   },
 
-  async deleteBlogger(id: number): Promise<boolean> {
+  async deleteBlogger(id: string): Promise<boolean> {
     const isDeleted = await bloggersCollection.deleteOne({ id });
     return isDeleted.deletedCount === 1;
   },

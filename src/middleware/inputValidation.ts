@@ -7,20 +7,23 @@ export const mongoIdValidation = param("id")
   .matches(/^[a-z0-9]{24}$/, "i")
   .withMessage("Id should be of Mongo Id type, 24 charachters,lowercase latin letters and numbers");
 
+
+
 // Blogger validation ==============================================================================================================
 
 const re = /^https:\/\/([\w-]+\.)+[\w-]+(\/[\w-]+)*\/?$/;
 
 export const bloggerIDValidation = param("id")
   .trim()
+  .isLength({min:13})
   .isInt({ gt: 0 })
   .withMessage("Invalid query bloggerID, it shoud be a number greater then 0,without symbols or letters");
 
 export const bloggerIDBodyValidation = body("bloggerId")
   .trim()
-  .isInt({ gt: 0})
-  .isLength({min:9})
-  .withMessage("Invalid BloggerId !!it shoud be a number greater then 0,without symbols or letters or bogger doesn't exists");
+  .isInt({ gt: 0 })
+  .isLength({ min: 13 })
+  .withMessage("Invalid BloggerId !!bloggerIDBodyValidation");
 
 export const nameValidation = body("name")
   .trim()

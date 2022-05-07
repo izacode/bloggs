@@ -3,20 +3,19 @@ import { commentsRepository } from "../repositories/comments-db-repository";
 import { CommentType, CustomResponseType } from "../types/types";
 
 export const commentsService = {
-  async getAllPostComments(postId: number,PageNumber:any,PageSize:any):Promise<CustomResponseType> {
-
+  async getAllPostComments(postId: string, PageNumber: any, PageSize: any): Promise<CustomResponseType> {
     const postComments = await commentsRepository.getAllPostComments(postId, +PageNumber, +PageSize);
-    return postComments
+    return postComments;
   },
 
-  async getCommentById(id: string):Promise<CommentType|null>{
-    const comment = await commentsRepository.getCommentById(id)
-    return comment
+  async getCommentById(id: string): Promise<CommentType | null> {
+    const comment = await commentsRepository.getCommentById(id);
+    return comment;
   },
 
-  async createComment(postId: number, content: string, userId: string, login: string):Promise<CommentType |null> {
+  async createComment(postId: string, content: string, userId: string, login: string): Promise<CommentType | null> {
     const newComment: CommentType = {
-      id:(new Date).toString(),
+      id: (+new Date()).toString(),
       postId,
       content,
       userId,
@@ -28,12 +27,12 @@ export const commentsService = {
     return createdComment;
   },
 
-  async updateComment(id: string, content: string):Promise<boolean>{    
-      const isUpdated = commentsRepository.updateComment(id,content)
-      return isUpdated
+  async updateComment(id: string, content: string): Promise<boolean> {
+    const isUpdated = commentsRepository.updateComment(id, content);
+    return isUpdated;
   },
-  async deleteComment(id:string):Promise<boolean>{
-      const isDeleted = commentsRepository.deleteComment(id)
-      return isDeleted
-  }
+  async deleteComment(id: string): Promise<boolean> {
+    const isDeleted = commentsRepository.deleteComment(id);
+    return isDeleted;
+  },
 };

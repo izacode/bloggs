@@ -12,7 +12,7 @@ export const postsRepository = {
         .skip((pageNumber - 1) * +pageSize)
         .limit(+pageSize)
         .toArray()
-    ).map((p) => Object.assign(p, { bloggerName: bloggers.find((b) => b.id === p.bloggerId)?.name }));
+    ).map((p) => Object.assign(p, { bloggerName: bloggers.find((b) => b.id === p.bloggerId.toString())?.name }));
 
     const totalCount: number = await postsCollection.countDocuments(filter);
 
@@ -32,23 +32,24 @@ export const postsRepository = {
     await postsCollection.insertOne(newPost);
     
     const createdPost = await postsCollection.findOne({ id: newPost.id }, { projection: { _id: 0 } });
-    const createdPostWithBloggerName = Object.assign(createdPost, { bloggerName: bloggers.find((b) => b.id === newPost.bloggerId)?.name });
+    debugger;
+    const createdPostWithBloggerName = Object.assign(createdPost, { bloggerName: bloggers.find((b) => b.id === (newPost.bloggerId.toString()))?.name });
     return createdPostWithBloggerName;
   },
 
-  async getPost(postID: number): Promise<PostType | null> {
+  async getPost(postID: string): Promise<PostType | null> {
     const bloggers = await bloggersCollection.find({}, { projection: { _id: 0 } }).toArray();
     const post = await postsCollection.findOne({ id: postID }, { projection: { _id: 0 } });
     if(!post) return null
    
-    return Object.assign(post, { bloggerName: bloggers.find((b) => b.id === post?.bloggerId)?.name });
+    return Object.assign(post, { bloggerName: bloggers.find((b) => b.id === post?.bloggerId.toString())?.name });
   },
 
-  async updatePost(postID: number, title: string, shortDescription: string, content: string, bloggerId: number): Promise<boolean> {
+  async updatePost(postID: string, title: string, shortDescription: string, content: string, bloggerId: number): Promise<boolean> {
     const post = await postsCollection.updateOne({ id: postID }, { $set: { title, shortDescription, content, bloggerId } });
     return post.matchedCount === 1;
   },
-  async deletePost(postID: number) {
+  async deletePost(postID: string) {
     const deletedPost = await postsCollection.deleteOne({ id: postID });
     return deletedPost.deletedCount === 1;
   },

@@ -10,11 +10,11 @@ export const postsService = {
 
   async createPost(body: any, params: any): Promise<PostType | null> {
     debugger;
-    const bloggerID = body.bloggerId || +params.id;
+    const bloggerID = body.bloggerId || params.id;
     const blogger = await bloggersRepository.getBlogger(bloggerID);
     if (!blogger) return null;
     const newPost: PostType = {
-      id: +(new Date),
+      id: (+new Date()).toString(),
       title: body.title,
       shortDescription: body.shortDescription,
       content: body.content,
@@ -24,15 +24,15 @@ export const postsService = {
     return postsRepository.createPost(newPost);
   },
 
-  async getPost(postID: number): Promise<PostType | null> {
+  async getPost(postID: string): Promise<PostType | null> {
     return postsRepository.getPost(postID);
   },
 
-  async updatePost(postID: number, title: string, shortDescription: string, content: string, bloggerId: number): Promise<boolean> {
+  async updatePost(postID: string, title: string, shortDescription: string, content: string, bloggerId: number): Promise<boolean> {
     return postsRepository.updatePost(postID, title, shortDescription, content, bloggerId);
   },
 
-  async deletePost(postID: number): Promise<boolean> {
+  async deletePost(postID: string): Promise<boolean> {
     return postsRepository.deletePost(postID);
   },
 };

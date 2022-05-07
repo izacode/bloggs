@@ -8,7 +8,7 @@ export type QueryType = {
 };
 
 export type PostType = {
-  id?: number;
+  id?: string;
   title: string;
   shortDescription: string;
   content: string;
@@ -17,7 +17,7 @@ export type PostType = {
 };
 
 export type BloggerType = {
-  id?: number;
+  id?: string;
   name: string;
   youtubeUrl: string;
 };
@@ -40,7 +40,7 @@ export type CustomResponseType = {
 
 export type CommentType = {
   id: string;
-  postId: number;
+  postId: string;
   content: string;
   userId: string;
   login: string;
