@@ -67,9 +67,9 @@ bloggersRouter.get("/:bloggerId/posts", async (req: Request, res: Response) => {
 });
 
 bloggersRouter.post(
-  "/:id/posts",
+  "/:bloggerId/posts",
   authorization,
-  bloggerIDValidation,
+
   titleValidation,
   shortDescriptionValidation,
   contentValidation,
