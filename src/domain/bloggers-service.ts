@@ -1,11 +1,11 @@
 import { bloggersRepository } from "../repositories/bloggers-db-repository";
-
+import { CustomResponseType } from "../types/types";
 
 export const bloggersService = {
   async getAllBloggers(SearchNameTerm: any, pageNumber: any, pageSize: any) {
     return bloggersRepository.getAllBloggers(SearchNameTerm, pageNumber, pageSize);
   },
-  async getAllBloggerPosts(bloggerId: string, pageNumber: any, pageSize: any) {
+  async getAllBloggerPosts(bloggerId: string, pageNumber: any, pageSize: any): Promise<CustomResponseType | null> {
     return bloggersRepository.getAllBloggerPosts(bloggerId, +pageNumber, +pageSize);
   },
   async getBlogger(id: string) {
@@ -14,7 +14,7 @@ export const bloggersService = {
 
   async createBlogger(name: string, youtubeUrl: string) {
     const newBlogger = {
-      id: (+(new Date())).toString(),
+      id: (+new Date()).toString(),
       name,
       youtubeUrl,
     };

@@ -1,4 +1,4 @@
-import { BloggerType } from "../types/types";
+import { BloggerType, CustomResponseType } from "../types/types";
 import { bloggersCollection, postsCollection } from "./dbmongo";
 
 export const bloggersRepository = {
@@ -22,9 +22,9 @@ export const bloggersRepository = {
 
     return customResponse;
   },
-  async getAllBloggerPosts(bloggerId: string, pageNumber: number, pageSize: number) {
+  async getAllBloggerPosts(bloggerId: string, pageNumber: number, pageSize: number): Promise<CustomResponseType | null> {
     const blogger = await bloggersCollection.findOne({ id: bloggerId });
-    debugger;
+    if (!blogger) return null;
     const posts = (
       await postsCollection
         .find({ bloggerId }, { projection: { _id: 0 } })
@@ -43,7 +43,7 @@ export const bloggersRepository = {
       items: posts,
     };
 
-    return blogger !== null ? customResponse : false;
+    return customResponse;
   },
   async getBlogger(id: string) {
     const blogger = await bloggersCollection.findOne({ id }, { projection: { _id: 0 } });
