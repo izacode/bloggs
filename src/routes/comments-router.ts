@@ -26,3 +26,4 @@ commentsRouter.delete("/:id", authentication, async (req: Request, res: Response
   const isDeleted = await commentsService.deleteComment(req.params.id);
   isDeleted ? res.sendStatus(204) : res.sendStatus(404);
 });
+  
