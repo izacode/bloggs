@@ -7,17 +7,12 @@ export const mongoIdValidation = param("id")
   .matches(/^[a-z0-9]{24}$/, "i")
   .withMessage("Id should be of Mongo Id type, 24 charachters,lowercase latin letters and numbers");
 
-
-
 // Blogger validation ==============================================================================================================
 
 const re = /^https:\/\/([\w-]+\.)+[\w-]+(\/[\w-]+)*\/?$/;
 
-export const bloggerIDValidation = param("id")
-  .trim()
-  .isLength({min:13})
-  .isInt({ gt: 0 })
-  .withMessage("Invalid query bloggerID, it shoud be a number greater then 0,without symbols or letters");
+export const bloggerIDValidation = param("id").trim().isLength({ min: 13, max: 13 }).withMessage("Invalid query bloggerId");
+export const bloggerIdQueryValidation = param("bloggerId").trim().isLength({ min: 13, max: 13 }).withMessage("Invalid query bloggerId");
 
 export const bloggerIDBodyValidation = body("bloggerId")
   .trim()
@@ -83,7 +78,7 @@ export const inputValidationMiddleware = (req: Request, res: Response, next: Nex
     res.status(400).json({ errorsMessages: myErrors, resultCode: 1 });
   }
 };
-export const bloggerIdError =  {
+export const bloggerIdError = {
   errorsMessages: [
     {
       message: "invalid bloggerId or blogger doesn't exists",
@@ -92,4 +87,3 @@ export const bloggerIdError =  {
   ],
   resultCode: 1,
 };
-

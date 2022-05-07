@@ -10,6 +10,7 @@ import {
   titleValidation,
   shortDescriptionValidation,
   contentValidation,
+  bloggerIdQueryValidation,
 } from "../middleware/inputValidation";
 import { authorization } from "../middleware/authMiddleware";
 
@@ -54,7 +55,7 @@ bloggersRouter.put(
   }
 );
 
-bloggersRouter.delete("/:id", authorization, bloggerIDValidation, inputValidationMiddleware, async (req: Request, res: Response) => {
+bloggersRouter.delete("/:id", authorization, async (req: Request, res: Response) => {
   const isDeleted: boolean = await bloggersService.deleteBlogger(req.params.id);
   isDeleted ? res.sendStatus(204) : res.sendStatus(404);
 });
