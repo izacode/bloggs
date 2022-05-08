@@ -10,7 +10,7 @@ export const commentsRepository = {
       .limit(PageSize)
       .toArray();
 
-    const totalCount: number = await commentsCollection.countDocuments();
+    const totalCount: number = await commentsCollection.countDocuments({ postId });
 
     const customResponse = {
       pagesCount: Math.ceil(totalCount / PageSize),

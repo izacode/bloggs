@@ -1,7 +1,7 @@
 import { Router, Request, Response } from "express";
 import { commentsService } from "../domain/comments-service";
 import { authentication } from "../middleware/authMiddleware";
-import { commentContentValidation, contentValidation, inputValidationMiddleware, mongoIdValidation } from "../middleware/inputValidation";
+import { commentContentValidation, contentValidation, inputValidationMiddleware, } from "../middleware/inputValidation";
 import { CommentType } from "../types/types";
 
 export const commentsRouter = Router();
