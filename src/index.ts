@@ -8,6 +8,7 @@ import { usersRouter } from "./routes/users-routes";
 import { authRouter } from "./routes/auth-router";
 import { commentsRouter } from "./routes/comments-router";
 
+
 const corsOptions = {
   origin: "*",
   credentials: true,
