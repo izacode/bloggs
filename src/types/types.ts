@@ -12,7 +12,7 @@ export type PostType = {
   title: string;
   shortDescription: string;
   content: string;
-  bloggerId: number | string;
+  bloggerId: string;
   bloggerName?: string;
 };
 
@@ -39,7 +39,7 @@ export type CustomResponseType = {
 };
 
 export type CommentType = {
-  commentId: string;
+  id: string;
   postId: string;
   content: string;
   userId: string;

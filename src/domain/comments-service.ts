@@ -15,7 +15,7 @@ export const commentsService = {
 
   async createComment(postId: string, content: string, userId: string, login: string): Promise<CommentType | null> {
     const newComment: CommentType = {
-      commentId: (+new Date()).toString(),
+      id: (+new Date()).toString(),
       postId,
       content,
       userId,

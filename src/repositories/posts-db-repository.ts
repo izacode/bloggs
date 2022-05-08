@@ -14,7 +14,6 @@ export const postsRepository = {
     ).map((p) =>
       Object.assign(p, {
         bloggerName: bloggers.find((b) => b.id === p.bloggerId)?.name,
-        bloggerId: +(bloggers.find((b) => b.id === p.bloggerId)?.id)!,
       })
     );
 
@@ -55,7 +54,7 @@ export const postsRepository = {
     });
   },
 
-  async updatePost(postID: string, title: string, shortDescription: string, content: string, bloggerId: number): Promise<boolean> {
+  async updatePost(postID: string, title: string, shortDescription: string, content: string, bloggerId: string): Promise<boolean> {
     const post = await postsCollection.updateOne({ id: postID }, { $set: { title, shortDescription, content, bloggerId } });
     return post.matchedCount === 1;
   },

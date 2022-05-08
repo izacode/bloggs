@@ -6,7 +6,7 @@ import { UserType } from "../types/types";
 
 export const authRouter = Router();
 
-authRouter.post("/login", userLoginValidation, userPasswordValidation,inputValidationMiddleware, async (req: Request, res: Response) => {
+authRouter.post("/login", userLoginValidation, userPasswordValidation, inputValidationMiddleware, async (req: Request, res: Response) => {
   const user: UserType | null = await usersService.checkCredentials(req.body.login, req.body.password);
   if (!user) {
     res.sendStatus(401);

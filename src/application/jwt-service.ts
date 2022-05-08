@@ -5,7 +5,7 @@ import { settings } from "../settings/settings";
 export const jwtService = {
   async createJWT(user: UserType) {
     const token = await jwt.sign({ userId: user.id }, settings.JWT_SECRET, { expiresIn: "90 days" });
-    return token;
+    return { token };
   },
   async getUserIdByToken(token: string) {
     try {

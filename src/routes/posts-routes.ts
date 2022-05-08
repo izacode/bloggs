@@ -81,6 +81,7 @@ postsRouter.delete("/:id", authorization, postIDValidation, inputValidationMiddl
 
 
 // =============    Comments   =======================
+
 postsRouter.get("/:id/comments", async (req: Request, res: Response) => {
   const { PageNumber = 1, PageSize = 10 } = req.query as QueryType;
   const post = await postsService.getPost(req.params.id);
