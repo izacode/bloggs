@@ -19,7 +19,6 @@ commentsRouter.put(
   async (req: Request, res: Response) => {
     const commentToUpdate = await commentsService.getCommentById(req.params.commentId);
     if (!commentToUpdate) return res.sendStatus(404);
-    debugger;
     if (commentToUpdate.userId !== req.context.user.id) return res.sendStatus(403);
     const isUpdated = await commentsService.updateComment(req.params.commentId, req.body.content);
     isUpdated ? res.sendStatus(204) : res.sendStatus(404);

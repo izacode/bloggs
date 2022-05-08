@@ -4,7 +4,6 @@ import { bloggersCollection, postsCollection } from "./dbmongo";
 export const bloggersRepository = {
   async getAllBloggers(SearchNameTerm: string, pageNumber: number, pageSize: number) {
     let filter = SearchNameTerm === null ? {} : { name: { $regex: SearchNameTerm } };
-    debugger;
     const bloggers: BloggerType[] = await bloggersCollection
       .find(filter, { projection: { _id: 0 } })
       .skip((pageNumber - 1) * +pageSize)

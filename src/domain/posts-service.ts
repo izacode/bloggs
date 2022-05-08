@@ -9,7 +9,6 @@ export const postsService = {
   },
 
   async createPost(body: any, params: any): Promise<PostType | null> {
-    debugger;
     const bloggerID = body.bloggerId || params.bloggerId;
     const blogger = await bloggersRepository.getBlogger(bloggerID);
     if (!blogger) return null;

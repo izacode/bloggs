@@ -35,11 +35,9 @@ export const usersRepository = {
   },
   async findUserById(userId: string):Promise<UserType|null> {
     const user = await usersCollection.findOne({ id: userId });
-    debugger;
     return user;
   },
   async deleteUser(id: string): Promise<boolean> {
-    debugger;
     const isDeleted = await usersCollection.deleteOne({ id });
     return isDeleted.deletedCount === 1;
   },
