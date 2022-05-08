@@ -11,7 +11,7 @@ export const postsRepository = {
         .skip((pageNumber - 1) * +pageSize)
         .limit(+pageSize)
         .toArray()
-    ).map((p) => Object.assign(p, { bloggerName: bloggers.find((b) => b.id === p.bloggerId.toString())?.name }));
+    ).map((p) => Object.assign(p, {bloggerName: bloggers.find((b) => b.id === p.bloggerId)?.name }));
 
     const totalCount: number = await postsCollection.countDocuments(filter);
 
