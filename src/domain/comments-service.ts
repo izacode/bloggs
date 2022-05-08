@@ -8,14 +8,14 @@ export const commentsService = {
     return postComments;
   },
 
-  async getCommentById(id: string): Promise<CommentType | null> {
-    const comment = await commentsRepository.getCommentById(id);
+  async getCommentById(commentId: string): Promise<CommentType | null> {
+    const comment = await commentsRepository.getCommentById(commentId);
     return comment;
   },
 
   async createComment(postId: string, content: string, userId: string, login: string): Promise<CommentType | null> {
     const newComment: CommentType = {
-      id: (+new Date()).toString(),
+      commentId: (+new Date()).toString(),
       postId,
       content,
       userId,
@@ -27,12 +27,12 @@ export const commentsService = {
     return createdComment;
   },
 
-  async updateComment(id: string, content: string): Promise<boolean> {
-    const isUpdated = commentsRepository.updateComment(id, content);
+  async updateComment(commentId: string, content: string): Promise<boolean> {
+    const isUpdated = commentsRepository.updateComment(commentId, content);
     return isUpdated;
   },
-  async deleteComment(id: string): Promise<boolean> {
-    const isDeleted = commentsRepository.deleteComment(id);
+  async deleteComment(commentId: string): Promise<boolean> {
+    const isDeleted = commentsRepository.deleteComment(commentId);
     return isDeleted;
   },
 };

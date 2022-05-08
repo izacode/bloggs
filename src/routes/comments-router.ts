@@ -6,24 +6,24 @@ import { CommentType } from "../types/types";
 
 export const commentsRouter = Router();
 
-commentsRouter.get("/:id",  async (req: Request, res: Response) => {
-  const comment: CommentType | null = await commentsService.getCommentById(req.params.id);
+commentsRouter.get("/:commentId",  async (req: Request, res: Response) => {
+  const comment: CommentType | null = await commentsService.getCommentById(req.params.commentId);
   comment ? res.send(comment) : res.sendStatus(404);
 });
 
-commentsRouter.put("/:id", authentication, contentValidation, inputValidationMiddleware, async (req: Request, res: Response) => {
-  const commentToUpdate = await commentsService.getCommentById(req.params.id);
+commentsRouter.put("/:commentId", authentication, contentValidation, inputValidationMiddleware, async (req: Request, res: Response) => {
+  const commentToUpdate = await commentsService.getCommentById(req.params.commentId);
   if (!commentToUpdate) return res.sendStatus(404);
   if (commentToUpdate.userId.toString() !== req.context.user.id) return res.sendStatus(403);
-  const isUpdated = await commentsService.updateComment(req.params.id, req.body.content);
+  const isUpdated = await commentsService.updateComment(req.params.commentId, req.body.content);
   isUpdated ? res.sendStatus(204) : res.sendStatus(404);
 });
 
-commentsRouter.delete("/:id", authentication, async (req: Request, res: Response) => {
-  const commentToDelete = await commentsService.getCommentById(req.params.id);
+commentsRouter.delete("/:commentId", authentication, async (req: Request, res: Response) => {
+  const commentToDelete = await commentsService.getCommentById(req.params.commentId);
   if (!commentToDelete) return res.sendStatus(404);
   if (commentToDelete.userId.toString() !== req.context.user.id) return res.sendStatus(403);
-  const isDeleted = await commentsService.deleteComment(req.params.id);
+  const isDeleted = await commentsService.deleteComment(req.params.commentId);
   isDeleted ? res.sendStatus(204) : res.sendStatus(404);
 });
   

@@ -1,6 +1,5 @@
 import jwt from "jsonwebtoken";
 import { UserType } from "../types/types";
-
 import { settings } from "../settings/settings";
 
 export const jwtService = {

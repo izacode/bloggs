@@ -39,7 +39,7 @@ export type CustomResponseType = {
 };
 
 export type CommentType = {
-  id: string;
+  commentId: string;
   postId: string;
   content: string;
   userId: string;

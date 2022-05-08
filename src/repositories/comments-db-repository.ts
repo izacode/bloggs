@@ -20,28 +20,27 @@ export const commentsRepository = {
       items: postComments,
     };
     return customResponse;
-    
   },
 
-  async getCommentById(id: string): Promise<CommentType | null> {
-    const comment = await commentsCollection.findOne({ id }, commentsFilter);
+  async getCommentById(commentId: string): Promise<CommentType | null> {
+    const comment = await commentsCollection.findOne({ commentId }, commentsFilter);
     if (!comment) return null;
     return comment;
   },
 
   async createComment(newComment: CommentType): Promise<CommentType | null> {
     await commentsCollection.insertOne(newComment);
-    const createdComment = await commentsCollection.findOne({ id: newComment.id }, commentsFilter);
+    const createdComment = await commentsCollection.findOne({ commentId: newComment.commentId }, commentsFilter);
     return createdComment;
   },
 
-  async updateComment(id: string, content: string): Promise<boolean> {
-    const isUpdated = await commentsCollection.updateOne({ id}, { $set: { content } });
+  async updateComment(commentId: string, content: string): Promise<boolean> {
+    const isUpdated = await commentsCollection.updateOne({ commentId }, { $set: { content } });
     return isUpdated.matchedCount === 1;
   },
 
-  async deleteComment(id: string): Promise<boolean> {
-    const isDeleted = await commentsCollection.deleteOne({ id});
+  async deleteComment(commentId: string): Promise<boolean> {
+    const isDeleted = await commentsCollection.deleteOne({ commentId });
     return isDeleted.deletedCount === 1;
   },
 };

@@ -54,7 +54,7 @@ export const contentValidation = body("content")
 export const commentContentValidation = body("content")
   .trim()
   .isLength({ min: 20, max: 1000 })
-  .withMessage("Content is missing,it should contain at least one character");
+  .withMessage("Content should be from 20 to 100 characters");
 export const userLoginValidation = body("login")
   .trim()
   .isLength({ min: 3, max: 10 })
@@ -90,4 +90,9 @@ export const bloggerIdError = {
     },
   ],
   resultCode: 1,
+};
+
+export const testMiddleware = (req: Request, res: Response, next: NextFunction) => {
+  console.log("Inside test middleware");
+  next();
 };
