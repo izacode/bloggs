@@ -45,7 +45,7 @@ export const postsRepository = {
     if (!post) return null;
 
     return Object.assign(post, {
-      bloggerId: post.bloggerId,
+      bloggerId: +post.bloggerId,
       bloggerName: bloggers.find((b) => b.id === post?.bloggerId.toString())?.name,
     });
   },

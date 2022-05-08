@@ -15,6 +15,7 @@ import {
   postIDValidation,
   bloggerIdError,
   bloggerIDBodyValidation,
+  commentContentValidation,
 } from "../middleware/inputValidation";
 import { QueryType } from "../types/types";
 
@@ -88,9 +89,15 @@ postsRouter.get("/:id/comments", async (req: Request, res: Response) => {
   res.send(postComments);
 });
 
-postsRouter.post("/:id/comments", authentication,contentValidation,inputValidationMiddleware, async (req: Request, res: Response) => {
-  const post = await postsService.getPost(req.params.id);
-  if (!post) return res.sendStatus(404);
-  const newComment = await commentsService.createComment(req.params.id, req.body.content, req.context.user!.id, req.context.user!.login);
-  res.status(201).send(newComment);
-});
+postsRouter.post(
+  "/:id/comments",
+  authentication,
+  commentContentValidation,
+  inputValidationMiddleware,
+  async (req: Request, res: Response) => {
+    const post = await postsService.getPost(req.params.id);
+    if (!post) return res.sendStatus(404);
+    const newComment = await commentsService.createComment(req.params.id, req.body.content, req.context.user!.id, req.context.user!.login);
+    res.status(201).send(newComment);
+  }
+);

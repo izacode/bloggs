@@ -51,6 +51,10 @@ export const contentValidation = body("content")
   .trim()
   .isLength({ min: 1, max: 1000 })
   .withMessage("Content is missing,it should contain at least one character");
+export const commentContentValidation = body("content")
+  .trim()
+  .isLength({ min: 20, max: 1000 })
+  .withMessage("Content is missing,it should contain at least one character");
 export const userLoginValidation = body("login")
   .trim()
   .isLength({ min: 3, max: 10 })
