@@ -37,7 +37,6 @@ export const postsRepository = {
     const createdPost = await postsCollection.findOne({ id: newPost.id }, { projection: { _id: 0 } });
     debugger;
     const createdPostWithBloggerName = Object.assign(createdPost, {
-      bloggerId: +newPost.bloggerId,
       bloggerName: bloggers.find((b) => b.id === newPost.bloggerId.toString())?.name,
     });
     return createdPostWithBloggerName;
@@ -49,7 +48,6 @@ export const postsRepository = {
     if (!post) return null;
 
     return Object.assign(post, {
-      bloggerId: +post.bloggerId,
       bloggerName: bloggers.find((b) => b.id === post?.bloggerId.toString())?.name,
     });
   },

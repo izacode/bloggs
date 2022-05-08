@@ -13,14 +13,14 @@ export const commentsService = {
     return comment;
   },
 
-  async createComment(postId: string, content: string, userId: string, login: string): Promise<CommentType | null> {
+  async createComment(postId: string, content: string, userId: string, userLogin: string): Promise<CommentType | null> {
     const newComment: CommentType = {
       id: (+new Date()).toString(),
       postId,
       content,
       userId,
-      login,
-      createdAt: new Date().toISOString(),
+      userLogin,
+      addedAt: new Date().toISOString(),
     };
 
     const createdComment = await commentsRepository.createComment(newComment);

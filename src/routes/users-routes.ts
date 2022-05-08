@@ -6,7 +6,7 @@ import { QueryType } from "../types/types";
 
 export const usersRouter = Router();
 
-usersRouter.get("/", async (req: Request, res: Response) => {
+usersRouter.get("/", authorization, async (req: Request, res: Response) => {
   const { PageNumber = 1, PageSize = 10 } = req.query as QueryType;
   const users = await usersService.getAllUsers(PageNumber, PageSize);
   res.json(users);

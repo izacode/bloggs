@@ -43,8 +43,8 @@ export type CommentType = {
   postId: string;
   content: string;
   userId: string;
-  login: string;
-  createdAt: string;
+  userLogin: string;
+  addedAt: string;
 };
 
 // ==============================================================================================
