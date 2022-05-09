@@ -66,12 +66,12 @@ export const userPasswordValidation = body("password")
   .withMessage("Password should be from 6 to 20 charachters long");
 export const loginValidation = body("login")
   .trim()
-  .isLength({ min: 3, max: 10 })
+  .isLength({ min:1 })
   .withMessage("Login should be at least 3 charachters long, and up to 10");
 
 export const passwordValidation = body("password")
   .trim()
-  .isLength({ min: 6, max: 20 })
+  .isLength({ min: 1})
   .withMessage("Password should be from 6 to 20 charachters long");
 // ==============================================================================================================
 
