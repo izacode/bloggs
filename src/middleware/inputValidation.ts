@@ -57,12 +57,21 @@ export const commentContentValidation = body("content")
   .withMessage("Content should be from 20 to 100 characters");
 export const userLoginValidation = body("login")
   .trim()
-  .isLength({ min:1 })
+  .isLength({ min: 3, max: 10 })
   .withMessage("Login should be at least 3 charachters long, and up to 10");
 
 export const userPasswordValidation = body("password")
   .trim()
-  .isLength({ min:1 })
+  .isLength({ min: 6, max: 20 })
+  .withMessage("Password should be from 6 to 20 charachters long");
+export const loginValidation = body("login")
+  .trim()
+  .isLength({ min: 3, max: 10 })
+  .withMessage("Login should be at least 3 charachters long, and up to 10");
+
+export const passwordValidation = body("password")
+  .trim()
+  .isLength({ min: 6, max: 20 })
   .withMessage("Password should be from 6 to 20 charachters long");
 // ==============================================================================================================
 
