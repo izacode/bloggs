@@ -21,13 +21,7 @@ commentsRouter.put(
     if (!commentToUpdate) return res.sendStatus(404);
     if (commentToUpdate.userId !== req.context.user.id) return res.sendStatus(403);
     const isUpdated = await commentsService.updateComment(req.params.commentId, req.body.content);
-    if (isUpdated) {
-      res.sendStatus(204);
-    } else {
-      res.sendStatus(404);
-    }
-
-    // isUpdated ? res.sendStatus(204) : res.sendStatus(404);
+    isUpdated ? res.sendStatus(204) : res.sendStatus(404);
   }
 );
 
