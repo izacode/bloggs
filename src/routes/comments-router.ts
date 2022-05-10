@@ -1,12 +1,12 @@
-import { Router, Request, Response } from "express";
+import e, { Router, Request, Response } from "express";
 import { commentsService } from "../domain/comments-service";
 import { authentication } from "../middleware/authMiddleware";
-import { commentContentValidation, contentValidation, inputValidationMiddleware, } from "../middleware/inputValidation";
+import { commentContentValidation, contentValidation, inputValidationMiddleware } from "../middleware/inputValidation";
 import { CommentType } from "../types/types";
 
 export const commentsRouter = Router();
 
-commentsRouter.get("/:commentId",  async (req: Request, res: Response) => {
+commentsRouter.get("/:commentId", async (req: Request, res: Response) => {
   const comment: CommentType | null = await commentsService.getCommentById(req.params.commentId);
   comment ? res.send(comment) : res.sendStatus(404);
 });
@@ -17,11 +17,17 @@ commentsRouter.put(
   commentContentValidation,
   inputValidationMiddleware,
   async (req: Request, res: Response) => {
-    const commentToUpdate = await commentsService.getCommentById(req.params.commentId);
+    const commentToUpdate: CommentType | null = await commentsService.getCommentById(req.params.commentId);
     if (!commentToUpdate) return res.sendStatus(404);
     if (commentToUpdate.userId !== req.context.user.id) return res.sendStatus(403);
     const isUpdated = await commentsService.updateComment(req.params.commentId, req.body.content);
-    isUpdated ? res.sendStatus(204) : res.sendStatus(404);
+    if (isUpdated) {
+      res.sendStatus(204);
+    } else {
+      res.sendStatus(404);
+    }
+
+    // isUpdated ? res.sendStatus(204) : res.sendStatus(404);
   }
 );
 
@@ -32,4 +38,3 @@ commentsRouter.delete("/:commentId", authentication, async (req: Request, res: R
   const isDeleted = await commentsService.deleteComment(req.params.commentId);
   isDeleted ? res.sendStatus(204) : res.sendStatus(404);
 });
-  
