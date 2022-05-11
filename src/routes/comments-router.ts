@@ -1,6 +1,6 @@
 import e, { Router, Request, Response } from "express";
 import { commentsService } from "../domain/comments-service";
-import { authentication } from "../middleware/authMiddleware";
+import { authentication, userAuthorization } from "../middleware/authMiddleware";
 import { commentContentValidation, contentValidation, inputValidationMiddleware } from "../middleware/inputValidation";
 import { CommentType } from "../types/types";
 
@@ -14,14 +14,13 @@ commentsRouter.get("/:commentId", async (req: Request, res: Response) => {
 commentsRouter.put(
   "/:commentId",
   authentication,
+  userAuthorization,
   commentContentValidation,
   inputValidationMiddleware,
   async (req: Request, res: Response) => {
     const commentToUpdate: CommentType | null = await commentsService.getCommentById(req.params.commentId);
     if (!commentToUpdate) return res.sendStatus(404);
-    if (commentToUpdate.userId !== req.context.user.id) return res.sendStatus(403);
-
-    
+    // if (commentToUpdate.userId !== req.context.user.id) return res.sendStatus(403);
     const isUpdated = await commentsService.updateComment(req.params.commentId, req.body.content);
     isUpdated ? res.sendStatus(204) : res.sendStatus(404);
   }
