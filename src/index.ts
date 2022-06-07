@@ -1,4 +1,4 @@
-import express,{Request,Response} from "express";
+import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import {bloggersRouter} from "./routes/bloggers-routes"
@@ -7,6 +7,7 @@ import { runDb } from "./repositories/dbmongo";
 import { usersRouter } from "./routes/users-routes";
 import { authRouter } from "./routes/auth-router";
 import { commentsRouter } from "./routes/comments-router";
+import { emailRouter } from "./routes/email-router";
 
 
 const corsOptions = {
@@ -20,15 +21,13 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
 const port = process.env.PORT || 5000;
-// app.get("/", (req:Request,res:Response)=>{
-//   res.json({id:1})
-// })
 
 app.use("/bloggers", bloggersRouter);
 app.use("/posts", postsRouter);
 app.use("/users", usersRouter);
 app.use("/auth", authRouter);
 app.use("/comments", commentsRouter);
+app.use("/email", emailRouter);
 
 
 const startApp = async () => {

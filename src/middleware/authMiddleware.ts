@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { ObjectId } from "mongodb";
 import { jwtService } from "../application/jwt-service";
 import { commentsService } from "../domain/comments-service";
 import { usersService } from "../domain/users-service";
@@ -21,7 +22,7 @@ export const authentication = async (req: Request, res: Response, next: NextFunc
   }
   const token = req.headers.authorization.split(" ")[1];
   const userId = await jwtService.getUserIdByToken(token);
-
+  debugger;
   if (userId) {
     req.context = {
       user: await usersService.findUserById(userId),
@@ -31,9 +32,9 @@ export const authentication = async (req: Request, res: Response, next: NextFunc
   }
   res.sendStatus(401);
 };
-export const userAuthorization = async (req:Request, res:Response, next:NextFunction)=> {
+export const userAuthorization = async (req: Request, res: Response, next: NextFunction) => {
   const commentToUpdate: CommentType | null = await commentsService.getCommentById(req.params.commentId);
   if (!commentToUpdate) return res.sendStatus(404);
   if (commentToUpdate.userId !== req.context.user.id) return res.sendStatus(403);
-  next()
-}
+  next();
+};
