@@ -22,9 +22,12 @@ class UsersService {
     const user = await this.usersRepository.findUserById(_id);
     return user;
   }
+  async findUserByLogin(login: string): Promise<UserAccountDBType | null> {
+    return await this.usersRepository.findUserByLogin(login)
+  }
   async findUserIdByToken(token: string): Promise<UserAccountDBType | null> {
     try {
-      debugger
+      debugger;
       const result: any = jwt.verify(token, settings.JWT_SECRET);
       const user = await this.findUserById(result._id);
       return user;
@@ -48,10 +51,8 @@ class UsersService {
   }
 }
 
-const usersRepository = new UsersRepository()
-export const usersService = new UsersService(usersRepository)
-
-
+const usersRepository = new UsersRepository();
+export const usersService = new UsersService(usersRepository);
 
 // export const usersService = {
 //   async getAllUsers(pageNumber: any, pageSize: any): Promise<CustomResponseType> {

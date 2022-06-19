@@ -67,6 +67,7 @@ export type UserAccountType = {
   userName: string;
   passwordHash: string;
   createdAt: Date;
+  ip: string
 };
 export type SentConfirmationEmailType = {
   sentDate: Date;
@@ -76,6 +77,13 @@ export type LoginAttemptType = {
   attemptDate: Date;
   ip: string;
 };
+
+export type RegisterAttemptType = {
+  ip: string;
+  attemptDate: Date;
+};
+
+
 
 
 

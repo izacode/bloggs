@@ -10,6 +10,7 @@ import { validationResult, body, param, query } from "express-validator";
 // Blogger validation ==============================================================================================================
 
 const re = /^https:\/\/([\w-]+\.)+[\w-]+(\/[\w-]+)*\/?$/;
+const regexForEmail = /^[\w\.]+@([\w]+\.)+[\w]{2,4}$/;
 
 export const bloggerIDValidation = param("id").trim().isLength({ min: 13, max: 13 }).withMessage("Invalid query bloggerId");
 export const bloggerIdQueryValidation = param("bloggerId").trim().isLength({ min: 13, max: 13 }).withMessage("Invalid query bloggerId");
@@ -66,13 +67,17 @@ export const userPasswordValidation = body("password")
   .withMessage("Password should be from 6 to 20 charachters long");
 export const loginValidation = body("login")
   .trim()
-  .isLength({ min:1 })
+  .isLength({ min: 3, max: 10 })
   .withMessage("Login should be at least 3 charachters long, and up to 10");
 
 export const passwordValidation = body("password")
   .trim()
-  .isLength({ min: 1})
+  .isLength({ min: 6, max: 20 })
   .withMessage("Password should be from 6 to 20 charachters long");
+// ==============================================================================================================
+export const emailValidation = body("email").trim().matches(regexForEmail).withMessage("Invalid email")
+export const codeValidation = body("code").trim().isString().isLength({min:1})
+
 // ==============================================================================================================
 
 export const inputValidationMiddleware = (req: Request, res: Response, next: NextFunction) => {
