@@ -97,6 +97,7 @@ export type RegisterAttemptType = {
 
 
 
+
 // export type GetBloggersQueryType = {
 //   SearchNameTerm: string | null;
 //   pageNumber: string | null;
