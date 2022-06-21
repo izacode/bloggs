@@ -3,8 +3,8 @@ import { ObjectId } from "mongodb";
 import { jwtService } from "../application/jwt-service";
 import { commentsService } from "../domain/comments-service";
 import { usersService } from "../domain/users-service";
-import { registrationIpCollection } from "../repositories/dbmongo";
-import { CommentType, RegisterAttemptType } from "../types/types";
+import { loginIpsCollection, registrationIpCollection, resendEmailIpsCollection } from "../repositories/dbmongo";
+import { CommentType, LoginAttemptType, RegisterAttemptType } from "../types/types";
 import sub from "date-fns/sub";
 import { UsersRepository } from "../repositories/users-db-repository";
 export const authorization = (req: Request, res: Response, next: NextFunction) => {
@@ -54,6 +54,30 @@ export const attemptsCheck = async (req: Request, res: Response, next: NextFunct
   await registrationIpCollection.insertOne(attempt);
   next();
 };
+export const resendEmailAttemptsCheck = async (req: Request, res: Response, next: NextFunction) => {
+  const ip: string = req.ip;
+  const attemptDate: Date = new Date();
+  const result = await resendEmailIpsCollection.find({ ip }).toArray();
+  if (result && result.length > 5 && result.filter((a) => a.attemptDate < sub(new Date(), { seconds: 10 }))) return res.sendStatus(429);
+  const attempt: RegisterAttemptType = {
+    ip,
+    attemptDate,
+  };
+  await resendEmailIpsCollection.insertOne(attempt);
+  next();
+};
+export const loginAttemptsCheck = async (req: Request, res: Response, next: NextFunction) => {
+  const ip: string = req.ip;
+  const attemptDate: Date = new Date();
+  const result = await loginIpsCollection.find({ ip }).toArray();
+  if (result && result.length > 5 && result.filter((a) => a.attemptDate < sub(new Date(), { seconds: 10 }))) return res.sendStatus(429);
+  const attempt: LoginAttemptType = {
+    ip,
+    attemptDate,
+  };
+  await loginIpsCollection.insertOne(attempt);
+  next();
+};
 
 const usersRepository = new UsersRepository();
 
@@ -68,8 +92,8 @@ export const userExistsCheck = async (req: Request, res: Response, next: NextFun
 
 export const isConfirmed = async (req: Request, res: Response, next: NextFunction) => {
   const user = await usersRepository.findUserByLoginOrEmail(req.body.email);
-  if (!user) return res.status(404).send("User is not found");
-  if (user.emailConfirmation.isConfirmed)
+  
+  if (user!.emailConfirmation.isConfirmed)
     return res.status(400).json({ errorsMessages: [{ message: "User is confirmed", field: "email" }] });
-    next()
+  next()  
 };

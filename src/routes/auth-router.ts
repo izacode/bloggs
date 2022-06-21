@@ -4,7 +4,7 @@ import { jwtService } from "../application/jwt-service";
 import { authService } from "../domain/auth-service";
 import { emailService } from "../domain/email-service";
 import { usersService } from "../domain/users-service";
-import { attemptsCheck, isConfirmed, userExistsCheck } from "../middleware/authMiddleware";
+import { attemptsCheck, isConfirmed, loginAttemptsCheck, resendEmailAttemptsCheck, userExistsCheck } from "../middleware/authMiddleware";
 // import { usersService } from "../domain/users-service";
 import {
   codeValidation,
@@ -32,11 +32,11 @@ authRouter.post(
   async (req: Request, res: Response) => {
     const user: UserAccountDBType | null = await authService.createUser(req.body.login, req.body.email, req.body.password, req.ip);
     if (!user) return res.sendStatus(400);
-    res.status(204).send(`Confirmation email has been send to ${req.body.email}`)
+    res.status(204).send(`Confirmation email has been send to ${req.body.email}`);
   }
 );
 
-authRouter.post("/login", async (req: Request, res: Response) => {
+authRouter.post("/login", loginAttemptsCheck, async (req: Request, res: Response) => {
   const confirmedUser = await usersService.findUserByLogin(req.body.login);
   if (!confirmedUser) return res.sendStatus(401);
   if (!confirmedUser.emailConfirmation.isConfirmed) return res.status(400).json({ message: "Please confirm your email" });
@@ -63,24 +63,27 @@ authRouter.post("/refreshtoken", async (req: Request, res: Response) => {
   }
 });
 
-authRouter.post("/registration-confirmation",attemptsCheck, codeValidation, inputValidationMiddleware, async (req: Request, res: Response) => {
-  const result = await authService.confirmEmail(req.body.code);
-  if (result) {
-    res.status(201).json({
-      status: "success",
-      message: "Email has been confirmed",
-    });
-  } else {
-    res.sendStatus(400);
+authRouter.post(
+  "/registration-confirmation",
+  attemptsCheck,
+  codeValidation,
+  inputValidationMiddleware,
+  async (req: Request, res: Response) => {
+    const result = await authService.confirmEmail(req.body.code);
+    if (result) {
+      res.status(201).json({
+        status: "success",
+        message: "Email has been confirmed",
+      });
+    } else {
+      res.sendStatus(400);
+    }
   }
-});
-authRouter.post("/registration-email-resending", isConfirmed, async (req: Request, res: Response) => {
+);
+authRouter.post("/registration-email-resending", isConfirmed, resendEmailAttemptsCheck, async (req: Request, res: Response) => {
   const result = await authService.reConfirmEmail(req.body.email);
-  if(!result) return res.sendStatus(400)
-  res.sendStatus(204)
-
-
-  // TO DO
+  if (!result) return res.sendStatus(400);
+  res.sendStatus(204);
 });
 
 authRouter.post("/sendRecoveryPassword", async (req: Request, res: Response) => {

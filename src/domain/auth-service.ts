@@ -74,6 +74,17 @@ class AuthService {
     if (!user) return false;
     if (user.emailConfirmation.expirationDate < new Date()) return false;
     let result = await this.usersRepository.updateConfirmation(user._id);
+    try {
+      const result = await emailService.sendEmailConfirmationMassage(user);
+      // const result = await emailManager.sendEmailConfirmationMassage(user);
+      if (result) {
+        await this.usersRepository.updateSentEmails(user._id);
+      }
+    } catch (error) {
+      console.log(error);
+      await this.usersRepository.deleteUser(user._id);
+      console.log("registration failed , pls try once again");
+    }
     return result;
   }
   async _generateHash(password: string) {
