@@ -4,7 +4,7 @@ import { jwtService } from "../application/jwt-service";
 import { authService } from "../domain/auth-service";
 import { emailService } from "../domain/email-service";
 import { usersService } from "../domain/users-service";
-import { attemptsCheck } from "../middleware/authMiddleware";
+import { attemptsCheck, isConfirmed, userExistsCheck } from "../middleware/authMiddleware";
 // import { usersService } from "../domain/users-service";
 import {
   codeValidation,
@@ -27,11 +27,12 @@ authRouter.post(
   passwordValidation,
   emailValidation,
   inputValidationMiddleware,
+  userExistsCheck,
 
   async (req: Request, res: Response) => {
     const user: UserAccountDBType | null = await authService.createUser(req.body.login, req.body.email, req.body.password, req.ip);
     if (!user) return res.sendStatus(400);
-    res.sendStatus(204)
+    res.status(204).send(`Confirmation email has been send to ${req.body.email}`)
   }
 );
 
@@ -73,8 +74,11 @@ authRouter.post("/registration-confirmation",attemptsCheck, codeValidation, inpu
     res.sendStatus(400);
   }
 });
-authRouter.post("/registration-email-resending", async (req: Request, res: Response) => {
-  const result = await authService.reConfirmEmail(req.body.email)
+authRouter.post("/registration-email-resending", isConfirmed, async (req: Request, res: Response) => {
+  const result = await authService.reConfirmEmail(req.body.email);
+  if(!result) return res.sendStatus(400)
+  res.sendStatus(204)
+
 
   // TO DO
 });

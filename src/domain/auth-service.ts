@@ -7,13 +7,11 @@ import add from "date-fns/add";
 import { emailManager } from "../managers/email-manager";
 import { emailService } from "./email-service";
 
+
 class AuthService {
   constructor(private usersRepository: UsersRepository) {};
   async createUser(login: string, email: string, password: string, ip: string): Promise<UserAccountDBType | null> {
     
-    const userExists = await this.usersRepository.findUserByLoginOrEmail(login);
-     debugger;
-    if (userExists) return null;
     const passwordHash = await this._generateHash(password);
     const user: UserAccountDBType = {
       _id: new ObjectId(),
@@ -72,9 +70,8 @@ class AuthService {
     return result;
   }
   async reConfirmEmail(email: string): Promise<boolean> {
-    const user = await this.usersRepository.findUserByConfirmationCode(email);
+    const user = await this.usersRepository.findUserByLoginOrEmail(email);
     if (!user) return false;
-    if (user.emailConfirmation.isConfirmed) return false;
     if (user.emailConfirmation.expirationDate < new Date()) return false;
     let result = await this.usersRepository.updateConfirmation(user._id);
     return result;

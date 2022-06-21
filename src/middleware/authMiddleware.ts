@@ -5,7 +5,8 @@ import { commentsService } from "../domain/comments-service";
 import { usersService } from "../domain/users-service";
 import { registrationIpCollection } from "../repositories/dbmongo";
 import { CommentType, RegisterAttemptType } from "../types/types";
-import sub from "date-fns/sub"
+import sub from "date-fns/sub";
+import { UsersRepository } from "../repositories/users-db-repository";
 export const authorization = (req: Request, res: Response, next: NextFunction) => {
   if (!req.headers.authorization) return res.sendStatus(401);
   const authorizationType = req.headers.authorization.split(" ")[0];
@@ -41,18 +42,34 @@ export const userAuthorization = async (req: Request, res: Response, next: NextF
   next();
 };
 
-
-
 export const attemptsCheck = async (req: Request, res: Response, next: NextFunction) => {
   const ip: string = req.ip;
   const attemptDate: Date = new Date();
   const result = await registrationIpCollection.find({ ip }).toArray();
-  if (result && result.length > 5 && result.filter(a=>a.attemptDate<sub(new Date(),{seconds: 10})))
-    return res.sendStatus(429);
+  if (result && result.length > 5 && result.filter((a) => a.attemptDate < sub(new Date(), { seconds: 10 }))) return res.sendStatus(429);
   const attempt: RegisterAttemptType = {
     ip,
     attemptDate,
   };
   await registrationIpCollection.insertOne(attempt);
-  next()
+  next();
+};
+
+const usersRepository = new UsersRepository();
+
+export const userExistsCheck = async (req: Request, res: Response, next: NextFunction) => {
+  debugger;
+  const userLoginExists = await usersRepository.findUserByLoginOrEmail(req.body.login);
+  if (userLoginExists) return res.status(400).json({ errorsMessages: [{ message: "User with this login exists", field: "login" }] });
+  const userEmailExists = await usersRepository.findUserByLoginOrEmail(req.body.email);
+  if (userEmailExists) return res.status(400).json({ errorsMessages: [{ message: "User with this email exists", field: "email" }] });
+  next();
+};
+
+export const isConfirmed = async (req: Request, res: Response, next: NextFunction) => {
+  const user = await usersRepository.findUserByLoginOrEmail(req.body.email);
+  if (!user) return res.status(404).send("User is not found");
+  if (user.emailConfirmation.isConfirmed)
+    return res.status(400).json({ errorsMessages: [{ message: "User is confirmed", field: "email" }] });
+    next()
 };
