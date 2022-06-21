@@ -7,11 +7,9 @@ import add from "date-fns/add";
 import { emailManager } from "../managers/email-manager";
 import { emailService } from "./email-service";
 
-
 class AuthService {
-  constructor(private usersRepository: UsersRepository) {};
+  constructor(private usersRepository: UsersRepository) {}
   async createUser(login: string, email: string, password: string, ip: string): Promise<UserAccountDBType | null> {
-    
     const passwordHash = await this._generateHash(password);
     const user: UserAccountDBType = {
       _id: new ObjectId(),
@@ -20,7 +18,7 @@ class AuthService {
         email,
         passwordHash,
         createdAt: new Date(),
-        ip
+        ip,
       },
       loginAttempts: [],
       emailConfirmation: {
@@ -33,16 +31,15 @@ class AuthService {
         isConfirmed: false,
       },
     };
-    
 
     const createResult = await this.usersRepository.createUser(user);
-    
+
     try {
       const result = await emailService.sendEmailConfirmationMassage(user);
       // const result = await emailManager.sendEmailConfirmationMassage(user);
-      if(result) {
+      if (result) {
         await this.usersRepository.updateSentEmails(user._id);
-      } 
+      }
     } catch (error) {
       console.log(error);
       await this.usersRepository.deleteUser(user._id);
@@ -53,7 +50,6 @@ class AuthService {
   }
   async checkCredentials(loginOrEmail: string, password: string) {
     const user: UserAccountDBType | null = await this.usersRepository.findUserByLoginOrEmail(loginOrEmail);
-    debugger;
     if (!user) return null;
     // ??? Which one should go first isConfirmed or password check
     if (!user.emailConfirmation.isConfirmed) return null;
@@ -97,9 +93,8 @@ class AuthService {
   }
 }
 
-
 const usersRepository = new UsersRepository();
-export const authService = new AuthService(usersRepository)
+export const authService = new AuthService(usersRepository);
 
 // export const authService = {
 //   async createUser(login: string, email: string, password: string): Promise<UserAccountDBType | null> {
@@ -131,7 +126,7 @@ export const authService = new AuthService(usersRepository)
 //       const result = await emailManager.sendEmailConfirmationMassage(user);
 //       if(result) {
 //         await usersRepository.updateSentEmails(user._id);
-//       } 
+//       }
 //     } catch (error) {
 //       console.log(error);
 //       await usersRepository.deleteUser(user._id);

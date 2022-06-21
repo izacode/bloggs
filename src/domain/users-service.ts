@@ -23,11 +23,10 @@ class UsersService {
     return user;
   }
   async findUserByLogin(login: string): Promise<UserAccountDBType | null> {
-    return await this.usersRepository.findUserByLogin(login)
+    return await this.usersRepository.findUserByLogin(login);
   }
   async findUserIdByToken(token: string): Promise<UserAccountDBType | null> {
     try {
-      debugger;
       const result: any = jwt.verify(token, settings.JWT_SECRET);
       const user = await this.findUserById(result._id);
       return user;

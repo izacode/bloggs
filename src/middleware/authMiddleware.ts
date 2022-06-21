@@ -25,7 +25,6 @@ export const authentication = async (req: Request, res: Response, next: NextFunc
   }
   const token = req.headers.authorization.split(" ")[1];
   const userId = await jwtService.getUserIdByToken(token);
-  debugger;
   if (userId) {
     req.context = {
       user: await usersService.findUserById(userId),
@@ -82,7 +81,6 @@ export const loginAttemptsCheck = async (req: Request, res: Response, next: Next
 const usersRepository = new UsersRepository();
 
 export const userExistsCheck = async (req: Request, res: Response, next: NextFunction) => {
-  debugger;
   const userLoginExists = await usersRepository.findUserByLoginOrEmail(req.body.login);
   if (userLoginExists) return res.status(400).json({ errorsMessages: [{ message: "User with this login exists", field: "login" }] });
   const userEmailExists = await usersRepository.findUserByLoginOrEmail(req.body.email);
@@ -92,8 +90,8 @@ export const userExistsCheck = async (req: Request, res: Response, next: NextFun
 
 export const isConfirmed = async (req: Request, res: Response, next: NextFunction) => {
   const user = await usersRepository.findUserByLoginOrEmail(req.body.email);
-  
+
   if (user!.emailConfirmation.isConfirmed)
     return res.status(400).json({ errorsMessages: [{ message: "User is confirmed", field: "email" }] });
-  next()  
+  next();
 };

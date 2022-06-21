@@ -1,4 +1,3 @@
-
 import { emailAdapter } from "../adapters/email-adapter";
 import { UserAccountDBType } from "../types/types";
 
@@ -10,12 +9,11 @@ export const emailManager = {
     return info;
   },
   async sendEmailConfirmationMassage(user: UserAccountDBType) {
-    debugger;
-      const subject: string = "This is email confirmation message";
-      const message: string = "<H1> Please confirm your email <a href='www.google.com'>confirm email <a/><H1/>";
+    const subject: string = "This is email confirmation message";
+    const message: string = "<H1> Please confirm your email <a href='www.google.com'>confirm email <a/><H1/>";
 
-      const result = await emailAdapter.sendEmail(user.accountData.email,subject, message)
-      debugger
-      return result
-    }
+    const result = await emailAdapter.sendEmail(user.accountData.email, subject, message);
+
+    return result;
+  },
 };

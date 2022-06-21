@@ -107,9 +107,9 @@ export const bloggerIdError = {
   resultCode: 1,
 };
 
-export const testMiddleware = (req: Request, res: Response, next: NextFunction) => {
-  console.log("Inside test middleware");
-  next();
-};
+// export const testMiddleware = (req: Request, res: Response, next: NextFunction) => {
+//   console.log("Inside test middleware");
+//   next();
+// };
 
 

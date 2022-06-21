@@ -19,7 +19,7 @@ export const emailAdapter = {
       html: message,
     });
 
-    console.log(info);
+   
     return true;
   },
 };
