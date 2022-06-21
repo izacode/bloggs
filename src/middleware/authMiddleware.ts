@@ -103,4 +103,5 @@ export const requestCollect = async (req:Request,res: Response,next: NextFunctio
   
   const income = {requestId: req.ip, requestBody: req.body }
   await usersRepository.saveRequests(income);
+  next()
 }
