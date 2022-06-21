@@ -12,4 +12,8 @@ export const emailService = {
     const result = await emailManager.sendEmailConfirmationMassage(user);
     return result;
   },
+  async resendEmailConfirmationMassage(user: UserAccountDBType) {
+    const result = await emailManager.sendEmailConfirmationMassage(user);
+    return result;
+  },
 };

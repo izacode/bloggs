@@ -46,6 +46,12 @@ export class CommentsRepository {
     const isDeleted = await commentsCollection.deleteOne({ id });
     return isDeleted.deletedCount === 1;
   }
+  async deleteAllComments() {
+    await commentsCollection.deleteMany({});
+    const totalCount: number = await commentsCollection.countDocuments({});
+    if (totalCount !== 0) return false;
+    return true;
+  }
 }
 
 

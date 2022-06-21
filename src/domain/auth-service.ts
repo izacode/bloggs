@@ -38,7 +38,7 @@ class AuthService {
     
 
     const createResult = await this.usersRepository.createUser(user);
-    debugger;
+    
     try {
       const result = await emailService.sendEmailConfirmationMassage(user);
       // const result = await emailManager.sendEmailConfirmationMassage(user);
@@ -65,6 +65,14 @@ class AuthService {
   }
   async confirmEmail(code: string): Promise<boolean> {
     const user = await this.usersRepository.findUserByConfirmationCode(code);
+    if (!user) return false;
+    if (user.emailConfirmation.isConfirmed) return false;
+    if (user.emailConfirmation.expirationDate < new Date()) return false;
+    let result = await this.usersRepository.updateConfirmation(user._id);
+    return result;
+  }
+  async reConfirmEmail(email: string): Promise<boolean> {
+    const user = await this.usersRepository.findUserByConfirmationCode(email);
     if (!user) return false;
     if (user.emailConfirmation.isConfirmed) return false;
     if (user.emailConfirmation.expirationDate < new Date()) return false;

@@ -73,7 +73,9 @@ authRouter.post("/registration-confirmation",attemptsCheck, codeValidation, inpu
     res.sendStatus(400);
   }
 });
-authRouter.post("/resend-registration-code", async (req: Request, res: Response) => {
+authRouter.post("/registration-email-resending", async (req: Request, res: Response) => {
+  const result = await authService.reConfirmEmail(req.body.email)
+
   // TO DO
 });
 

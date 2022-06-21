@@ -64,6 +64,12 @@ export class BloggersRepository {
     const isDeleted = await bloggersCollection.deleteOne({ id });
     return isDeleted.deletedCount === 1;
   }
+  async deleteAllBloggers() {
+    await bloggersCollection.deleteMany({});
+    const totalCount: number = await bloggersCollection.countDocuments({});
+    if (totalCount !== 0) return false;
+    return true;
+  }
 }
 
 

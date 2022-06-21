@@ -8,7 +8,7 @@ import { BloggerType, CommentType, PostType, UserType, UserAccountDBType, Regist
 const mongoUri = `mongodb+srv://thug:${settings.MONGO_PASSWORD}@clusterblogg.gub0i.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`
 
 const client = new MongoClient(mongoUri);
-let db = client.db("bloggz");
+export let db = client.db("bloggz");
 export const postsCollection = db.collection<PostType>("posts");
 export const bloggersCollection = db.collection<BloggerType>("bloggers");
 export const usersCollection = db.collection<UserType>("users")

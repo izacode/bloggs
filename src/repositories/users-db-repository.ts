@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import { CustomResponseType, UserAccountDBType, UserType } from "../types/types";
-import { usersAccountCollection, usersCollection } from "./dbmongo";
+import { registrationIpCollection, usersAccountCollection, usersCollection } from "./dbmongo";
 
 export class UsersRepository {
   async getAllUsers(pageNumber: number, pageSize: number): Promise<CustomResponseType> {
@@ -55,6 +55,24 @@ export class UsersRepository {
   async deleteUser(_id: ObjectId): Promise<boolean> {
     const isDeleted = await usersAccountCollection.deleteOne({ _id });
     return isDeleted.deletedCount === 1;
+  }
+  async deleteAllUsers() {
+    await usersCollection.deleteMany({});
+    const totalCount: number = await usersCollection.countDocuments({});
+    if (totalCount !== 0) return false;
+    return true;
+  }
+  async deleteAllUsersAccount() {
+    await usersAccountCollection.deleteMany({});
+    const totalCount: number = await usersAccountCollection.countDocuments({});
+    if (totalCount !== 0) return false;
+    return true;
+  }
+  async deleteAllIps() {
+    await registrationIpCollection.deleteMany({});
+    const totalCount: number = await registrationIpCollection.countDocuments({});
+    if (totalCount !== 0) return false;
+    return true;
   }
 }
 

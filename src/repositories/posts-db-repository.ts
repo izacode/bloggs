@@ -35,6 +35,7 @@ export class PostsRepository {
     await postsCollection.insertOne(newPost);
 
     const createdPost = await postsCollection.findOne({ id: newPost.id }, { projection: { _id: 0 } });
+    if(!createdPost) return null
     const createdPostWithBloggerName = Object.assign(createdPost, {
       bloggerName: bloggers.find((b) => b.id === newPost.bloggerId.toString())?.name,
     });
@@ -58,6 +59,12 @@ export class PostsRepository {
   async deletePost(postID: string) {
     const deletedPost = await postsCollection.deleteOne({ id: postID });
     return deletedPost.deletedCount === 1;
+  }
+  async deleteAllPosts() {
+    await postsCollection.deleteMany({})
+    const totalCount: number = await postsCollection.countDocuments({});
+    if (totalCount !== 0)return false;
+    return true
   }
 }
 
