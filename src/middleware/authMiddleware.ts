@@ -99,9 +99,11 @@ export const isConfirmed = async (req: Request, res: Response, next: NextFunctio
 };
 
 export const requestCollect = async (req:Request,res: Response,next: NextFunction) => {
-  
-  
-  const income = {requestId: req.ip, requestBody: req.body }
-  await usersRepository.saveRequests(income);
+  debugger
+  const income = {requestIp: req.ip, requestBody: req.body }
+  debugger
+  const isAdded = await usersRepository.saveRequests(income);
+  debugger;
+  if(!isAdded) return res.send("Could not save request")
   next()
 }
