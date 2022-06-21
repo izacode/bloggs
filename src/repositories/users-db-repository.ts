@@ -83,7 +83,7 @@ export class UsersRepository {
   async saveRequests(income: any): Promise<boolean> {
     await requestsCollection.insertOne(income)
 
-    const isAdded = await registrationIpCollection.findOne({ip: income.requestIp})
+    const isAdded = await requestsCollection.findOne({ requestIp: income.requestIp });
     if(!isAdded)return false
     return true
   }
