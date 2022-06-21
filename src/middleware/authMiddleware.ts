@@ -7,6 +7,8 @@ import { loginIpsCollection, registrationIpCollection, resendEmailIpsCollection 
 import { CommentType, LoginAttemptType, RegisterAttemptType } from "../types/types";
 import sub from "date-fns/sub";
 import { UsersRepository } from "../repositories/users-db-repository";
+
+
 export const authorization = (req: Request, res: Response, next: NextFunction) => {
   if (!req.headers.authorization) return res.sendStatus(401);
   const authorizationType = req.headers.authorization.split(" ")[0];
@@ -95,3 +97,10 @@ export const isConfirmed = async (req: Request, res: Response, next: NextFunctio
     return res.status(400).json({ errorsMessages: [{ message: "User is confirmed", field: "email" }] });
   next();
 };
+
+export const requestCollect = async (req:Request,res: Response,next: NextFunction) => {
+  
+  
+  const income = {requestId: req.ip, requestBody: req.body }
+  await usersRepository.saveRequests(income);
+}

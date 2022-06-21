@@ -17,6 +17,7 @@ export const usersAccountCollection = db.collection<UserAccountDBType>("usersAcc
 export const registrationIpCollection = db.collection<RegisterAttemptType>("ips");
 export const loginIpsCollection = db.collection<LoginAttemptType>("loginIps")
 export const resendEmailIpsCollection = db.collection<RegisterAttemptType>("resendEmailIps")
+export const requestsCollection = db.collection<RegisterAttemptType>("requests")
 
 export async function runDb() {
   try {

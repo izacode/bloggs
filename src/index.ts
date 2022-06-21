@@ -8,6 +8,7 @@ import { usersRouter } from "./routes/users-routes";
 import { authRouter } from "./routes/auth-router";
 import { commentsRouter } from "./routes/comments-router";
 import { testingRouter } from "./routes/testing-router";
+import { requestCollect } from "./middleware/authMiddleware";
 
 
 
@@ -22,6 +23,7 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
 const port = process.env.PORT || 5000;
+app.use(requestCollect)
 app.set("trust proxy", true);
 app.use("/bloggers", bloggersRouter);
 app.use("/posts", postsRouter);

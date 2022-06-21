@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import { CustomResponseType, UserAccountDBType, UserType } from "../types/types";
-import { registrationIpCollection, usersAccountCollection, usersCollection } from "./dbmongo";
+import { registrationIpCollection, requestsCollection, usersAccountCollection, usersCollection } from "./dbmongo";
 
 export class UsersRepository {
   async getAllUsers(pageNumber: number, pageSize: number): Promise<CustomResponseType> {
@@ -73,6 +73,15 @@ export class UsersRepository {
     const totalCount: number = await registrationIpCollection.countDocuments({});
     if (totalCount !== 0) return false;
     return true;
+  }
+  async deleteAllRequests() {
+    await requestsCollection.deleteMany({});
+    const totalCount: number = await requestsCollection.countDocuments({});
+    if (totalCount !== 0) return false;
+    return true;
+  }
+  async saveRequests(income: any) {
+    await requestsCollection.insertOne(income)
   }
 }
 
