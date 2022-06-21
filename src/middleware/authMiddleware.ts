@@ -8,7 +8,6 @@ import { CommentType, LoginAttemptType, RegisterAttemptType } from "../types/typ
 import sub from "date-fns/sub";
 import { UsersRepository } from "../repositories/users-db-repository";
 
-
 export const authorization = (req: Request, res: Response, next: NextFunction) => {
   if (!req.headers.authorization) return res.sendStatus(401);
   const authorizationType = req.headers.authorization.split(" ")[0];
@@ -92,18 +91,16 @@ export const userExistsCheck = async (req: Request, res: Response, next: NextFun
 
 export const isConfirmed = async (req: Request, res: Response, next: NextFunction) => {
   const user = await usersRepository.findUserByLoginOrEmail(req.body.email);
-  if(!user) return next()
+  if (!user) return next();
   if (user.emailConfirmation.isConfirmed)
     return res.status(400).json({ errorsMessages: [{ message: "User is confirmed", field: "email" }] });
   next();
 };
 
-export const requestCollect = async (req:Request,res: Response,next: NextFunction) => {
-  debugger
-  const income = {requestIp: req.ip, requestBody: req.body }
-  debugger
+export const requestCollect = async (req: Request, res: Response, next: NextFunction) => {
+  const income = { requestIp: req.ip, requestBody: req.body };
+
   const isAdded = await usersRepository.saveRequests(income);
-  debugger;
-  if(!isAdded) return res.send("Could not save request")
-  next()
-}
+  if (!isAdded) return res.send("Could not save request");
+  next();
+};
