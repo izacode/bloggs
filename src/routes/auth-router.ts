@@ -22,12 +22,12 @@ export const authRouter = Router();
 
 authRouter.post(
   "/registration",
-  attemptsCheck,
+  
   loginValidation,
   passwordValidation,
   emailValidation,
   inputValidationMiddleware,
-  userExistsCheck,
+  userExistsCheck,attemptsCheck,
 
   async (req: Request, res: Response) => {
     const user: UserAccountDBType | null = await authService.createUser(req.body.login, req.body.email, req.body.password, req.ip);
@@ -65,9 +65,9 @@ authRouter.post("/refreshtoken", async (req: Request, res: Response) => {
 
 authRouter.post(
   "/registration-confirmation",
-  attemptsCheck,
+  
   codeValidation,
-  inputValidationMiddleware,
+  inputValidationMiddleware,attemptsCheck,
   async (req: Request, res: Response) => {
     const result = await authService.confirmEmail(req.body.code);
     if (result) {
