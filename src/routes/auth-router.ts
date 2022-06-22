@@ -79,7 +79,7 @@ authRouter.post(
     }
   }
 );
-authRouter.post("/registration-email-resending", isConfirmed, isEmailExists, resendEmailAttemptsCheck, async (req: Request, res: Response) => {
+authRouter.post("/registration-email-resending", isConfirmed, isEmailExists,  async (req: Request, res: Response) => {
   const result = await authService.reConfirmEmail(req.body.email);
   if (!result) return res.sendStatus(400);
   res.sendStatus(204);
