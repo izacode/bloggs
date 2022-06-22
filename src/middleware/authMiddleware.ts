@@ -87,19 +87,17 @@ const usersRepository = new UsersRepository();
 
 export const userExistsCheck = async (req: Request, res: Response, next: NextFunction) => {
   const userLoginExists = await usersRepository.findUserByLoginOrEmail(req.body.login);
-  if (userLoginExists) return res.status(400).send({ errorsMessages: [{ message: "User with this login exists", field: "login" }] });
+  if (userLoginExists) return res.status(400).json({ errorsMessages: [{ message: "User with this login exists", field: "login" }] });
   const userEmailExists = await usersRepository.findUserByLoginOrEmail(req.body.email);
-  
-  if (userEmailExists) return res.status(400).send({ errorsMessages: [{ message: "User with this email exists", field: "email" }] });
+  if (userEmailExists) return res.status(400).json({ errorsMessages: [{ message: "User with this email exists", field: "email" }] });
   next();
 };
 
 export const isConfirmed = async (req: Request, res: Response, next: NextFunction) => {
   const user = await usersRepository.findUserByLoginOrEmail(req.body.email);
-  const error = { errorsMessages: [{ message: "User is confirmed", field: "email" }] };
   if (!user) return next();
   if (user.emailConfirmation.isConfirmed)
-    return res.status(400).send(error);
+    return res.status(400).json({ errorsMessages: [{ message: "User is confirmed", field: "email" }] });
   next();
 };
 export const isConfirmedCode = async (req: Request, res: Response, next: NextFunction) => {
