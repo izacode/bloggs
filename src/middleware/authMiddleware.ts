@@ -46,7 +46,8 @@ export const attemptsCheck = async (req: Request, res: Response, next: NextFunct
   const ip: string = req.ip;
   const attemptDate: Date = new Date();
   const result = await registrationIpCollection.find({ ip }).toArray();
-  if (result && result.length > 5 && result.filter((a) => a.attemptDate < sub(new Date(), { seconds: 10 }))) return res.sendStatus(429);
+  if (result && result.length > 5 && result.filter((a) => a.attemptDate < sub(new Date(), { seconds: 10 })).length > 5)
+    return res.sendStatus(429);
   const attempt: RegisterAttemptType = {
     ip,
     attemptDate,
@@ -58,7 +59,8 @@ export const resendEmailAttemptsCheck = async (req: Request, res: Response, next
   const ip: string = req.ip;
   const attemptDate: Date = new Date();
   const result = await resendEmailIpsCollection.find({ ip }).toArray();
-  if (result && result.length > 5 && result.filter((a) => a.attemptDate < sub(new Date(), { seconds: 10 }))) return res.sendStatus(429);
+  if (result && result.length > 5 && result.filter((a) => a.attemptDate < sub(new Date(), { seconds: 10 })).length > 5)
+    return res.sendStatus(429);
   const attempt: RegisterAttemptType = {
     ip,
     attemptDate,
@@ -70,7 +72,9 @@ export const loginAttemptsCheck = async (req: Request, res: Response, next: Next
   const ip: string = req.ip;
   const attemptDate: Date = new Date();
   const result = await loginIpsCollection.find({ ip }).toArray();
-  if (result && result.length > 5 && result.filter((a) => a.attemptDate < sub(new Date(), { seconds: 10 }))) return res.sendStatus(429);
+  const filtered = result.filter((a) => a.attemptDate < sub(new Date(), { seconds: 10 }));
+  console.log(filtered)
+  if (result && result.length > 5 && (result.filter((a) => a.attemptDate < sub(new Date(), { seconds: 10 }))).length > 5) return res.sendStatus(429);
   const attempt: LoginAttemptType = {
     ip,
     attemptDate,
@@ -100,7 +104,7 @@ export const isConfirmedCode = async (req: Request, res: Response, next: NextFun
   const user = await usersRepository.findUserByConfirmationCode(req.body.code);
   if (!user) return next();
   if (user.emailConfirmation.isConfirmed)
-    return res.status(400).json({ errorsMessages: [{ message: "User is confirmed", field: "email" }] });
+    return res.status(400).send({ errorsMessages: [{ message: "User is confirmed", field: "email" }] });
   next();
 };
 
