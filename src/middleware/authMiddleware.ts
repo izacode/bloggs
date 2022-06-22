@@ -90,6 +90,7 @@ export const userExistsCheck = async (req: Request, res: Response, next: NextFun
 };
 
 export const isConfirmed = async (req: Request, res: Response, next: NextFunction) => {
+  debugger
   const user = await usersRepository.findUserByLoginOrEmail(req.body.email);
   if (!user) return next();
   if (user.emailConfirmation.isConfirmed)

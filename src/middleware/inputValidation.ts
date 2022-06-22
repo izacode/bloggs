@@ -77,7 +77,7 @@ export const passwordValidation = body("password")
   .withMessage("Password should be from 6 to 20 charachters long");
 // ==============================================================================================================
 export const emailValidation = body("email").trim().matches(regexForEmail).withMessage("Invalid email")
-export const codeValidation = body("code").trim().isString().isLength({min:1})
+export const codeValidation = body("code").trim().isString().isLength({min:20})
 
 // ==============================================================================================================
 

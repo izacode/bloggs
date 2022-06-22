@@ -65,7 +65,6 @@ authRouter.post("/refreshtoken", async (req: Request, res: Response) => {
 
 authRouter.post(
   "/registration-confirmation",
-  
   codeValidation,
   inputValidationMiddleware,attemptsCheck,
   async (req: Request, res: Response) => {
