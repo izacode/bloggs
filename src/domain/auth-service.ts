@@ -70,8 +70,14 @@ class AuthService {
     if (!user) return false;
     if (user.emailConfirmation.expirationDate < new Date()) return false;
     let result = await this.usersRepository.updateConfirmation(user._id);
+    const newConfirmationCode = uuidv4();
+    let updatedCode = await this.usersRepository.updateConfirmationCode(user._id, newConfirmationCode);
+    if(!updatedCode) return false
+    const updatedUser = await this.usersRepository.findUserByLoginOrEmail(email);
+    if (!updatedUser) return false;
+
     try {
-      const result = await emailService.sendEmailConfirmationMassage(user);
+      const result = await emailService.sendEmailConfirmationMassage(updatedUser);
       // const result = await emailManager.sendEmailConfirmationMassage(user);
       if (result) {
         await this.usersRepository.updateSentEmails(user._id);

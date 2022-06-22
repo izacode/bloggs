@@ -70,12 +70,12 @@ authRouter.post(
   async (req: Request, res: Response) => {
     const result = await authService.confirmEmail(req.body.code);
     if (result) {
-      res.status(201).json({
+      return res.status(201).json({
         status: "success",
         message: "Email has been confirmed",
       });
     } else {
-      res.sendStatus(400);
+      return res.sendStatus(400);
     }
   }
 );

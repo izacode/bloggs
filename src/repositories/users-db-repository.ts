@@ -48,6 +48,10 @@ export class UsersRepository {
     const result = await usersAccountCollection.updateOne({ _id }, { $set: { "emailConfirmation.isConfirmed": true } });
     return result.matchedCount === 1;
   }
+  async updateConfirmationCode(_id: ObjectId, newCode: string): Promise<boolean> {
+    const result = await usersAccountCollection.updateOne({ _id }, { $set: { "emailConfirmation.confirmationCode": newCode } });
+    return result.matchedCount === 1;
+  }
   async updateSentEmails(_id: ObjectId): Promise<boolean> {
     const result = await usersAccountCollection.updateOne({ _id }, { $set: { "emailConfirmation.sentEmails": [1] } });
     return result.matchedCount === 1;
@@ -56,6 +60,7 @@ export class UsersRepository {
     const isDeleted = await usersAccountCollection.deleteOne({ _id });
     return isDeleted.deletedCount === 1;
   }
+  
   async deleteAllUsers() {
     await usersCollection.deleteMany({});
     const totalCount: number = await usersCollection.countDocuments({});
@@ -81,11 +86,11 @@ export class UsersRepository {
     return true;
   }
   async saveRequests(income: any): Promise<boolean> {
-    await requestsCollection.insertOne(income)
+    await requestsCollection.insertOne(income);
 
     const isAdded = await requestsCollection.findOne({ requestIp: income.requestIp });
-    if(!isAdded)return false
-    return true
+    if (!isAdded) return false;
+    return true;
   }
 }
 
