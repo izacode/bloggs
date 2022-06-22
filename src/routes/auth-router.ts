@@ -66,7 +66,7 @@ authRouter.post("/refreshtoken", async (req: Request, res: Response) => {
 authRouter.post(
   "/registration-confirmation",
   codeValidation,
-  inputValidationMiddleware,attemptsCheck,
+  inputValidationMiddleware,
   async (req: Request, res: Response) => {
     const result = await authService.confirmEmail(req.body.code);
     if (result) {
