@@ -10,7 +10,8 @@ export const emailManager = {
   },
   async sendEmailConfirmationMassage(user: UserAccountDBType) {
     const subject: string = "This is email confirmation message";
-    const message: string = "<H1> Please confirm your email <a href='www.google.com'>confirm email <a/><H1/>";
+    const message: string =
+      `<H1> Please confirm your email <a href='https://somesite.com/confirm-email?code=${user.emailConfirmation.confirmationCode}'>confirm email <a/><H1/>`;
 
     const result = await emailAdapter.sendEmail(user.accountData.email, subject, message);
 
