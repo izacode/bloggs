@@ -4,7 +4,7 @@ import { jwtService } from "../application/jwt-service";
 import { authService } from "../domain/auth-service";
 import { emailService } from "../domain/email-service";
 import { usersService } from "../domain/users-service";
-import { attemptsCheck, isConfirmed, isEmailExists, loginAttemptsCheck, resendEmailAttemptsCheck, userExistsCheck } from "../middleware/authMiddleware";
+import { attemptsCheck, isConfirmed, isConfirmedCode, isEmailExists, loginAttemptsCheck, resendEmailAttemptsCheck, userExistsCheck } from "../middleware/authMiddleware";
 // import { usersService } from "../domain/users-service";
 import {
   codeValidation,
@@ -41,12 +41,12 @@ authRouter.post("/login", loginAttemptsCheck, async (req: Request, res: Response
   // if (!confirmedUser) return res.sendStatus(401);
   // if (!confirmedUser.emailConfirmation.isConfirmed) return res.status(400).json({ message: "Please confirm your email" });
 
-  const user: UserAccountDBType | null = await authService.checkCredentials(req.body.loginOrEmail, req.body.password);
+  const user: UserAccountDBType | null = await authService.checkCredentials(req.body.login, req.body.password);
   if (user) {
     const accessToken: string = await jwtService.createJWT(user);
-    const refreshToken: string = await jwtService.createRefreshJWT(user);
-    const tokens = { accessToken, refreshToken };
-    res.send(tokens);
+    // const refreshToken: string = await jwtService.createRefreshJWT(user);
+    // const tokens = { accessToken, refreshToken };
+    res.send(accessToken);
   } else {
     res.sendStatus(401);
   }
@@ -66,7 +66,7 @@ authRouter.post("/refreshtoken", async (req: Request, res: Response) => {
 authRouter.post(
   "/registration-confirmation",
   codeValidation,
-  isConfirmed,
+  isConfirmedCode,
   inputValidationMiddleware,
   async (req: Request, res: Response) => {
     const result = await authService.confirmEmail(req.body.code);

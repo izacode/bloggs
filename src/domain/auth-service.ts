@@ -48,11 +48,12 @@ class AuthService {
 
     return createResult;
   }
-  async checkCredentials(loginOrEmail: string, password: string) {
-    const user: UserAccountDBType | null = await this.usersRepository.findUserByLoginOrEmail(loginOrEmail);
+  async checkCredentials(login: string, password: string) {
+    debugger
+    const user: UserAccountDBType | null = await this.usersRepository.findUserByLoginOrEmail(login);
     if (!user) return null;
     // ??? Which one should go first isConfirmed or password check
-    if (!user.emailConfirmation.isConfirmed) return null;
+    // if (!user.emailConfirmation.isConfirmed) return null;
     const areHashesEqual = await this._isPasswordCorrect(password, user.accountData.passwordHash);
     if (!areHashesEqual) return null;
     return user;
