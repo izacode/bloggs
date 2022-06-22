@@ -94,7 +94,7 @@ export const inputValidationMiddleware = (req: Request, res: Response, next: Nex
       };
     });
 
-    res.status(400).json({ errorsMessages: myErrors, resultCode: 1 });
+    res.status(400).json({ errorsMessages: myErrors});
   }
 };
 export const bloggerIdError = {
