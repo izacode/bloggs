@@ -4,7 +4,7 @@ import { jwtService } from "../application/jwt-service";
 import { authService } from "../domain/auth-service";
 import { emailService } from "../domain/email-service";
 import { usersService } from "../domain/users-service";
-import { attemptsCheck, isConfirmed, loginAttemptsCheck, resendEmailAttemptsCheck, userExistsCheck } from "../middleware/authMiddleware";
+import { attemptsCheck, isConfirmed, isEmailExists, loginAttemptsCheck, resendEmailAttemptsCheck, userExistsCheck } from "../middleware/authMiddleware";
 // import { usersService } from "../domain/users-service";
 import {
   codeValidation,
@@ -79,7 +79,7 @@ authRouter.post(
     }
   }
 );
-authRouter.post("/registration-email-resending", isConfirmed, resendEmailAttemptsCheck, async (req: Request, res: Response) => {
+authRouter.post("/registration-email-resending", isConfirmed, isEmailExists, resendEmailAttemptsCheck, async (req: Request, res: Response) => {
   const result = await authService.reConfirmEmail(req.body.email);
   if (!result) return res.sendStatus(400);
   res.sendStatus(204);
