@@ -37,9 +37,9 @@ authRouter.post(
 );
 
 authRouter.post("/login", loginAttemptsCheck, async (req: Request, res: Response) => {
-  const confirmedUser = await usersService.findUserByLogin(req.body.login);
-  if (!confirmedUser) return res.sendStatus(401);
-  if (!confirmedUser.emailConfirmation.isConfirmed) return res.status(400).json({ message: "Please confirm your email" });
+  // const confirmedUser = await usersService.findUserByLogin(req.body.login);
+  // if (!confirmedUser) return res.sendStatus(401);
+  // if (!confirmedUser.emailConfirmation.isConfirmed) return res.status(400).json({ message: "Please confirm your email" });
 
   const user: UserAccountDBType | null = await authService.checkCredentials(req.body.loginOrEmail, req.body.password);
   if (user) {
