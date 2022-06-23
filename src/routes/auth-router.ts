@@ -46,7 +46,7 @@ authRouter.post("/login", loginAttemptsCheck, async (req: Request, res: Response
     const accessToken: string = await jwtService.createJWT(user);
     // const refreshToken: string = await jwtService.createRefreshJWT(user);
     // const tokens = { accessToken, refreshToken };
-    res.send(accessToken);
+    res.send({token:accessToken});
   } else {
     res.sendStatus(401);
   }
