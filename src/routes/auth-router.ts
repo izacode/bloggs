@@ -26,8 +26,8 @@ authRouter.post(
   loginValidation,
   passwordValidation,
   emailValidation,
-  inputValidationMiddleware,
-  userExistsCheck,attemptsCheck,
+  inputValidationMiddleware,attemptsCheck,
+  userExistsCheck,
 
   async (req: Request, res: Response) => {
     const user: UserAccountDBType | null = await authService.createUser(req.body.login, req.body.email, req.body.password, req.ip);
