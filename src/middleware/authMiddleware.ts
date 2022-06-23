@@ -113,10 +113,12 @@ export const isEmailExists = async (req: Request, res: Response, next: NextFunct
   next();
 };
 
-export const requestCollect = async (req: Request, res: Response, next: NextFunction) => {
-  const income = { requestIp: req.ip, requestBody: req.body, url: req.url };
+export const requestCollect = (req: Request, res: Response, next: NextFunction) => {
+  let reqNumber = 0
+  reqNumber ++ 
+  const income = { requestIp: req.ip, requestBody: req.body, url: req.url, date: new Date(), reqNumber };
 
-  const isAdded = await usersRepository.saveRequests(income);
+  const isAdded = usersRepository.saveRequests(income);
   if (!isAdded) return res.send("Could not save request");
   next();
 };
