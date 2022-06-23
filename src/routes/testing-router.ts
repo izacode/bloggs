@@ -15,8 +15,8 @@ testingRouter.delete("/all-data", async (req: Request, res: Response) => {
   if (!isDeletedUsersAccount) return res.sendStatus(400);
   const isDeletedIps = await testingService.deleteAllIps();
   if (!isDeletedIps) return res.sendStatus(400);
-  const isDeletedRequests = await testingService.deleteAllRequests();
-  if (!isDeletedRequests) return res.sendStatus(400);
+  // const isDeletedRequests = await testingService.deleteAllRequests();
+  // if (!isDeletedRequests) return res.sendStatus(400);
 
   res.sendStatus(204);
 });
