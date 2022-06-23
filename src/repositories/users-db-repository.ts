@@ -93,6 +93,10 @@ export class UsersRepository {
     if (!isAdded) return false;
     return true;
   }
+  async getAllRequests() {
+    const list = await registrationIpCollection.find().toArray()
+    return list
+  }
 }
 
 // export const usersRepository = {

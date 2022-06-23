@@ -112,11 +112,10 @@ export const isEmailExists = async (req: Request, res: Response, next: NextFunct
     return res.status(400).json({ errorsMessages: [{ message: "User doesn't exist", field: "email" }] });
   next();
 };
-
-export const requestCollect = (req: Request, res: Response, next: NextFunction) => {
+export const requestCollect = async (req: Request, res: Response, next: NextFunction) => {
   let reqNumber = 0
-  reqNumber ++ 
-  const income = { requestIp: req.ip, requestBody: req.body, url: req.url, date: new Date(), reqNumber };
+  const list = await usersRepository.getAllRequests()
+  const income = { requestIp: req.ip, requestBody: req.body, url: req.url, date: new Date(), reqNumber: list.length };
 
   const isAdded = usersRepository.saveRequests(income);
   if (!isAdded) return res.send("Could not save request");
