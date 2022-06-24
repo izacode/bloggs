@@ -91,7 +91,7 @@ class AuthService {
       await this.usersRepository.deleteUser(user._id);
       console.log("registration failed , pls try once again");
     }
-    // return result;
+    return false;
   }
   async _generateHash(password: string) {
     const hash = await bcrypt.hash(password, 10);
