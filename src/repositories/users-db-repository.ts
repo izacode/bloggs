@@ -38,7 +38,7 @@ export class UsersRepository {
     return user;
   }
   async findUserById(_id: ObjectId): Promise<UserAccountDBType | null> {
-    const user = await usersAccountCollection.findOne({ _id: new Object(_id) });
+    const user = await usersAccountCollection.findOne({ _id: new ObjectId(_id) });
     return user;
   }
   async findUserByConfirmationCode(code: string): Promise<UserAccountDBType | null> {

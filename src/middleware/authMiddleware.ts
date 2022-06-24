@@ -20,14 +20,17 @@ export const authorization = (req: Request, res: Response, next: NextFunction) =
   next();
 };
 export const authentication = async (req: Request, res: Response, next: NextFunction) => {
+  debugger
   if (!req.headers.authorization) {
     res.sendStatus(401);
     return;
   }
-  debugger
+  
   const token = req.headers.authorization.split(" ")[1];
   const userId = await jwtService.getUserIdByToken(token);
-  const userIdObject = new ObjectId(userId)
+  
+  const userIdObject = new ObjectId(userId);
+  
   if (userId) {
     req.context = {
       user: await usersService.findUserById(userIdObject),
@@ -38,6 +41,7 @@ export const authentication = async (req: Request, res: Response, next: NextFunc
   res.sendStatus(401);
 };
 export const userAuthorization = async (req: Request, res: Response, next: NextFunction) => {
+  debugger
   const commentToUpdate: CommentType | null = await commentsService.getCommentById(req.params.commentId);
   if (!commentToUpdate) return res.sendStatus(404);
   if (commentToUpdate.userId !== req.context.user._id) return res.sendStatus(403);// changed to _id
