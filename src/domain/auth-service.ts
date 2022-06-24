@@ -69,8 +69,8 @@ class AuthService {
   async reConfirmEmail(email: string): Promise<boolean> {
     const user: UserAccountDBType | null = await this.usersRepository.findUserByLoginOrEmail(email);
     if (!user) return false;
-    if (user.emailConfirmation.expirationDate < new Date()) return false;
-    let result = await this.usersRepository.updateConfirmation(user._id);
+    // if (user.emailConfirmation.expirationDate < new Date()) return false;
+    // let result = await this.usersRepository.updateConfirmation(user._id);
     const newConfirmationCode = uuidv4();
     let updatedCode = await this.usersRepository.updateConfirmationCode(user._id, newConfirmationCode);
     if(!updatedCode) return false
@@ -82,13 +82,16 @@ class AuthService {
       // const result = await emailManager.sendEmailConfirmationMassage(user);
       if (result) {
         await this.usersRepository.updateSentEmails(user._id);
+
+
       }
+      return result
     } catch (error) {
       console.log(error);
       await this.usersRepository.deleteUser(user._id);
       console.log("registration failed , pls try once again");
     }
-    return result;
+    // return result;
   }
   async _generateHash(password: string) {
     const hash = await bcrypt.hash(password, 10);
