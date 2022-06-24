@@ -28,7 +28,7 @@ commentsRouter.put(
 commentsRouter.delete("/:commentId", authentication, async (req: Request, res: Response) => {
   const commentToDelete = await commentsService.getCommentById(req.params.commentId);
   if (!commentToDelete) return res.sendStatus(404);
-  if (commentToDelete.userId.toString() !== req.context.user.id) return res.sendStatus(403);
+  if (commentToDelete.userId.toString() !== req.context.user._id) return res.sendStatus(403); //changed to _id
   const isDeleted = await commentsService.deleteComment(req.params.commentId);
   isDeleted ? res.sendStatus(204) : res.sendStatus(404);
 });

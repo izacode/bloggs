@@ -40,7 +40,7 @@ export const authentication = async (req: Request, res: Response, next: NextFunc
 export const userAuthorization = async (req: Request, res: Response, next: NextFunction) => {
   const commentToUpdate: CommentType | null = await commentsService.getCommentById(req.params.commentId);
   if (!commentToUpdate) return res.sendStatus(404);
-  if (commentToUpdate.userId !== req.context.user.id) return res.sendStatus(403);
+  if (commentToUpdate.userId !== req.context.user._id) return res.sendStatus(403);// changed to _id
   next();
 };
 
