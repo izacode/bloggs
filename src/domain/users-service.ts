@@ -19,7 +19,7 @@ class UsersService {
     return user;
   }
   async findUserById(_id: ObjectId): Promise<UserAccountDBType | null> {
-    const user = await this.usersRepository.findUserById(_id);
+    const user: UserAccountDBType | null = await this.usersRepository.findUserById(_id);
     return user;
   }
   async findUserByLogin(login: string): Promise<UserAccountDBType | null> {

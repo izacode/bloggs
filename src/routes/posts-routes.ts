@@ -92,13 +92,15 @@ postsRouter.get("/:id/comments", async (req: Request, res: Response) => {
 
 postsRouter.post(
   "/:id/comments",
+  
   authentication,
   commentContentValidation,
   inputValidationMiddleware,
   async (req: Request, res: Response) => {
+    debugger
     const post = await postsService.getPost(req.params.id);
     if (!post) return res.sendStatus(404);
-    const newComment = await commentsService.createComment(req.params.id, req.body.content, req.context.user!.id, req.context.user!.login);
+    const newComment = await commentsService.createComment(req.params.id, req.body.content, req.context.user!._id, req.context.user!.accountData.userName);
     res.status(201).send(newComment);
   }
 );

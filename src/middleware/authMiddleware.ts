@@ -24,11 +24,13 @@ export const authentication = async (req: Request, res: Response, next: NextFunc
     res.sendStatus(401);
     return;
   }
+  debugger
   const token = req.headers.authorization.split(" ")[1];
   const userId = await jwtService.getUserIdByToken(token);
+  const userIdObject = new ObjectId(userId)
   if (userId) {
     req.context = {
-      user: await usersService.findUserById(userId),
+      user: await usersService.findUserById(userIdObject),
     };
     next();
     return;
@@ -58,16 +60,6 @@ export const attemptsCheck = async (req: Request, res: Response, next: NextFunct
   if (result> 5) return res.sendStatus(429);
   next();
 };
-
-
-
-
-
-
-
-
-
-
 
 
 
