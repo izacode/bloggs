@@ -99,10 +99,8 @@ export const isConfirmed = async (req: Request, res: Response, next: NextFunctio
   next();
 };
 export const isConfirmedCode = async (req: Request, res: Response, next: NextFunction) => {
-  debugger
   const user = await usersRepository.findUserByConfirmationCode(req.body.code);
   if (!user) return next();
-  debugger
   if (user.emailConfirmation.isConfirmed)
     return res.status(400).send({ errorsMessages: [{ message: "User is confirmed", field: "code" }] });
   next();

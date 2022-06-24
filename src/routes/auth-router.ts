@@ -67,7 +67,7 @@ authRouter.post(
   "/registration-confirmation",
   codeValidation,
   inputValidationMiddleware,
-  isConfirmedCode,
+  // isConfirmedCode,
   async (req: Request, res: Response) => {
     const result = await authService.confirmEmail(req.body.code);
     if (result) {
