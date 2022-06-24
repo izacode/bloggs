@@ -59,15 +59,15 @@ class AuthService {
     return user;
   }
   async confirmEmail(code: string): Promise<boolean> {
-    const user = await this.usersRepository.findUserByConfirmationCode(code);
+    const user: UserAccountDBType | null = await this.usersRepository.findUserByConfirmationCode(code);
     if (!user) return false;
     // if (user.emailConfirmation.isConfirmed) return false;
     if (user.emailConfirmation.expirationDate < new Date()) return false;
-    let result = await this.usersRepository.updateConfirmation(user._id);
+    let result: boolean = await this.usersRepository.updateConfirmation(user._id);
     return result;
   }
   async reConfirmEmail(email: string): Promise<boolean> {
-    const user = await this.usersRepository.findUserByLoginOrEmail(email);
+    const user: UserAccountDBType | null = await this.usersRepository.findUserByLoginOrEmail(email);
     if (!user) return false;
     if (user.emailConfirmation.expirationDate < new Date()) return false;
     let result = await this.usersRepository.updateConfirmation(user._id);
