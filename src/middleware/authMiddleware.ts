@@ -3,8 +3,8 @@ import { ObjectId } from "mongodb";
 import { jwtService } from "../application/jwt-service";
 import { commentsService } from "../domain/comments-service";
 import { usersService } from "../domain/users-service";
-import { loginIpsCollection, registrationIpCollection, resendEmailIpsCollection } from "../repositories/dbmongo";
-import { CommentType, LoginAttemptType, AttemptType } from "../types/types";
+import {registrationIpCollection} from "../repositories/dbmongo";
+import { CommentType, AttemptType } from "../types/types";
 import sub from "date-fns/sub";
 import { UsersRepository } from "../repositories/users-db-repository";
 

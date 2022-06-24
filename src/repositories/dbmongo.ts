@@ -1,6 +1,6 @@
 import { MongoClient } from "mongodb";
 import { settings } from "../settings/settings";
-import { BloggerType, CommentType, PostType, UserType, UserAccountDBType, RegisterAttemptType, LoginAttemptType } from "../types/types";
+import { BloggerType, CommentType, PostType, UserType, UserAccountDBType, AttemptType} from "../types/types";
 
 // const mongoUri = process.env.mongoURI || "mongodb://localhost:27017";
 // const mongoUri = "mongodb://localhost:27017";
@@ -14,9 +14,7 @@ export const bloggersCollection = db.collection<BloggerType>("bloggers");
 export const usersCollection = db.collection<UserType>("users")
 export const commentsCollection =db.collection<CommentType>("comments");
 export const usersAccountCollection = db.collection<UserAccountDBType>("usersAccount");
-export const registrationIpCollection = db.collection<RegisterAttemptType>("ips");
-export const loginIpsCollection = db.collection<LoginAttemptType>("loginIps")
-export const resendEmailIpsCollection = db.collection<RegisterAttemptType>("resendEmailIps")
+export const registrationIpCollection = db.collection<AttemptType>("ips");
 export const requestsCollection = db.collection("requests")
 
 export async function runDb() {
