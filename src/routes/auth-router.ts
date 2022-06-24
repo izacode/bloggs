@@ -22,17 +22,17 @@ export const authRouter = Router();
 
 authRouter.post(
   "/registration",
-  
   loginValidation,
   passwordValidation,
   emailValidation,
-  inputValidationMiddleware,attemptsCheck,
+  inputValidationMiddleware,
+  attemptsCheck,
   userExistsCheck,
 
   async (req: Request, res: Response) => {
     const user: UserAccountDBType | null = await authService.createUser(req.body.login, req.body.email, req.body.password, req.ip);
     if (!user) return res.sendStatus(400);
-    res.status(204).send(`Confirmation email has been send to ${req.body.email}`);
+    res.sendStatus(204);
   }
 );
 
@@ -66,8 +66,8 @@ authRouter.post("/refreshtoken", async (req: Request, res: Response) => {
 authRouter.post(
   "/registration-confirmation",
   codeValidation,
-  isConfirmedCode,
   inputValidationMiddleware,
+  isConfirmedCode,
   async (req: Request, res: Response) => {
     const result = await authService.confirmEmail(req.body.code);
     if (result) {

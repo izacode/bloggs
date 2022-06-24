@@ -46,8 +46,8 @@ export const attemptsCheck = async (req: Request, res: Response, next: NextFunct
   const ip: string = req.ip;
   const attemptDate: Date = new Date();
   const result = await registrationIpCollection.find({ ip }).toArray();
-  if (result.filter((a) => a.attemptDate > sub(new Date(), { seconds: 10 })).length > 5)
-    return res.sendStatus(429);
+ 
+  if (result.filter((a) => a.attemptDate > sub(new Date(), { seconds: 100 })).length > 5) return res.sendStatus(429);
   const attempt: RegisterAttemptType = {
     ip,
     attemptDate,
@@ -99,8 +99,10 @@ export const isConfirmed = async (req: Request, res: Response, next: NextFunctio
   next();
 };
 export const isConfirmedCode = async (req: Request, res: Response, next: NextFunction) => {
+  debugger
   const user = await usersRepository.findUserByConfirmationCode(req.body.code);
   if (!user) return next();
+  debugger
   if (user.emailConfirmation.isConfirmed)
     return res.status(400).send({ errorsMessages: [{ message: "User is confirmed", field: "code" }] });
   next();
