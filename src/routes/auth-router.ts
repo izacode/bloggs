@@ -4,7 +4,7 @@ import { jwtService } from "../application/jwt-service";
 import { authService } from "../domain/auth-service";
 import { emailService } from "../domain/email-service";
 import { usersService } from "../domain/users-service";
-import { attemptsCheck, isConfirmed, isConfirmedCode, isEmailExists, loginAttemptsCheck, resendEmailAttemptsCheck, userExistsCheck } from "../middleware/authMiddleware";
+import { attemptsCheck, isConfirmed, isConfirmedCode, isEmailExists, userExistsCheck } from "../middleware/authMiddleware";
 // import { usersService } from "../domain/users-service";
 import {
   codeValidation,
@@ -22,11 +22,12 @@ export const authRouter = Router();
 
 authRouter.post(
   "/registration",
+  attemptsCheck,
   loginValidation,
   passwordValidation,
   emailValidation,
   inputValidationMiddleware,
-  attemptsCheck,
+  
   userExistsCheck,
 
   async (req: Request, res: Response) => {
@@ -36,7 +37,7 @@ authRouter.post(
   }
 );
 
-authRouter.post("/login", loginAttemptsCheck, async (req: Request, res: Response) => {
+authRouter.post("/login", attemptsCheck, async (req: Request, res: Response) => {
   // const confirmedUser = await usersService.findUserByLogin(req.body.login);
   // if (!confirmedUser) return res.sendStatus(401);
   // if (!confirmedUser.emailConfirmation.isConfirmed) return res.status(400).json({ message: "Please confirm your email" });
@@ -77,8 +78,8 @@ authRouter.post(
     }
   }
 );
-authRouter.post("/registration-email-resending", isConfirmed, isEmailExists,  async (req: Request, res: Response) => {
-  
+authRouter.post("/registration-email-resending",attemptsCheck, isConfirmed, isEmailExists,  async (req: Request, res: Response) => {
+
   const result = await authService.reConfirmEmail(req.body.email);
   if (!result) return res.sendStatus(400);
   res.sendStatus(204);

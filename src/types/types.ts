@@ -78,9 +78,10 @@ export type LoginAttemptType = {
   ip: string;
 };
 
-export type RegisterAttemptType = {
+export type AttemptType = {
   ip: string;
   attemptDate: Date;
+  url: string
 };
 
 

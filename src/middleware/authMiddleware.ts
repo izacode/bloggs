@@ -4,7 +4,7 @@ import { jwtService } from "../application/jwt-service";
 import { commentsService } from "../domain/comments-service";
 import { usersService } from "../domain/users-service";
 import { loginIpsCollection, registrationIpCollection, resendEmailIpsCollection } from "../repositories/dbmongo";
-import { CommentType, LoginAttemptType, RegisterAttemptType } from "../types/types";
+import { CommentType, LoginAttemptType, AttemptType } from "../types/types";
 import sub from "date-fns/sub";
 import { UsersRepository } from "../repositories/users-db-repository";
 
@@ -45,41 +45,57 @@ export const userAuthorization = async (req: Request, res: Response, next: NextF
 export const attemptsCheck = async (req: Request, res: Response, next: NextFunction) => {
   const ip: string = req.ip;
   const attemptDate: Date = new Date();
-  const result = await registrationIpCollection.find({ ip }).toArray();
- 
-  if (result.filter((a) => a.attemptDate > sub(new Date(), { seconds: 100 })).length > 5) return res.sendStatus(429);
-  const attempt: RegisterAttemptType = {
+  const url = req.url
+  
+  const attempt: AttemptType = {
     ip,
     attemptDate,
+    url
   };
   await registrationIpCollection.insertOne(attempt);
+  const nowMinusTenSec = sub(new Date(), { seconds: 10 })
+  const result = await registrationIpCollection.countDocuments( {ip, attemptDate: { $gt: nowMinusTenSec }, url})
+  if (result> 5) return res.sendStatus(429);
   next();
 };
-export const resendEmailAttemptsCheck = async (req: Request, res: Response, next: NextFunction) => {
-  const ip: string = req.ip;
-  const attemptDate: Date = new Date();
-  const result = await resendEmailIpsCollection.find({ ip }).toArray();
-  if (result.filter((a) => a.attemptDate > sub(new Date(), { seconds: 10 })).length > 5) return res.sendStatus(429);
-  const attempt: RegisterAttemptType = {
-    ip,
-    attemptDate,
-  };
-  await resendEmailIpsCollection.insertOne(attempt);
-  next();
-};
-export const loginAttemptsCheck = async (req: Request, res: Response, next: NextFunction) => {
-  const ip: string = req.ip;
-  const attemptDate: Date = new Date();
-  const result = await loginIpsCollection.find({ ip }).toArray();
 
-  if (result.filter((a) => a.attemptDate > sub(new Date(), { seconds: 10 })).length > 5) return res.sendStatus(429);
-  const attempt: LoginAttemptType = {
-    ip,
-    attemptDate,
-  };
-  await loginIpsCollection.insertOne(attempt);
-  next();
-};
+
+
+
+
+
+
+
+
+
+
+
+
+// export const resendEmailAttemptsCheck = async (req: Request, res: Response, next: NextFunction) => {
+//   const ip: string = req.ip;
+//   const attemptDate: Date = new Date();
+//   const result = await resendEmailIpsCollection.find({ ip }).toArray();
+//   if (result.filter((a) => a.attemptDate > sub(new Date(), { seconds: 10 })).length > 5) return res.sendStatus(429);
+//   const attempt: RegisterAttemptType = {
+//     ip,
+//     attemptDate,
+//   };
+//   await resendEmailIpsCollection.insertOne(attempt);
+//   next();
+// };
+// export const loginAttemptsCheck = async (req: Request, res: Response, next: NextFunction) => {
+//   const ip: string = req.ip;
+//   const attemptDate: Date = new Date();
+//   const result = await loginIpsCollection.find({ ip }).toArray();
+
+//   if (result.filter((a) => a.attemptDate > sub(new Date(), { seconds: 10 })).length > 5) return res.sendStatus(429);
+//   const attempt: LoginAttemptType = {
+//     ip,
+//     attemptDate,
+//   };
+//   await loginIpsCollection.insertOne(attempt);
+//   next();
+// };
 
 const usersRepository = new UsersRepository();
 
