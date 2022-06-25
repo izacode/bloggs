@@ -3,4 +3,5 @@ dist
 .vscode
 front
 settings/
+settings.ts
 
