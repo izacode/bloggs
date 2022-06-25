@@ -27,7 +27,6 @@ export class UsersRepository {
     return createdUser;
   }
   async findUserByLoginOrEmail(loginOrEmail: string): Promise<UserAccountDBType | null> {
-    debugger
     const user = await usersAccountCollection.findOne({
       $or: [{ "accountData.userName": loginOrEmail }, { "accountData.email": loginOrEmail }],
     });
@@ -61,7 +60,7 @@ export class UsersRepository {
     const isDeleted = await usersAccountCollection.deleteOne({ _id });
     return isDeleted.deletedCount === 1;
   }
-  
+
   async deleteAllUsers() {
     await usersCollection.deleteMany({});
     const totalCount: number = await usersCollection.countDocuments({});
@@ -94,8 +93,8 @@ export class UsersRepository {
     return true;
   }
   async getAllRequests() {
-    const list = await registrationIpCollection.find().toArray()
-    return list
+    const list = await registrationIpCollection.find().toArray();
+    return list;
   }
 }
 

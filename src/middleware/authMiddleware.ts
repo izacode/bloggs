@@ -3,7 +3,7 @@ import { ObjectId } from "mongodb";
 import { jwtService } from "../application/jwt-service";
 import { commentsService } from "../domain/comments-service";
 import { usersService } from "../domain/users-service";
-import {registrationIpCollection} from "../repositories/dbmongo";
+import { registrationIpCollection } from "../repositories/dbmongo";
 import { CommentType, AttemptType } from "../types/types";
 import sub from "date-fns/sub";
 import { UsersRepository } from "../repositories/users-db-repository";
@@ -20,17 +20,16 @@ export const authorization = (req: Request, res: Response, next: NextFunction) =
   next();
 };
 export const authentication = async (req: Request, res: Response, next: NextFunction) => {
-  debugger
   if (!req.headers.authorization) {
     res.sendStatus(401);
     return;
   }
-  
+
   const token = req.headers.authorization.split(" ")[1];
   const userId = await jwtService.getUserIdByToken(token);
-  
+
   const userIdObject = new ObjectId(userId);
-  
+
   if (userId) {
     req.context = {
       user: await usersService.findUserById(userIdObject),
@@ -41,31 +40,28 @@ export const authentication = async (req: Request, res: Response, next: NextFunc
   res.sendStatus(401);
 };
 export const userAuthorization = async (req: Request, res: Response, next: NextFunction) => {
-  debugger
   const commentToUpdate: CommentType | null = await commentsService.getCommentById(req.params.commentId);
   if (!commentToUpdate) return res.sendStatus(404);
-  if (commentToUpdate.userId.toString() !== req.context.user._id.toString()) return res.sendStatus(403);// changed to _id and toString
+  if (commentToUpdate.userId.toString() !== req.context.user._id.toString()) return res.sendStatus(403);
   next();
 };
 
 export const attemptsCheck = async (req: Request, res: Response, next: NextFunction) => {
   const ip: string = req.ip;
   const attemptDate: Date = new Date();
-  const url = req.url
-  
+  const url = req.url;
+
   const attempt: AttemptType = {
     ip,
     attemptDate,
-    url
+    url,
   };
   await registrationIpCollection.insertOne(attempt);
-  const nowMinusTenSec = sub(new Date(), { seconds: 10 })
-  const result = await registrationIpCollection.countDocuments( {ip, attemptDate: { $gt: nowMinusTenSec }, url})
-  if (result> 5) return res.sendStatus(429);
+  const nowMinusTenSec = sub(new Date(), { seconds: 10 });
+  const result = await registrationIpCollection.countDocuments({ ip, attemptDate: { $gt: nowMinusTenSec }, url });
+  if (result > 5) return res.sendStatus(429);
   next();
 };
-
-
 
 // export const resendEmailAttemptsCheck = async (req: Request, res: Response, next: NextFunction) => {
 //   const ip: string = req.ip;
@@ -120,13 +116,10 @@ export const isConfirmedCode = async (req: Request, res: Response, next: NextFun
 
 export const isEmailExists = async (req: Request, res: Response, next: NextFunction) => {
   const user = await usersRepository.findUserByLoginOrEmail(req.body.email);
-  if (!user)
-    return res.status(400).json({ errorsMessages: [{ message: "User doesn't exist", field: "email" }] });
+  if (!user) return res.status(400).json({ errorsMessages: [{ message: "User doesn't exist", field: "email" }] });
   next();
 };
 export const requestCollect = async (req: Request, res: Response, next: NextFunction) => {
-  
- 
   const income = { requestIp: req.ip, requestBody: req.body, url: req.url, date: new Date() };
 
   const isAdded = usersRepository.saveRequests(income);

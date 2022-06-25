@@ -1,22 +1,16 @@
 import { Router, Request, Response } from "express";
-
 import { jwtService } from "../application/jwt-service";
 import { authService } from "../domain/auth-service";
 import { emailService } from "../domain/email-service";
-import { usersService } from "../domain/users-service";
 import { attemptsCheck, isConfirmed, isConfirmedCode, isEmailExists, userExistsCheck } from "../middleware/authMiddleware";
-// import { usersService } from "../domain/users-service";
 import {
   codeValidation,
   emailValidation,
   inputValidationMiddleware,
   loginValidation,
   passwordValidation,
-  testMiddleware,
-  userLoginValidation,
-  userPasswordValidation,
 } from "../middleware/inputValidation";
-import { UserAccountDBType, UserType } from "../types/types";
+import { UserAccountDBType } from "../types/types";
 
 export const authRouter = Router();
 
@@ -79,7 +73,6 @@ authRouter.post(
   }
 );
 authRouter.post("/registration-email-resending",attemptsCheck, isConfirmed, isEmailExists,  async (req: Request, res: Response) => {
-
   const result = await authService.reConfirmEmail(req.body.email);
   if (!result) return res.sendStatus(400);
   res.sendStatus(204);
@@ -87,7 +80,5 @@ authRouter.post("/registration-email-resending",attemptsCheck, isConfirmed, isEm
 
 authRouter.post("/sendRecoveryPassword", async (req: Request, res: Response) => {
   const info = await emailService.recoverPassword(req.body.email);
-
-  // res.sendStatus(200)
   res.send(info);
 });

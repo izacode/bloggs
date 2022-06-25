@@ -6,14 +6,14 @@ import { authentication, authorization } from "../middleware/authMiddleware";
 
 import {
   inputValidationMiddleware,
-  postIDBodyValidation,
+  
   titleValidation,
   shortDescriptionValidation,
   contentValidation,
-  bloggerIDValidation,
+  
   queryValidation,
   postIDValidation,
-  bloggerIdError,
+  
   bloggerIDBodyValidation,
   commentContentValidation,
 } from "../middleware/inputValidation";
@@ -79,7 +79,6 @@ postsRouter.delete("/:id", authorization, postIDValidation, inputValidationMiddl
   isDeleted ? res.sendStatus(204) : res.sendStatus(404);
 });
 
-
 // =============    Comments   =======================
 
 postsRouter.get("/:id/comments", async (req: Request, res: Response) => {
@@ -92,15 +91,19 @@ postsRouter.get("/:id/comments", async (req: Request, res: Response) => {
 
 postsRouter.post(
   "/:id/comments",
-  
+
   authentication,
   commentContentValidation,
   inputValidationMiddleware,
   async (req: Request, res: Response) => {
-    debugger
     const post = await postsService.getPost(req.params.id);
     if (!post) return res.sendStatus(404);
-    const newComment = await commentsService.createComment(req.params.id, req.body.content, req.context.user!._id, req.context.user!.accountData.userName);
+    const newComment = await commentsService.createComment(
+      req.params.id,
+      req.body.content,
+      req.context.user!._id,
+      req.context.user!.accountData.userName
+    );
     res.status(201).send(newComment);
   }
 );

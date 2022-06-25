@@ -49,7 +49,6 @@ class AuthService {
     return createResult;
   }
   async checkCredentials(login: string, password: string) {
-    debugger
     const user: UserAccountDBType | null = await this.usersRepository.findUserByLoginOrEmail(login);
     if (!user) return null;
     // ??? Which one should go first isConfirmed or password check
@@ -73,7 +72,7 @@ class AuthService {
     // let result = await this.usersRepository.updateConfirmation(user._id);
     const newConfirmationCode = uuidv4();
     let updatedCode = await this.usersRepository.updateConfirmationCode(user._id, newConfirmationCode);
-    if(!updatedCode) return false
+    if (!updatedCode) return false;
     const updatedUser = await this.usersRepository.findUserByLoginOrEmail(email);
     if (!updatedUser) return false;
 
@@ -82,10 +81,8 @@ class AuthService {
       // const result = await emailManager.sendEmailConfirmationMassage(user);
       if (result) {
         await this.usersRepository.updateSentEmails(user._id);
-
-
       }
-      return result
+      return result;
     } catch (error) {
       console.log(error);
       await this.usersRepository.deleteUser(user._id);
