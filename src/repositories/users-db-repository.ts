@@ -1,16 +1,18 @@
 import { ObjectId } from "mongodb";
-import { CustomResponseType, UserAccountDBType, UserType } from "../types/types";
-import { registrationIpCollection, requestsCollection, usersAccountCollection, usersCollection } from "./dbmongo";
+import { AttemptModel, UserAccountDBModel } from "../models/models";
+import { CustomResponseType, UserAccountDBType } from "../types/types";
+
+// import { registrationIpCollection, requestsCollection, usersAccountCollection, usersCollection } from "./dbmongo";
 
 export class UsersRepository {
   async getAllUsers(pageNumber: number, pageSize: number): Promise<CustomResponseType> {
-    const users = await usersCollection
-      .find({}, { projection: { _id: 0, passwordHash: 0, passwordSalt: 0 } })
+    const users = await UserAccountDBModel.find({}, { projection: { _id: 0, passwordHash: 0, passwordSalt: 0 } })
       .skip((pageNumber - 1) * pageSize)
       .limit(pageSize)
       .sort({ id: 1 })
-      .toArray();
-    const totalCount: number = await usersCollection.countDocuments();
+      .lean();
+
+    const totalCount: number = await UserAccountDBModel.countDocuments();
 
     const customResponse = {
       pagesCount: Math.ceil(totalCount / pageSize),
@@ -22,82 +24,87 @@ export class UsersRepository {
     return customResponse;
   }
   async createUser(user: UserAccountDBType): Promise<UserAccountDBType | null> {
-    await usersAccountCollection.insertOne(user);
-    const createdUser = await usersAccountCollection.findOne({ _id: user._id });
+    await UserAccountDBModel.create(user);
+    const createdUser = await UserAccountDBModel.findOne({ _id: user._id });
     return createdUser;
   }
   async findUserByLoginOrEmail(loginOrEmail: string): Promise<UserAccountDBType | null> {
-    const user = await usersAccountCollection.findOne({
+    const user = await UserAccountDBModel.findOne({
       $or: [{ "accountData.userName": loginOrEmail }, { "accountData.email": loginOrEmail }],
     });
     return user;
   }
   async findUserByLogin(login: string): Promise<UserAccountDBType | null> {
-    const user = await usersAccountCollection.findOne({ login });
+    const user = await UserAccountDBModel.findOne({ login });
     return user;
   }
   async findUserById(_id: ObjectId): Promise<UserAccountDBType | null> {
-    const user = await usersAccountCollection.findOne({ _id: new ObjectId(_id) });
+    const user = await UserAccountDBModel.findOne({ _id: new ObjectId(_id) });
     return user;
   }
   async findUserByConfirmationCode(code: string): Promise<UserAccountDBType | null> {
-    const user = await usersAccountCollection.findOne({ "emailConfirmation.confirmationCode": code });
+    const user = await UserAccountDBModel.findOne({ "emailConfirmation.confirmationCode": code });
     return user;
   }
   async updateConfirmation(_id: ObjectId): Promise<boolean> {
-    const result = await usersAccountCollection.updateOne({ _id }, { $set: { "emailConfirmation.isConfirmed": true } });
+    const result = await UserAccountDBModel.updateOne({ _id }, { $set: { "emailConfirmation.isConfirmed": true } });
     return result.matchedCount === 1;
   }
   async updateConfirmationCode(_id: ObjectId, newCode: string): Promise<boolean> {
-    const result = await usersAccountCollection.updateOne({ _id }, { $set: { "emailConfirmation.confirmationCode": newCode } });
+    const result = await UserAccountDBModel.updateOne({ _id }, { $set: { "emailConfirmation.confirmationCode": newCode } });
     return result.matchedCount === 1;
   }
   async updateSentEmails(_id: ObjectId): Promise<boolean> {
-    const result = await usersAccountCollection.updateOne({ _id }, { $set: { "emailConfirmation.sentEmails": [1] } });
-    return result.matchedCount === 1;
+    const doc = await UserAccountDBModel.findById({_id})
+    if(!doc)return false
+    doc.emailConfirmation.sentEmails.push({sentDate: new Date()})
+    await doc.save()
+    return true
   }
   async deleteUser(_id: ObjectId): Promise<boolean> {
-    const isDeleted = await usersAccountCollection.deleteOne({ _id });
+    const isDeleted = await UserAccountDBModel.deleteOne({ _id });
     return isDeleted.deletedCount === 1;
   }
 
   async deleteAllUsers() {
-    await usersCollection.deleteMany({});
-    const totalCount: number = await usersCollection.countDocuments({});
+    await UserAccountDBModel.deleteMany({});
+    const totalCount: number = await UserAccountDBModel.countDocuments({});
     if (totalCount !== 0) return false;
     return true;
   }
   async deleteAllUsersAccount() {
-    await usersAccountCollection.deleteMany({});
-    const totalCount: number = await usersAccountCollection.countDocuments({});
+    await UserAccountDBModel.deleteMany({});
+    const totalCount: number = await UserAccountDBModel.countDocuments({});
     if (totalCount !== 0) return false;
     return true;
   }
+
+  // Ips and requests================================================================
   async deleteAllIps() {
-    await registrationIpCollection.deleteMany({});
-    const totalCount: number = await registrationIpCollection.countDocuments({});
+    await AttemptModel.deleteMany({});
+    const totalCount: number = await AttemptModel.countDocuments({});
     if (totalCount !== 0) return false;
     return true;
   }
-  async deleteAllRequests() {
-    await requestsCollection.deleteMany({});
-    const totalCount: number = await requestsCollection.countDocuments({});
-    if (totalCount !== 0) return false;
-    return true;
-  }
-  async saveRequests(income: any): Promise<boolean> {
-    await requestsCollection.insertOne(income);
+  // async deleteAllRequests() {
+  //   await requestsCollection.deleteMany({});
+  //   const totalCount: number = await requestsCollection.countDocuments({});
+  //   if (totalCount !== 0) return false;
+  //   return true;
+  // }
+  // async saveRequests(income: any): Promise<boolean> {
+  //   await requestsCollection.insertOne(income);
 
-    const isAdded = await requestsCollection.findOne({ requestIp: income.requestIp });
-    if (!isAdded) return false;
-    return true;
-  }
-  async getAllRequests() {
-    const list = await registrationIpCollection.find().toArray();
-    return list;
-  }
+  //   const isAdded = await requestsCollection.findOne({ requestIp: income.requestIp });
+  //   if (!isAdded) return false;
+  //   return true;
+  // }
+  // async getAllRequests() {
+  //   const list = await registrationIpCollection.find().toArray();
+  //   return list;
+  // }
 }
-
+// ==============================================================================================================================
 // export const usersRepository = {
 //   async getAllUsers(pageNumber: number, pageSize: number): Promise<CustomResponseType> {
 //     const users = await usersCollection

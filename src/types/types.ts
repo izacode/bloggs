@@ -35,7 +35,7 @@ export type CustomResponseType = {
   page: number;
   pageSize: number;
   totalCount: number;
-  items: BloggerType[] | PostType[] | UserType[] | CommentType[];
+  items: BloggerType[] | PostType[] | UserAccountDBType[] | CommentType[];
 };
 
 export type CommentType = {

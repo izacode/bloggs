@@ -25,6 +25,7 @@ authRouter.post(
   userExistsCheck,
 
   async (req: Request, res: Response) => {
+    debugger
     const user: UserAccountDBType | null = await authService.createUser(req.body.login, req.body.email, req.body.password, req.ip);
     if (!user) return res.sendStatus(400);
     res.sendStatus(204);

@@ -1,23 +1,23 @@
-import { BloggerType, PostType } from "../types/types";
-import { postsCollection, bloggersCollection } from "./dbmongo";
+import { BloggerModel, PostModel } from "../models/models";
+import { BloggerType, CustomResponseType, PostType } from "../types/types";
+// import { postsCollection, bloggersCollection } from "./dbmongo";
 
 export class PostsRepository {
-  async getAllPosts(SearchTitleTerm: string | null, pageNumber: any, pageSize: any) {
-    const bloggers: BloggerType[] = await bloggersCollection.find({}, { projection: { _id: 0 } }).toArray();
+  async getAllPosts(SearchTitleTerm: string | null, pageNumber: any, pageSize: any): Promise<CustomResponseType> {
+    const bloggers: BloggerType[] = await BloggerModel.find({}, { projection: { _id: 0 } }).lean();
     let filter = SearchTitleTerm === null ? {} : { title: { $regex: SearchTitleTerm } };
     const posts: PostType[] = (
-      await postsCollection
-        .find(filter, { projection: { _id: 0 } })
+      await PostModel.find(filter, "-_id -__v")
         .skip((pageNumber - 1) * +pageSize)
         .limit(+pageSize)
-        .toArray()
+        .lean()
     ).map((p) =>
       Object.assign(p, {
         bloggerName: bloggers.find((b) => b.id === p.bloggerId)?.name,
       })
     );
 
-    const totalCount: number = await postsCollection.countDocuments(filter);
+    const totalCount: number = await PostModel.countDocuments(filter);
 
     const customResponse = {
       pagesCount: Math.ceil(totalCount / +pageSize),
@@ -30,12 +30,12 @@ export class PostsRepository {
   }
 
   async createPost(newPost: PostType): Promise<PostType | null> {
-    const bloggers = await bloggersCollection.find().toArray();
+    const bloggers = await BloggerModel.find().lean();
 
-    await postsCollection.insertOne(newPost);
+    await PostModel.create(newPost);
 
-    const createdPost = await postsCollection.findOne({ id: newPost.id }, { projection: { _id: 0 } });
-    if(!createdPost) return null
+    const createdPost = await PostModel.findOne({ id: newPost.id }, "-_id -__v");
+    if (!createdPost) return null;
     const createdPostWithBloggerName = Object.assign(createdPost, {
       bloggerName: bloggers.find((b) => b.id === newPost.bloggerId.toString())?.name,
     });
@@ -43,8 +43,8 @@ export class PostsRepository {
   }
 
   async getPost(postID: string): Promise<PostType | null> {
-    const bloggers = await bloggersCollection.find({}, { projection: { _id: 0 } }).toArray();
-    const post = await postsCollection.findOne({ id: postID }, { projection: { _id: 0 } });
+    const bloggers = await BloggerModel.find({}, "-_id").lean();
+    const post = await PostModel.findOne({ id: postID }, "-_id -__v");
     if (!post) return null;
 
     return Object.assign(post, {
@@ -53,24 +53,28 @@ export class PostsRepository {
   }
 
   async updatePost(postID: string, title: string, shortDescription: string, content: string, bloggerId: string): Promise<boolean> {
-    const post = await postsCollection.updateOne({ id: postID }, { $set: { title, shortDescription, content, bloggerId } });
-    return post.matchedCount === 1;
+    // const post = await postsCollection.updateOne({ id: postID }, { $set: { title, shortDescription, content, bloggerId } });
+    // return post.matchedCount === 1;
+    const post = await PostModel.findOne({ id: postID });
+    if (!post) return false;
+    post.title = title;
+    post.shortDescription = shortDescription;
+    post.content = content;
+    post.bloggerId = bloggerId;
+    await post.save();
+    return true;
   }
   async deletePost(postID: string) {
-    const deletedPost = await postsCollection.deleteOne({ id: postID });
+    const deletedPost = await PostModel.deleteOne({ id: postID });
     return deletedPost.deletedCount === 1;
   }
   async deleteAllPosts() {
-    await postsCollection.deleteMany({})
-    const totalCount: number = await postsCollection.countDocuments({});
-    if (totalCount !== 0)return false;
-    return true
+    await PostModel.deleteMany({});
+    const totalCount: number = await PostModel.countDocuments({});
+    if (totalCount !== 0) return false;
+    return true;
   }
 }
-
-
-
-
 
 // export const postsRepository = {
 //   async getAllPosts(SearchTitleTerm: string | null, pageNumber: any, pageSize: any) {

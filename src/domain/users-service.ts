@@ -4,6 +4,7 @@ import { CustomResponseType, UserAccountDBType, UserType } from "../types/types"
 import jwt from "jsonwebtoken";
 import { settings } from "../settings/settings";
 import { ObjectId } from "mongodb";
+import { UserAccountDBModel } from "../models/models";
 
 class UsersService {
   constructor(private usersRepository: UsersRepository) {}
@@ -42,6 +43,13 @@ class UsersService {
       return null;
     }
   }
+  // async updateUser(_id: ObjectId):Promise<boolean>{
+  //   const user = await this.usersRepository.findUserById(_id)
+  //   if(!user)return false
+  //   c
+      
+  //   return this.usersRepository.updateUser(updatedUser)
+  // }
   async deleteUser(_id: ObjectId): Promise<boolean> {
     return this.usersRepository.deleteUser(_id);
   }
