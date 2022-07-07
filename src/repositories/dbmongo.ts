@@ -1,5 +1,5 @@
 import { MongoClient } from "mongodb";
-import { settings } from "../settings/settings";
+// import { settings } from "../settings/settings";
 import { BloggerType, CommentType, PostType, UserType, UserAccountDBType, AttemptType } from "../types/types";
 import mongoose from "mongoose";
 

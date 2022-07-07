@@ -2,7 +2,8 @@ import { UsersRepository } from "../repositories/users-db-repository";
 import bcrypt from "bcrypt";
 import { CustomResponseType, UserAccountDBType, UserType } from "../types/types";
 import jwt from "jsonwebtoken";
-import { settings } from "../settings/settings";
+// import { settings } from "../settings/settings";
+import { settings } from "../settings/new-settings";
 import { ObjectId } from "mongodb";
 import { UserAccountDBModel } from "../models/models";
 

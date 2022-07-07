@@ -40,12 +40,17 @@ const loginAttemptSchema = new Schema([
   },
 ]);
 
-const sentConfirmationEmailsSchema = new Schema({
-  sentDate: {
-    type: Date,
-    required: true,
+const sentConfirmationEmailsSchema = new Schema(
+  {
+    sentDate: {
+      type: Date,
+      required: true,
+    },
   },
-});
+  {
+    _id: false,
+  }
+);
 
 const emailConfirmationSchema = new Schema({
   isConfirmed: {

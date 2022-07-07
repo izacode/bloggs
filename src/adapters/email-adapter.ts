@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
-import { settings } from "../settings/settings";
+// import { settings } from "../settings/settings";
+import { settings } from "../settings/new-settings";
 
 export const emailAdapter = {
   async sendEmail(email: string, subject: string, message: string) {

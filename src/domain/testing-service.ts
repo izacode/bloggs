@@ -30,10 +30,10 @@ class TestingService {
     const isDBCleared = await this.usersRepository.deleteAllIps();
     return isDBCleared;
   }
-  async deleteAllRequests(): Promise<boolean> {
-    const isDBCleared = await this.usersRepository.deleteAllRequests();
-    return isDBCleared;
-  }
+  // async deleteAllRequests(): Promise<boolean> {
+  //   const isDBCleared = await this.usersRepository.deleteAllRequests();
+  //   return isDBCleared;
+  // }
 };
 
 const postsRepository = new PostsRepository();
