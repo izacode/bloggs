@@ -50,7 +50,7 @@ authRouter.post(
       res.cookie("rjwt", refreshToken, {
         maxAge: 24 * 60 * 60 * 1000,
         httpOnly: true,
-        // secure: true,
+        secure: true,
       });
       res.send({ token: accessToken });
     } else {
@@ -69,7 +69,7 @@ authRouter.post("/refresh-token", async (req: Request, res: Response) => {
   res.cookie("rjwt", newRefreshToken, {
     maxAge: 24 * 60 * 60 * 1000,
     httpOnly: true,
-    // secure: true,
+    secure: true,
   });
   return res.send({ token: accessToken });
 });
@@ -83,7 +83,7 @@ authRouter.post("/logout", async (req: Request, res: Response) => {
   res.clearCookie("rjwt", {
     maxAge: 24 * 60 * 60 * 1000,
     httpOnly: true,
-    // secure: true,
+    secure: true,
   });
   res.sendStatus(204)
 });
