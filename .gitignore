@@ -3,5 +3,3 @@ dist
 .vscode
 front
 .env
-src/settings/.new-settings
-**settings
