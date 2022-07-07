@@ -23,7 +23,12 @@ usersRouter.post(
   userPasswordValidation,
   inputValidationMiddleware,
   async (req: Request, res: Response) => {
-    const newUser = await authService.createUser(req.body.login, req.body.email, req.body.password, req.ip);
+    const createdUser = await authService.createUser(req.body.login, req.body.email, req.body.password, req.ip);
+    if(!createdUser) return res.sendStatus(400)
+    const newUser = {
+      id: createdUser._id,
+      login: createdUser.accountData.userName,
+    };
     res.status(201).json(newUser);
   }
 );
