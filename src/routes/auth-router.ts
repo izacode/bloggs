@@ -42,12 +42,10 @@ authRouter.post(
     const user: UserAccountDBType | null = await authService.checkCredentials(req.body.login, req.body.password);
     console.log(req.body);
     if (user) {
-      // const accessToken: string = await jwtService.createJWT(user);
-      const accessToken: string =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MmM4NzU4NDI5MmZiODM5YWU3OTg2YWQiLCJpYXQiOjE2NTczMDU0NzIsImV4cCI6MTY1NzMwNTQ4Mn0.4dCySIZyk0EdyY6DIfQEWaM6YcvUU3Why4xP19kcgbQ";
-      // const refreshToken: string = await jwtService.createRefreshJWT(user);
-      const refreshToken: string =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MmM4NzU4NDI5MmZiODM5YWU3OTg2YWQiLCJpYXQiOjE2NTczMDU0NzIsImV4cCI6MTY1NzMwNTQ4Mn0.4dCySIZyk0EdyY6DIfQEWaM6YcvUU3Why4xP19kcgbQ";
+      const accessToken: string = await jwtService.createJWT(user);
+      
+      const refreshToken: string = await jwtService.createRefreshJWT(user);
+      
       res.cookie("refreshToken ", refreshToken, {
         httpOnly: true,
         secure: true,

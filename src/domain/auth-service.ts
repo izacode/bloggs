@@ -55,6 +55,7 @@ class AuthService {
     const user: UserAccountDBType | null = await this.usersRepository.findUserByLoginOrEmail(login);
     
     if (!user) return null;
+    debugger
     const areHashesEqual = await this._isPasswordCorrect(password, user.accountData.passwordHash);
     if (!areHashesEqual) return null;
     return user;

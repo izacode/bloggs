@@ -29,9 +29,10 @@ export class UsersRepository {
     return createdUser;
   }
   async findUserByLoginOrEmail(loginOrEmail: string): Promise<UserAccountDBType | null> {
+
     const user = await UserAccountDBModel.findOne({
       $or: [{ "accountData.userName": loginOrEmail }, { "accountData.email": loginOrEmail }],
-    });
+    }).lean();
     return user;
   }
   async findUserByLogin(login: string): Promise<UserAccountDBType | null> {
