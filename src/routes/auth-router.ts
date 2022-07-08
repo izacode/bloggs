@@ -112,6 +112,7 @@ authRouter.post("/sendRecoveryPassword", async (req: Request, res: Response) => 
   res.send(info);
 });
 authRouter.post("/me", authentication, async (req: Request, res: Response) => {
+   console.log("inside /me");
   let cookies = req.cookies;
   if (!cookies?.refreshToken) return res.sendStatus(401);
   const refreshToken = cookies.refreshToken;
