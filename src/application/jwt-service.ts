@@ -9,7 +9,7 @@ import { UsersRepository } from "../repositories/users-db-repository";
 class JwtService {
   constructor(private usersRepository: UsersRepository) {}
   async createJWT(user: UserAccountDBType) {
-    const token = await jwt.sign({ userId: user._id }, settings.JWT_SECRET, { expiresIn: settings.JWT_EXPIRATION });
+    const token = jwt.sign({ userId: user._id }, settings.JWT_SECRET, { expiresIn: settings.JWT_EXPIRATION });
     return token;
   }
   async createRefreshJWT(user: UserAccountDBType) {
