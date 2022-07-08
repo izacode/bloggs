@@ -45,6 +45,7 @@ authRouter.post(
     
     console.log("before checkCreds")
     const user: UserAccountDBType | null = await authService.checkCredentials(req.body.login, req.body.password);
+    console.log(user)
     console.log("after checkCreds");
     if (user) {
       const accessToken: string = await jwtService.createJWT(user);
