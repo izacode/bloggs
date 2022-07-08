@@ -40,10 +40,14 @@ authRouter.post(
   inputValidationMiddleware,
   async (req: Request, res: Response) => {
     const user: UserAccountDBType | null = await authService.checkCredentials(req.body.login, req.body.password);
-    console.log(req.body)
+    console.log(req.body);
     if (user) {
-      const accessToken: string = await jwtService.createJWT(user);
-      const refreshToken: string = await jwtService.createRefreshJWT(user);
+      // const accessToken: string = await jwtService.createJWT(user);
+      const accessToken: string =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MmM4NzU4NDI5MmZiODM5YWU3OTg2YWQiLCJpYXQiOjE2NTczMDU0NzIsImV4cCI6MTY1NzMwNTQ4Mn0.4dCySIZyk0EdyY6DIfQEWaM6YcvUU3Why4xP19kcgbQ";
+      // const refreshToken: string = await jwtService.createRefreshJWT(user);
+      const refreshToken: string =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MmM4NzU4NDI5MmZiODM5YWU3OTg2YWQiLCJpYXQiOjE2NTczMDU0NzIsImV4cCI6MTY1NzMwNTQ4Mn0.4dCySIZyk0EdyY6DIfQEWaM6YcvUU3Why4xP19kcgbQ";
       res.cookie("refreshToken ", refreshToken, {
         httpOnly: true,
         secure: true,
@@ -112,8 +116,8 @@ authRouter.post("/sendRecoveryPassword", async (req: Request, res: Response) => 
   const info = await emailService.recoverPassword(req.body.email);
   res.send(info);
 });
-authRouter.post("/me",  async (req: Request, res: Response) => {
-   console.log("inside /me");
+authRouter.post("/me", async (req: Request, res: Response) => {
+  console.log("inside /me");
   let cookies = req.cookies;
   if (!cookies?.refreshToken) return res.sendStatus(401);
   const refreshToken = cookies.refreshToken;
