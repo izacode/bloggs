@@ -43,10 +43,11 @@ authRouter.post(
     if (user) {
       const accessToken: string = await jwtService.createJWT(user);
       const refreshToken: string = await jwtService.createRefreshJWT(user);
-      res.cookie("refresh", refreshToken, {
+      
+      res.cookie("refreshToken ", refreshToken, {
         maxAge: 24 * 60 * 60 * 1000,
-        httpOnly: true,
-        secure: true,
+        // httpOnly: true,
+        // secure: true,
       });
       return res.send({ token: accessToken });
     } else {
@@ -56,13 +57,13 @@ authRouter.post(
 );
 authRouter.post("/refresh-token", async (req: Request, res: Response) => {
   let cookies = req.cookies;
-  if (!cookies?.refresh) return res.sendStatus(401);
-  const refreshToken = cookies.refresh;
+  if (!cookies?.refreshToken) return res.sendStatus(401);
+  const refreshToken = cookies.refreshToken;
   const result = await jwtService.checkRefreshToken(refreshToken);
   if(!result) return res.sendStatus(401)
   const accessToken: string = await jwtService.createJWT(result);
   const newRefreshToken: string = await jwtService.createRefreshJWT(result);
-  res.cookie("refresh", newRefreshToken, {
+  res.cookie("refreshToken", newRefreshToken, {
     maxAge: 24 * 60 * 60 * 1000,
     httpOnly: true,
     secure: true,
@@ -72,11 +73,11 @@ authRouter.post("/refresh-token", async (req: Request, res: Response) => {
 
 authRouter.post("/logout", async (req: Request, res: Response) => {
   let cookies = req.cookies;
-  if (!cookies?.refresh) return res.sendStatus(401);
-  const refreshToken = cookies.refresh;
+  if (!cookies?.refreshToken) return res.sendStatus(401);
+  const refreshToken = cookies.refreshToken;
   const result = await jwtService.checkRefreshToken(refreshToken);
   if(!result)res.sendStatus(401)
-  res.clearCookie("refresh", {
+  res.clearCookie("refreshToken", {
     maxAge: 24 * 60 * 60 * 1000,
     httpOnly: true,
     secure: true,
@@ -110,8 +111,8 @@ authRouter.post("/sendRecoveryPassword", async (req: Request, res: Response) => 
 });
 authRouter.get("/me", authentication, async (req: Request, res: Response) => {
  let cookies = req.cookies;
- if (!cookies?.refresh) return res.sendStatus(401);
- const refreshToken = cookies.refresh;
+ if (!cookies?.refreshToken) return res.sendStatus(401);
+ const refreshToken = cookies.refreshToken;
  const result = await jwtService.checkRefreshToken(refreshToken);
  if (!result) return res.sendStatus(401);
  const userInfo = 
