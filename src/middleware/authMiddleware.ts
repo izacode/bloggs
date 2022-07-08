@@ -63,18 +63,17 @@ export const attemptsCheck = async (req: Request, res: Response, next: NextFunct
     attemptDate,
     url,
   };
-  console.log("before try")
+ 
   try {
     await AttemptModel.create(attempt);
   } catch (e) {
     console.log(attempt + "failed to create");
   }
-   console.log("after try");
+
 
   const nowMinusTenSec = sub(new Date(), { seconds: 10 });
   const result = await AttemptModel.countDocuments({ ip, attemptDate: { $gt: nowMinusTenSec }, url });
   if (result > 5) return res.sendStatus(429);
-  console.log("inside attempts before next")
   next();
 };
 

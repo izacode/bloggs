@@ -39,19 +39,10 @@ authRouter.post(
   passwordValidation,
   inputValidationMiddleware,
   async (req: Request, res: Response) => {
-    console.log("body-----", req.body)
-    console.log("cookie-----", req.cookies)
-    console.log("headers-----", req.headers.authorization);
-    
-    console.log("before checkCreds")
     const user: UserAccountDBType | null = await authService.checkCredentials(req.body.login, req.body.password);
-    console.log(user)
-    console.log("after checkCreds");
     if (user) {
       const accessToken: string = await jwtService.createJWT(user);
       const refreshToken: string = await jwtService.createRefreshJWT(user);
-      
-      
       res.cookie("refreshToken ", refreshToken, {
         maxAge: 24 * 60 * 60 * 1000,
         httpOnly: true,
