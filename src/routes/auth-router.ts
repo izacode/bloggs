@@ -47,7 +47,7 @@ authRouter.post(
         httpOnly: true,
         secure: true,
       });
-      console.log("inside if")
+      console.log("inside if");
       return res.send({ token: accessToken });
     } else {
       console.log("inside else");
@@ -56,13 +56,13 @@ authRouter.post(
   }
 );
 authRouter.post("/refresh-token", async (req: Request, res: Response) => {
-  console.log("inside refresh token request")
+  console.log("inside refresh token request");
   let cookies = req.cookies;
-  debugger
+  debugger;
   if (!cookies?.refreshToken) return res.sendStatus(401);
   const refreshToken = cookies.refreshToken;
   const result = await jwtService.checkRefreshToken(refreshToken);
-  if(!result) return res.sendStatus(401)
+  if (!result) return res.sendStatus(401);
   const accessToken: string = await jwtService.createJWT(result);
   const newRefreshToken: string = await jwtService.createRefreshJWT(result);
   res.cookie("refreshToken", newRefreshToken, {
@@ -78,13 +78,13 @@ authRouter.post("/logout", async (req: Request, res: Response) => {
   if (!cookies?.refreshToken) return res.sendStatus(401);
   const refreshToken = cookies.refreshToken;
   const result = await jwtService.checkRefreshToken(refreshToken);
-  if(!result)res.sendStatus(401)
+  if (!result) res.sendStatus(401);
   res.clearCookie("refreshToken", {
     maxAge: 24 * 60 * 60 * 1000,
     httpOnly: true,
     secure: true,
   });
-  res.sendStatus(204)
+  res.sendStatus(204);
 });
 
 authRouter.post(
@@ -112,30 +112,29 @@ authRouter.post("/sendRecoveryPassword", async (req: Request, res: Response) => 
   res.send(info);
 });
 authRouter.post("/me", authentication, async (req: Request, res: Response) => {
- let cookies = req.cookies;
- if (!cookies?.refreshToken) return res.sendStatus(401);
- const refreshToken = cookies.refreshToken;
- const result = await jwtService.checkRefreshToken(refreshToken);
- if (!result) return res.sendStatus(401);
- const userInfo = 
- {
-  email: result.accountData.email,
-  login: result.accountData.userName,
-  userId: result._id
- }
- res.send(userInfo);
+  let cookies = req.cookies;
+  if (!cookies?.refreshToken) return res.sendStatus(401);
+  const refreshToken = cookies.refreshToken;
+  const result = await jwtService.checkRefreshToken(refreshToken);
+  if (!result) return res.sendStatus(401);
+  const userInfo = {
+    email: result.accountData.email,
+    login: result.accountData.userName,
+    userId: result._id,
+  };
+  res.send(userInfo);
 });
 authRouter.get("/me", authentication, async (req: Request, res: Response) => {
- let cookies = req.cookies;
- if (!cookies?.refreshToken) return res.sendStatus(401);
- const refreshToken = cookies.refreshToken;
- const result = await jwtService.checkRefreshToken(refreshToken);
- if (!result) return res.sendStatus(401);
- const userInfo = 
- {
-  email: result.accountData.email,
-  login: result.accountData.userName,
-  userId: result._id
- }
- res.send(userInfo);
+  console.log("inside /me");
+  let cookies = req.cookies;
+  if (!cookies?.refreshToken) return res.sendStatus(401);
+  const refreshToken = cookies.refreshToken;
+  const result = await jwtService.checkRefreshToken(refreshToken);
+  if (!result) return res.sendStatus(401);
+  const userInfo = {
+    email: result.accountData.email,
+    login: result.accountData.userName,
+    userId: result._id,
+  };
+  res.send(userInfo);
 });
