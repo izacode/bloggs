@@ -59,6 +59,7 @@ authRouter.post(
 authRouter.post("/refresh-token", async (req: Request, res: Response) => {
   console.log("inside refresh token request")
   let cookies = req.cookies;
+  debugger
   if (!cookies?.refreshToken) return res.sendStatus(401);
   const refreshToken = cookies.refreshToken;
   const result = await jwtService.checkRefreshToken(refreshToken);
@@ -110,6 +111,20 @@ authRouter.post("/registration-email-resending", attemptsCheck, isConfirmed, isE
 authRouter.post("/sendRecoveryPassword", async (req: Request, res: Response) => {
   const info = await emailService.recoverPassword(req.body.email);
   res.send(info);
+});
+authRouter.post("/me", authentication, async (req: Request, res: Response) => {
+ let cookies = req.cookies;
+ if (!cookies?.refreshToken) return res.sendStatus(401);
+ const refreshToken = cookies.refreshToken;
+ const result = await jwtService.checkRefreshToken(refreshToken);
+ if (!result) return res.sendStatus(401);
+ const userInfo = 
+ {
+  email: result.accountData.email,
+  login: result.accountData.userName,
+  userId: result._id
+ }
+ res.send(userInfo);
 });
 authRouter.get("/me", authentication, async (req: Request, res: Response) => {
  let cookies = req.cookies;
