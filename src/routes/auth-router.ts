@@ -40,7 +40,7 @@ authRouter.post(
   inputValidationMiddleware,
   async (req: Request, res: Response) => {
     const user: UserAccountDBType | null = await authService.checkCredentials(req.body.login, req.body.password);
-    console.log(user)
+    console.log(req.body)
     if (user) {
       const accessToken: string = await jwtService.createJWT(user);
       const refreshToken: string = await jwtService.createRefreshJWT(user);
