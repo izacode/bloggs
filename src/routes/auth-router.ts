@@ -39,10 +39,6 @@ authRouter.post(
   passwordValidation,
   inputValidationMiddleware,
   async (req: Request, res: Response) => {
-    // const confirmedUser = await usersService.findUserByLogin(req.body.login);
-    // if (!confirmedUser) return res.sendStatus(401);
-    // if (!confirmedUser.emailConfirmation.isConfirmed) return res.status(400).json({ message: "Please confirm your email" });
-    
     const user: UserAccountDBType | null = await authService.checkCredentials(req.body.login, req.body.password);
     if (user) {
       const accessToken: string = await jwtService.createJWT(user);
@@ -52,9 +48,9 @@ authRouter.post(
         httpOnly: true,
         secure: true,
       });
-      res.send({ token: accessToken });
+      return res.send({ token: accessToken });
     } else {
-      res.sendStatus(401);
+      return res.sendStatus(401);
     }
   }
 );
