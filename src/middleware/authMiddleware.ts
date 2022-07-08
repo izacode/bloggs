@@ -130,7 +130,7 @@ export const isEmailExists = async (req: Request, res: Response, next: NextFunct
   if (!user) return res.status(400).json({ errorsMessages: [{ message: "User doesn't exist", field: "email" }] });
   next();
 };
-export const requestCollect = async (req: Request, res: Response, next: NextFunction) => {
+export const logRequest = async (req: Request, res: Response, next: NextFunction) => {
   console.log(req.body);
   console.log(req.method);
   next();
