@@ -51,7 +51,9 @@ class AuthService {
     return createResult;
   }
   async checkCredentials(login: string, password: string) {
+    console.log("before findUserByLoginOrEmail inservice");
     const user: UserAccountDBType | null = await this.usersRepository.findUserByLoginOrEmail(login);
+    console.log("after findUserByLoginOrEmail inservice");
     if (!user) return null;
     // ??? Which one should go first isConfirmed or password check
     // if (!user.emailConfirmation.isConfirmed) return null;
