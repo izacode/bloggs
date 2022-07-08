@@ -53,7 +53,7 @@ authRouter.post(
       });
       
     res.send({ token: accessToken });
-    
+    return
   }
 );
 authRouter.post("/refresh-token", async (req: Request, res: Response) => {
