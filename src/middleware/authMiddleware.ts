@@ -72,6 +72,7 @@ export const attemptsCheck = async (req: Request, res: Response, next: NextFunct
   const nowMinusTenSec = sub(new Date(), { seconds: 10 });
   const result = await AttemptModel.countDocuments({ ip, attemptDate: { $gt: nowMinusTenSec }, url });
   if (result > 5) return res.sendStatus(429);
+  console.log("inside attempts before next")
   next();
 };
 

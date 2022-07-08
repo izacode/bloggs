@@ -39,6 +39,10 @@ authRouter.post(
   passwordValidation,
   inputValidationMiddleware,
   async (req: Request, res: Response) => {
+    console.log("body-----", req.body)
+    console.log("cookie-----", req.cookies)
+    console.log("headers-----", req.headers.authorization);
+    
     console.log("before checkCreds")
     const user: UserAccountDBType | null = await authService.checkCredentials(req.body.login, req.body.password);
     console.log("after checkCreds");
