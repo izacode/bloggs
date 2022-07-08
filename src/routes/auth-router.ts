@@ -57,9 +57,10 @@ authRouter.post(
         httpOnly: true,
         secure: true,
       });
-      
+      console.log("inside if")
       return res.send({ token: accessToken });
     } else {
+      console.log("inside else");
       return res.sendStatus(401);
     }
   }
