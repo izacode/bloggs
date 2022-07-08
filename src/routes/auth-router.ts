@@ -46,8 +46,8 @@ authRouter.post(
       
       res.cookie("refreshToken ", refreshToken, {
         maxAge: 24 * 60 * 60 * 1000,
-        // httpOnly: true,
-        // secure: true,
+        httpOnly: true,
+        secure: true,
       });
       return res.send({ token: accessToken });
     } else {
