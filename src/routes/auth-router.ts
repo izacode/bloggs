@@ -52,7 +52,7 @@ authRouter.post(
         secure: true,
       });
       
-      return res.send({ token: accessToken });
+    res.send({ token: accessToken });
     
   }
 );
