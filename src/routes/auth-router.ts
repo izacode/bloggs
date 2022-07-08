@@ -64,6 +64,7 @@ authRouter.post(
   }
 );
 authRouter.post("/refresh-token", async (req: Request, res: Response) => {
+  console.log("inside refresh token request")
   let cookies = req.cookies;
   if (!cookies?.refreshToken) return res.sendStatus(401);
   const refreshToken = cookies.refreshToken;
