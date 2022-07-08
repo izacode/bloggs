@@ -76,8 +76,8 @@ export const passwordValidation = body("password")
   .isLength({ min: 6, max: 20 })
   .withMessage("Password should be from 6 to 20 charachters long");
 // ==============================================================================================================
-export const emailValidation = body("email").trim().matches(regexForEmail).withMessage("Invalid email")
-export const codeValidation = body("code").trim().isString().isLength({min:20})
+export const emailValidation = body("email").trim().matches(regexForEmail).withMessage("Invalid email");
+export const codeValidation = body("code").trim().isString().isLength({ min: 20 });
 
 // ==============================================================================================================
 
@@ -85,10 +85,8 @@ export const inputValidationMiddleware = (req: Request, res: Response, next: Nex
   const errors = validationResult(req);
 
   if (errors.isEmpty() || (errors.array()[0].param === "p" && errors.array()[0].value === undefined)) {
-    console.log("inside inputValidationMiddleware before next");
     next();
   } else {
-    console.log("inside inputValidationMiddleware else");
     const myErrors = errors.array().map((e) => {
       return {
         message: e.msg,
@@ -96,7 +94,7 @@ export const inputValidationMiddleware = (req: Request, res: Response, next: Nex
       };
     });
 
-    res.status(400).json({ errorsMessages: myErrors});
+    res.status(400).json({ errorsMessages: myErrors });
   }
 };
 export const bloggerIdError = {
@@ -113,5 +111,3 @@ export const testMiddleware = (req: Request, res: Response, next: NextFunction) 
   console.log("Inside test middleware");
   next();
 };
-
-

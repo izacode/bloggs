@@ -39,24 +39,21 @@ authRouter.post(
   passwordValidation,
   inputValidationMiddleware,
   async (req: Request, res: Response) => {
-    console.log(req.body);
+ 
     const user: UserAccountDBType | null = await authService.checkCredentials(req.body.login, req.body.password);
-    console.log(user);
-    if (user) {
+    
+    if (!user) return res.sendStatus(401);
+   
       const accessToken: string = await jwtService.createJWT(user);
-      
       const refreshToken: string = await jwtService.createRefreshJWT(user);
-      
-      res.cookie("refreshToken", refreshToken, {
+
+      res.cookie("refreshToken",refreshToken, {
         httpOnly: true,
         secure: true,
       });
-      console.log("inside if");
+      
       return res.send({ token: accessToken });
-    } else {
-      console.log("inside else");
-      return res.sendStatus(401);
-    }
+    
   }
 );
 authRouter.post("/refresh-token", async (req: Request, res: Response) => {
