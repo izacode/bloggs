@@ -35,9 +35,9 @@ authRouter.post(
 authRouter.post(
   "/login",
   attemptsCheck,
-  loginValidation,
-  passwordValidation,
-  inputValidationMiddleware,
+  // loginValidation,
+  // passwordValidation,
+  // inputValidationMiddleware,
   async (req: Request, res: Response) => {
     const user: UserAccountDBType | null = await authService.checkCredentials(req.body.login, req.body.password);
 
