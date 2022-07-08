@@ -45,8 +45,8 @@ authRouter.post(
       const accessToken: string = await jwtService.createJWT(user);
       const refreshToken: string = await jwtService.createRefreshJWT(user);
       res.cookie("refreshToken ", refreshToken, {
-        // httpOnly: true,
-        // secure: true,
+        httpOnly: true,
+        secure: true,
       });
       console.log("inside if");
       return res.send({ token: accessToken });
