@@ -9,7 +9,7 @@ import { authRouter } from "./routes/auth-router";
 import { commentsRouter } from "./routes/comments-router";
 import { testingRouter } from "./routes/testing-router";
 import cookieParser from "cookie-parser";
-// import { requestCollect } from "./middleware/authMiddleware";
+import { logRequest } from "./middleware/authMiddleware";
 
 const corsOptions = {
   origin: "*",
@@ -23,7 +23,7 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 const port = process.env.PORT || 5000;
-// app.use(requestCollect)
+app.use(logRequest)
 app.set("trust proxy", true);
 app.use("/bloggers", bloggersRouter);
 app.use("/posts", postsRouter);

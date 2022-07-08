@@ -41,10 +41,8 @@ export const authentication = async (req: Request, res: Response, next: NextFunc
     res.sendStatus(401);
   } catch {
     res.sendStatus(401);
-    return
+    return;
   }
-
-  
 };
 export const userAuthorization = async (req: Request, res: Response, next: NextFunction) => {
   const commentToUpdate: CommentType | null = await commentsService.getCommentById(req.params.commentId);
@@ -63,13 +61,12 @@ export const attemptsCheck = async (req: Request, res: Response, next: NextFunct
     attemptDate,
     url,
   };
- 
+
   try {
     await AttemptModel.create(attempt);
   } catch (e) {
     console.log(attempt + "failed to create");
   }
-
 
   const nowMinusTenSec = sub(new Date(), { seconds: 10 });
   const result = await AttemptModel.countDocuments({ ip, attemptDate: { $gt: nowMinusTenSec }, url });
@@ -133,10 +130,8 @@ export const isEmailExists = async (req: Request, res: Response, next: NextFunct
   if (!user) return res.status(400).json({ errorsMessages: [{ message: "User doesn't exist", field: "email" }] });
   next();
 };
-// export const requestCollect = async (req: Request, res: Response, next: NextFunction) => {
-//   const income = { requestIp: req.ip, requestBody: req.body, url: req.url, date: new Date() };
-
-//   const isAdded = usersRepository.saveRequests(income);
-//   if (!isAdded) return res.send("Could not save request");
-//   next();
-// };
+export const requestCollect = async (req: Request, res: Response, next: NextFunction) => {
+  console.log(req.body);
+  console.log(req.method);
+  next();
+};
