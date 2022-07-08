@@ -39,24 +39,26 @@ authRouter.post(
   passwordValidation,
   inputValidationMiddleware,
   async (req: Request, res: Response) => {
- 
     const user: UserAccountDBType | null = await authService.checkCredentials(req.body.login, req.body.password);
-    
-    if (!user) return res.sendStatus(401);
-   
-      const accessToken: string = await jwtService.createJWT(user);
-      const refreshToken: string = await jwtService.createRefreshJWT(user);
 
-     res.cookie("refreshToken", refreshToken, { httpOnly: true, secure: true });
-    debugger  
+    if (!user) return res.sendStatus(401);
+
+    const accessToken: string = await jwtService.createJWT(user);
+    const refreshToken: string = await jwtService.createRefreshJWT(user);
+
+    res.cookie("refreshToken", refreshToken, {
+      // httpOnly: true,
+      secure: true,
+    });
+    debugger;
     res.send({ token: accessToken });
-    return
+    return;
   }
 );
 authRouter.post("/refresh-token", async (req: Request, res: Response) => {
   console.log("inside refresh token request");
   let cookies = req.cookies;
-  debugger;
+
   if (!cookies?.refreshToken) return res.sendStatus(401);
   const refreshToken = cookies.refreshToken;
   const result = await jwtService.checkRefreshToken(refreshToken);
@@ -64,7 +66,6 @@ authRouter.post("/refresh-token", async (req: Request, res: Response) => {
   const accessToken: string = await jwtService.createJWT(result);
   const newRefreshToken: string = await jwtService.createRefreshJWT(result);
   res.cookie("refreshToken", newRefreshToken, {
-    maxAge: 24 * 60 * 60 * 1000,
     httpOnly: true,
     secure: true,
   });
@@ -78,7 +79,6 @@ authRouter.post("/logout", async (req: Request, res: Response) => {
   const result = await jwtService.checkRefreshToken(refreshToken);
   if (!result) res.sendStatus(401);
   res.clearCookie("refreshToken", {
-    maxAge: 24 * 60 * 60 * 1000,
     httpOnly: true,
     secure: true,
   });
