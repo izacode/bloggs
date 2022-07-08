@@ -2,7 +2,7 @@ import { Router, Request, Response } from "express";
 import { jwtService } from "../application/jwt-service";
 import { authService } from "../domain/auth-service";
 import { emailService } from "../domain/email-service";
-import { attemptsCheck, isConfirmed, isConfirmedCode, isEmailExists, userExistsCheck } from "../middleware/authMiddleware";
+import { attemptsCheck, authentication, isConfirmed, isConfirmedCode, isEmailExists, userExistsCheck } from "../middleware/authMiddleware";
 import {
   codeValidation,
   emailValidation,
@@ -43,7 +43,7 @@ authRouter.post(
     if (user) {
       const accessToken: string = await jwtService.createJWT(user);
       const refreshToken: string = await jwtService.createRefreshJWT(user);
-      res.cookie("rjwt", refreshToken, {
+      res.cookie("refreshToken", refreshToken, {
         maxAge: 24 * 60 * 60 * 1000,
         httpOnly: true,
         secure: true,
@@ -56,13 +56,13 @@ authRouter.post(
 );
 authRouter.post("/refresh-token", async (req: Request, res: Response) => {
   let cookies = req.cookies;
-  if (!cookies?.rjwt) return res.sendStatus(401);
-  const refreshToken = cookies.rjwt;
+  if (!cookies?.refreshToken) return res.sendStatus(401);
+  const refreshToken = cookies.refreshToken;
   const result = await jwtService.checkRefreshToken(refreshToken);
   if(!result) return res.sendStatus(401)
   const accessToken: string = await jwtService.createJWT(result);
   const newRefreshToken: string = await jwtService.createRefreshJWT(result);
-  res.cookie("rjwt", newRefreshToken, {
+  res.cookie("refreshToken", newRefreshToken, {
     maxAge: 24 * 60 * 60 * 1000,
     httpOnly: true,
     secure: true,
@@ -72,11 +72,11 @@ authRouter.post("/refresh-token", async (req: Request, res: Response) => {
 
 authRouter.post("/logout", async (req: Request, res: Response) => {
   let cookies = req.cookies;
-  if (!cookies?.rjwt) return res.sendStatus(401);
-  const refreshToken = cookies.rjwt;
+  if (!cookies?.refreshToken) return res.sendStatus(401);
+  const refreshToken = cookies.refreshToken;
   const result = await jwtService.checkRefreshToken(refreshToken);
   if(!result)res.sendStatus(401)
-  res.clearCookie("rjwt", {
+  res.clearCookie("refreshToken", {
     maxAge: 24 * 60 * 60 * 1000,
     httpOnly: true,
     secure: true,
@@ -108,10 +108,10 @@ authRouter.post("/sendRecoveryPassword", async (req: Request, res: Response) => 
   const info = await emailService.recoverPassword(req.body.email);
   res.send(info);
 });
-authRouter.get("/me", async (req: Request, res: Response) => {
+authRouter.get("/me", authentication, async (req: Request, res: Response) => {
  let cookies = req.cookies;
- if (!cookies?.rjwt) return res.sendStatus(401);
- const refreshToken = cookies.rjwt;
+ if (!cookies?.refreshToken) return res.sendStatus(401);
+ const refreshToken = cookies.refreshToken;
  const result = await jwtService.checkRefreshToken(refreshToken);
  if (!result) return res.sendStatus(401);
  const userInfo = 
