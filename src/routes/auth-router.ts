@@ -45,8 +45,8 @@ authRouter.post(
       const accessToken: string = await jwtService.createJWT(user);
       const refreshToken: string = await jwtService.createRefreshJWT(user);
       res.cookie("refreshToken ", refreshToken, {
-        httpOnly: true,
-        secure: true,
+        // httpOnly: true,
+        // secure: true,
       });
       console.log("inside if");
       return res.send({ token: accessToken });
@@ -112,7 +112,7 @@ authRouter.post("/sendRecoveryPassword", async (req: Request, res: Response) => 
   const info = await emailService.recoverPassword(req.body.email);
   res.send(info);
 });
-authRouter.post("/me", authentication, async (req: Request, res: Response) => {
+authRouter.post("/me",  async (req: Request, res: Response) => {
    console.log("inside /me");
   let cookies = req.cookies;
   if (!cookies?.refreshToken) return res.sendStatus(401);
@@ -126,7 +126,7 @@ authRouter.post("/me", authentication, async (req: Request, res: Response) => {
   };
   res.send(userInfo);
 });
-authRouter.get("/me", authentication, async (req: Request, res: Response) => {
+authRouter.get("/me", async (req: Request, res: Response) => {
   console.log("inside /me");
   let cookies = req.cookies;
   if (!cookies?.refreshToken) return res.sendStatus(401);

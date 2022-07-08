@@ -45,11 +45,12 @@ class JwtService {
   async checkRefreshToken(refreshToken: string) {
     const decoded: any = jwt.verify(refreshToken, settings.REFRESH_JWT_SECRET, (err, decoded) => {
       if (err) return false;
+       console.log("decoded",decoded);
       return decoded;
     });
-    const user = this.usersRepository.findUserById(decoded.userId);
+    const user = await this.usersRepository.findUserById(decoded.userId);
     if(!user) return false
-    return decoded;
+    return user;
   }
 }
 const usersRepository = new UsersRepository();
