@@ -109,17 +109,14 @@ authRouter.post("/sendRecoveryPassword", async (req: Request, res: Response) => 
   const info = await emailService.recoverPassword(req.body.email);
   res.send(info);
 });
-authRouter.post("/me", async (req: Request, res: Response) => {
-  console.log("inside /me");
-  let cookies = req.cookies;
-  if (!cookies?.refreshToken) return res.sendStatus(401);
-  const refreshToken = cookies.refreshToken;
-  const result = await jwtService.checkRefreshToken(refreshToken);
-  if (!result) return res.sendStatus(401);
+authRouter.post("/me", authentication, async (req: Request, res: Response) => {
+  debugger
+  const user = req.context.user
+  if (!user) return res.sendStatus(401);
   const userInfo = {
-    email: result.accountData.email,
-    login: result.accountData.userName,
-    userId: result._id,
+    email: user.accountData.email,
+    login: user.accountData.userName,
+    userId: user._id,
   };
   res.send(userInfo);
 });

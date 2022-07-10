@@ -27,6 +27,7 @@ class JwtService {
   }
   async getUserIdByToken(token: string) {
     try {
+      debugger
       const result: any = jwt.verify(token, settings.JWT_SECRET);
       return result.userId;
     } catch (error) {

@@ -21,6 +21,9 @@ export const authorization = (req: Request, res: Response, next: NextFunction) =
   next();
 };
 export const authentication = async (req: Request, res: Response, next: NextFunction) => {
+  debugger;
+  const auth = req.headers.authorization;
+
   if (!req.headers.authorization) {
     res.sendStatus(401);
     return;
