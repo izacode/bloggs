@@ -14,30 +14,14 @@ import { UserAccountDBType } from "../types/types";
 
 export const authRouter = Router();
 
-authRouter.post(
-  "/registration",
-  attemptsCheck,
-  loginValidation,
-  passwordValidation,
-  emailValidation,
-  inputValidationMiddleware,
-
-  userExistsCheck,
-
-  async (req: Request, res: Response) => {
+class AuthController {
+  async registerUser(req: Request, res: Response) {
     const user: UserAccountDBType | null = await authService.createUser(req.body.login, req.body.email, req.body.password, req.ip);
     if (!user) return res.sendStatus(400);
     res.sendStatus(204);
   }
-);
 
-authRouter.post(
-  "/login",
-  attemptsCheck,
-  loginValidation,
-  passwordValidation,
-  inputValidationMiddleware,
-  async (req: Request, res: Response) => {
+  async loginUser(req: Request, res: Response) {
     const user: UserAccountDBType | null = await authService.checkCredentials(req.body.login, req.body.password);
     if (!user) return res.sendStatus(401);
     const accessToken: string = await jwtService.createJWT(user);
@@ -52,42 +36,36 @@ authRouter.post(
       token: accessToken,
     });
   }
-);
-authRouter.post("/refresh-token", async (req: Request, res: Response) => {
-  let cookies = req.cookies;
 
-  if (!cookies?.refreshToken) return res.sendStatus(401);
-  const refreshToken = cookies.refreshToken;
-  const result = await jwtService.checkRefreshToken(refreshToken);
-  if (!result) return res.sendStatus(401);
-  const accessToken: string = await jwtService.createJWT(result);
-  const newRefreshToken: string = await jwtService.createRefreshJWT(result);
-  res.cookie("refreshToken", newRefreshToken, {
-    httpOnly: true,
-    secure: true,
-  });
-  return res.send({ token: accessToken });
-});
+  async refreshTokens(req: Request, res: Response) {
+    let cookies = req.cookies;
+    if (!cookies?.refreshToken) return res.sendStatus(401);
+    const refreshToken = cookies.refreshToken;
+    const result = await jwtService.checkRefreshToken(refreshToken);
+    if (!result) return res.sendStatus(401);
+    const accessToken: string = await jwtService.createJWT(result);
+    const newRefreshToken: string = await jwtService.createRefreshJWT(result);
+    res.cookie("refreshToken", newRefreshToken, {
+      httpOnly: true,
+      secure: true,
+    });
+    return res.send({ token: accessToken });
+  }
 
-authRouter.post("/logout", async (req: Request, res: Response) => {
-  let cookies = req.cookies;
-  if (!cookies?.refreshToken) return res.sendStatus(401);
-  const refreshToken = cookies.refreshToken;
-  const result = await jwtService.checkRefreshToken(refreshToken);
-  if (!result) res.sendStatus(401);
-  res.clearCookie("refreshToken", {
-    httpOnly: true,
-    secure: true,
-  });
-  res.sendStatus(204);
-});
+  async logoutUser(req: Request, res: Response) {
+    let cookies = req.cookies;
+    if (!cookies?.refreshToken) return res.sendStatus(401);
+    const refreshToken = cookies.refreshToken;
+    const result = await jwtService.checkRefreshToken(refreshToken);
+    if (!result) res.sendStatus(401);
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: true,
+    });
+    res.sendStatus(204);
+  }
 
-authRouter.post(
-  "/registration-confirmation",
-  codeValidation,
-  inputValidationMiddleware,
-  isConfirmedCode,
-  async (req: Request, res: Response) => {
+  async confirmRegistration(req: Request, res: Response) {
     const result = await authService.confirmEmail(req.body.code);
     if (result) {
       return res.sendStatus(204);
@@ -95,39 +73,57 @@ authRouter.post(
       return res.sendStatus(400);
     }
   }
-);
-authRouter.post("/registration-email-resending", attemptsCheck, isConfirmed, isEmailExists, async (req: Request, res: Response) => {
-  const result = await authService.reConfirmEmail(req.body.email);
-  if (!result) return res.sendStatus(400);
-  res.sendStatus(204);
-});
 
-authRouter.post("/sendRecoveryPassword", async (req: Request, res: Response) => {
-  const info = await emailService.recoverPassword(req.body.email);
-  res.send(info);
-});
-authRouter.post("/me", authentication, async (req: Request, res: Response) => {
-  console.log("inside post /me");
-  const user = req.context.user;
-  if (!user) return res.sendStatus(401);
-  const userInfo = {
-    email: user.accountData.email,
-    login: user.accountData.userName,
-    userId: user._id,
-  };
-  res.send(userInfo);
-});
-authRouter.get("/me", async (req: Request, res: Response) => {
-  console.log("inside get /me");
-  let cookies = req.cookies;
-  if (!cookies?.refreshToken) return res.sendStatus(401);
-  const refreshToken = cookies.refreshToken;
-  const result = await jwtService.checkRefreshToken(refreshToken);
-  if (!result) return res.sendStatus(401);
-  const userInfo = {
-    email: result.accountData.email,
-    login: result.accountData.userName,
-    userId: result._id,
-  };
-  res.send(userInfo);
-});
+  async resendConfirmaitionEmail(req: Request, res: Response) {
+    const result = await authService.reConfirmEmail(req.body.email);
+    if (!result) return res.sendStatus(400);
+    res.sendStatus(204);
+  }
+
+  async sendRecoveryPassword(req: Request, res: Response) {
+    const info = await emailService.recoverPassword(req.body.email);
+    res.send(info);
+  }
+
+  async showUserInfo(req: Request, res: Response) {
+    console.log("inside post /me");
+    const user = req.context.user;
+    if (!user) return res.sendStatus(401);
+    const userInfo = {
+      email: user.accountData.email,
+      login: user.accountData.userName,
+      userId: user._id,
+    };
+    res.send(userInfo);
+  }
+}
+
+const authController = new AuthController();
+
+authRouter.post(
+  "/registration",
+  attemptsCheck,
+  loginValidation,
+  passwordValidation,
+  emailValidation,
+  inputValidationMiddleware,
+  userExistsCheck,
+  authController.registerUser
+);
+
+authRouter.post("/login", attemptsCheck, loginValidation, passwordValidation, inputValidationMiddleware, authController.loginUser);
+authRouter.post("/refresh-token", authController.refreshTokens);
+authRouter.post("/logout", authController.logoutUser);
+
+authRouter.post(
+  "/registration-confirmation",
+  codeValidation,
+  inputValidationMiddleware,
+  isConfirmedCode,
+  authController.confirmRegistration
+);
+
+authRouter.post("/registration-email-resending", attemptsCheck, isConfirmed, isEmailExists, authController.resendConfirmaitionEmail);
+authRouter.post("/sendRecoveryPassword", authController.sendRecoveryPassword);
+authRouter.post("/me", authentication, authController.showUserInfo);
+authRouter.get("/me", authentication, authController.showUserInfo);
