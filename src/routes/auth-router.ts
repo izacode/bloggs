@@ -126,4 +126,4 @@ authRouter.post(
 authRouter.post("/registration-email-resending", attemptsCheck, isConfirmed, isEmailExists, authController.resendConfirmaitionEmail);
 authRouter.post("/sendRecoveryPassword", authController.sendRecoveryPassword);
 authRouter.post("/me", authentication, authController.showUserInfo);
-authRouter.get("/me", authentication, authController.showUserInfo);
+// authRouter.get("/me", authentication, authController.showUserInfo);
