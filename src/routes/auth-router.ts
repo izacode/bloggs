@@ -43,6 +43,7 @@ authRouter.post(
     const accessToken: string = await jwtService.createJWT(user);
     const refreshToken: string = await jwtService.createRefreshJWT(user);
     try {
+      console.log("inside cookie try")
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
         secure: true,
@@ -52,6 +53,7 @@ authRouter.post(
     }
 
     try {
+      console.log("inside send try");
       res.send({ token: accessToken });
     } catch {
       console.log("error send");
