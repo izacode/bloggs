@@ -27,7 +27,7 @@ class JwtService {
   }
   async getUserIdByToken(token: string) {
     try {
-      debugger
+     
       const result: any = jwt.verify(token, settings.JWT_SECRET);
       return result.userId;
     } catch (error) {
@@ -46,7 +46,6 @@ class JwtService {
   async checkRefreshToken(refreshToken: string) {
     const decoded: any = jwt.verify(refreshToken, settings.REFRESH_JWT_SECRET, (err, decoded) => {
       if (err) return false;
-       console.log("decoded",decoded);
       return decoded;
     });
     const user = await this.usersRepository.findUserById(decoded.userId);

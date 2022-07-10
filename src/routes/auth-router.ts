@@ -25,7 +25,6 @@ authRouter.post(
   userExistsCheck,
 
   async (req: Request, res: Response) => {
-    debugger;
     const user: UserAccountDBType | null = await authService.createUser(req.body.login, req.body.email, req.body.password, req.ip);
     if (!user) return res.sendStatus(400);
     res.sendStatus(204);
@@ -40,23 +39,17 @@ authRouter.post(
   // inputValidationMiddleware,
   async (req: Request, res: Response) => {
     const user: UserAccountDBType | null = await authService.checkCredentials(req.body.login, req.body.password);
-
     if (!user) return res.sendStatus(401);
-
     const accessToken: string = await jwtService.createJWT(user);
     const refreshToken: string = await jwtService.createRefreshJWT(user);
-    console.log(refreshToken);
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: true,
     });
-    debugger;
     res.send({ token: accessToken });
-    return;
   }
 );
 authRouter.post("/refresh-token", async (req: Request, res: Response) => {
-  console.log("inside refresh token request");
   let cookies = req.cookies;
 
   if (!cookies?.refreshToken) return res.sendStatus(401);
@@ -110,8 +103,8 @@ authRouter.post("/sendRecoveryPassword", async (req: Request, res: Response) => 
   res.send(info);
 });
 authRouter.post("/me", authentication, async (req: Request, res: Response) => {
-  debugger
-  const user = req.context.user
+  console.log("inside post /me");
+  const user = req.context.user;
   if (!user) return res.sendStatus(401);
   const userInfo = {
     email: user.accountData.email,
@@ -121,7 +114,7 @@ authRouter.post("/me", authentication, async (req: Request, res: Response) => {
   res.send(userInfo);
 });
 authRouter.get("/me", async (req: Request, res: Response) => {
-  console.log("inside /me");
+  console.log("inside get /me");
   let cookies = req.cookies;
   if (!cookies?.refreshToken) return res.sendStatus(401);
   const refreshToken = cookies.refreshToken;

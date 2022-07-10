@@ -11,7 +11,7 @@ class AuthService {
   constructor(private usersRepository: UsersRepository) {}
  
   async createUser(login: string, email: string, password: string, ip: string): Promise<UserAccountDBType | null> {
-     debugger;
+    
     const passwordHash = await this._generateHash(password);
     const user: UserAccountDBType = {
       _id: new ObjectId(),
@@ -55,7 +55,7 @@ class AuthService {
     const user: UserAccountDBType | null = await this.usersRepository.findUserByLoginOrEmail(login);
     
     if (!user) return null;
-    debugger
+  
     const areHashesEqual = await this._isPasswordCorrect(password, user.accountData.passwordHash);
     if (!areHashesEqual) return null;
     return user;

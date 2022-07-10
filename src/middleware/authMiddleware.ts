@@ -21,7 +21,7 @@ export const authorization = (req: Request, res: Response, next: NextFunction) =
   next();
 };
 export const authentication = async (req: Request, res: Response, next: NextFunction) => {
-  debugger;
+
   const auth = req.headers.authorization;
 
   if (!req.headers.authorization) {
@@ -133,8 +133,8 @@ export const isEmailExists = async (req: Request, res: Response, next: NextFunct
   if (!user) return res.status(400).json({ errorsMessages: [{ message: "User doesn't exist", field: "email" }] });
   next();
 };
-export const logRequest = async (req: Request, res: Response, next: NextFunction) => {
-  console.log(req.body);
-  console.log(req.method);
-  next();
-};
+// export const logRequest = async (req: Request, res: Response, next: NextFunction) => {
+//   console.log(req.body);
+//   console.log(req.method);
+//   next();
+// };
