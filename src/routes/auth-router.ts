@@ -51,7 +51,7 @@ authRouter.post(
         secure: true,
       }
     );
-
+    console.log(res.cookie);
     res.send({
       token:
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MmNhZWI5NTIyOGE4YjU5OTdiM2M0ZmEiLCJpYXQiOjE2NTc0NjU3NTgsImV4cCI6MTY1NzQ2NTc2OH0.mD3bPPpA-D04NT5jBZAB_G_8K-BrWTjtsSTupsWH820",
