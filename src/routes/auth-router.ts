@@ -42,11 +42,20 @@ authRouter.post(
     if (!user) return res.sendStatus(401);
     const accessToken: string = await jwtService.createJWT(user);
     const refreshToken: string = await jwtService.createRefreshJWT(user);
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: true,
-    });
-    res.send({ token: accessToken });
+    try {
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        secure: true,
+      });
+    } catch {
+      console.log("error cookie");
+    }
+
+    try {
+      res.send({ token: accessToken });
+    } catch {
+      console.log("error send");
+    }
   }
 );
 authRouter.post("/refresh-token", async (req: Request, res: Response) => {
