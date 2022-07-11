@@ -48,7 +48,9 @@ class JwtService {
       if (err) return false;
       return decoded;
     });
-    return decoded
+    const user = await this.usersRepository.findUserById(decoded.userId);
+    if(!user) return false
+    return user;
   }
 }
 const usersRepository = new UsersRepository();
