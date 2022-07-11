@@ -43,6 +43,11 @@ class AuthController {
     const refreshToken = cookies.refreshToken;
     const result = await jwtService.checkRefreshToken(refreshToken);
     if (!result) return res.sendStatus(401);
+    res.clearCookie("refreshToken", {
+      path: "/logout",
+      httpOnly: true,
+      secure: true,
+    });
     const accessToken: string = await jwtService.createJWT(result);
     const newRefreshToken: string = await jwtService.createRefreshJWT(result);
     res.cookie("refreshToken", newRefreshToken, {
@@ -89,7 +94,6 @@ class AuthController {
   }
 
   async showUserInfo(req: Request, res: Response) {
-    console.log("inside post /me");
     const user = req.context.user;
     if (!user) return res.sendStatus(401);
     const userInfo = {
