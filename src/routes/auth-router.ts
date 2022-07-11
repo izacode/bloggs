@@ -49,7 +49,7 @@ class AuthController {
       httpOnly: true,
       secure: true,
     });
-    return res.send({ token: accessToken });
+    return res.send({ accessToken });
   }
 
   async logoutUser(req: Request, res: Response) {
