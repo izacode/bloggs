@@ -1,8 +1,11 @@
 import { CommentsRepository } from "../repositories/comments-db-repository";
 import { CommentType, CustomResponseType } from "../types/types";
 
-class CommentsService {
-  constructor(private commentsRepository: CommentsRepository){}
+export class CommentsService {
+  commentsRepository: CommentsRepository;
+  constructor() {
+    this.commentsRepository = new CommentsRepository()
+  }
   async getAllPostComments(postId: string, PageNumber: any, PageSize: any): Promise<CustomResponseType> {
     const postComments = await this.commentsRepository.getAllPostComments(postId, +PageNumber, +PageSize);
     return postComments;
@@ -37,8 +40,8 @@ class CommentsService {
   }
 }
 
-const commentsRepository = new CommentsRepository();
-export const commentsService = new CommentsService(commentsRepository);
+// const commentsRepository = new CommentsRepository();
+// export const commentsService = new CommentsService(commentsRepository);
 
 
 // export const commentsService = {

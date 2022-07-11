@@ -4,8 +4,13 @@ import { BloggersRepository } from "../repositories/bloggers-db-repository";
 import { PostType } from "../types/types";
 
 
-class PostsService {
-  constructor(private postsRepository: PostsRepository, private bloggersRepository: BloggersRepository) {};
+export class PostsService {
+   postsRepository: PostsRepository
+   bloggersRepository: BloggersRepository
+  constructor() {
+    this.postsRepository = new PostsRepository()
+    this.bloggersRepository = new BloggersRepository()
+  };
 async getAllPosts(SearchTitleTerm: any, pageNumber: any, pageSize: any) {
     return this.postsRepository.getAllPosts(SearchTitleTerm, pageNumber, pageSize);
   }
@@ -40,9 +45,9 @@ async getAllPosts(SearchTitleTerm: any, pageNumber: any, pageSize: any) {
 }
 
 
-const postsRepository = new PostsRepository();
-const bloggersRepository = new BloggersRepository(); // Should I create it here or import from bloggesService since it's already  there
-export const postsService = new PostsService(postsRepository,bloggersRepository)
+// const postsRepository = new PostsRepository();
+// const bloggersRepository = new BloggersRepository(); // Should I create it here or import from bloggesService since it's already  there
+// export const postsService = new PostsService(postsRepository,bloggersRepository)
 
 
 

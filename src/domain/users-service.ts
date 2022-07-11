@@ -7,8 +7,12 @@ import { settings } from "../settings/new-settings";
 import { ObjectId } from "mongodb";
 import { UserAccountDBModel } from "../models/models";
 
-class UsersService {
-  constructor(private usersRepository: UsersRepository) {}
+export class UsersService {
+  usersRepository: UsersRepository
+  constructor(){
+    this.usersRepository = new UsersRepository()
+  }
+  
   async getAllUsers(pageNumber: any, pageSize: any): Promise<CustomResponseType> {
     return this.usersRepository.getAllUsers(+pageNumber, +pageSize);
   }
@@ -59,8 +63,7 @@ class UsersService {
   }
 }
 
-const usersRepository = new UsersRepository();
-export const usersService = new UsersService(usersRepository);
+
 
 // export const usersService = {
 //   async getAllUsers(pageNumber: any, pageSize: any): Promise<CustomResponseType> {
