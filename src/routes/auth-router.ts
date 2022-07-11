@@ -53,15 +53,18 @@ class AuthController {
   }
 
   async logoutUser(req: Request, res: Response) {
+    
     let cookies = req.cookies;
     if (!cookies?.refreshToken) return res.sendStatus(401);
     const refreshToken = cookies.refreshToken;
     const result = await jwtService.checkRefreshToken(refreshToken);
     if (!result) return res.sendStatus(401);
     res.clearCookie("refreshToken", {
+      path: "/logout",
       httpOnly: true,
       secure: true,
     });
+
     res.sendStatus(204);
   }
 
