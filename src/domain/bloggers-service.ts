@@ -1,8 +1,13 @@
 import { BloggersRepository } from "../repositories/bloggers-db-repository";
 import { CustomResponseType } from "../types/types";
 
-class BloggersService {
-  constructor(private bloggersRepository:BloggersRepository){}
+export class BloggersService {
+  // constructor(private bloggersRepository:BloggersRepository){}
+
+  bloggersRepository: BloggersRepository
+  constructor() {
+    this.bloggersRepository = new BloggersRepository()
+  }
   async getAllBloggers(SearchNameTerm: any, pageNumber: any, pageSize: any) {
     return this.bloggersRepository.getAllBloggers(SearchNameTerm, pageNumber, pageSize);
   }
@@ -31,8 +36,8 @@ class BloggersService {
   }
 }
 
-const bloggersRepository = new BloggersRepository()
-export const bloggersService = new BloggersService(bloggersRepository); 
+// const bloggersRepository = new BloggersRepository()
+// export const bloggersService = new BloggersService(bloggersRepository); 
 
 
 
