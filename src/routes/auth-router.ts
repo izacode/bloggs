@@ -45,10 +45,6 @@ class AuthController {
     if (!result) return res.sendStatus(401);
     const accessToken: string = await jwtService.createJWT(result);
     const newRefreshToken: string = await jwtService.createRefreshJWT(result);
-    res.clearCookie("refreshToken", {
-      httpOnly: true,
-      secure: true,
-    });
     res.cookie("refreshToken", newRefreshToken, {
       httpOnly: true,
       secure: true,
