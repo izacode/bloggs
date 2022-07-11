@@ -18,7 +18,7 @@ export const bloggersRouter = Router();
 
 //  Controller =================================================================================================================
 
-class BloggerController {
+class BloggersController {
   async getBloggers(req: Request, res: Response) {
     const { SearchNameTerm = null, PageNumber = 1, PageSize = 10 } = req.query as QueryType;
     const bloggers = await bloggersService.getAllBloggers(SearchNameTerm, PageNumber, PageSize);
@@ -51,6 +51,7 @@ class BloggerController {
     const bloggerPosts = await bloggersService.getAllBloggerPosts(req.params.bloggerId, PageNumber, PageSize);
     bloggerPosts ? res.json(bloggerPosts) : res.sendStatus(404);
   }
+  
   async createBloggerPost(req: Request, res: Response) {
     const { body, params } = req;
     const newPost = await postsService.createPost(body, params);
@@ -59,17 +60,17 @@ class BloggerController {
   }
 }
 
-const bloggerController = new BloggerController();
+const bloggersController = new BloggersController();
 
 //  Routes =====================================================================================================================
 
-bloggersRouter.get("/", bloggerController.getBloggers);
-bloggersRouter.post("/", authorization, nameValidation, youtubeURIValidation, inputValidationMiddleware, bloggerController.createBlogger);
-bloggersRouter.get("/:id", bloggerController.getBlogger);
-bloggersRouter.put("/:id", authorization, nameValidation, youtubeURIValidation, inputValidationMiddleware, bloggerController.updateBlogger);
-bloggersRouter.delete("/:id", authorization, bloggerController.deleteBlogger);
-bloggersRouter.get("/:bloggerId/posts", bloggerController.getBloggerPosts);
-bloggersRouter.get("/:bloggerId/posts", bloggerController.createBloggerPost);
+bloggersRouter.get("/", bloggersController.getBloggers);
+bloggersRouter.post("/", authorization, nameValidation, youtubeURIValidation, inputValidationMiddleware, bloggersController.createBlogger);
+bloggersRouter.get("/:id", bloggersController.getBlogger);
+bloggersRouter.put("/:id", authorization, nameValidation, youtubeURIValidation, inputValidationMiddleware, bloggersController.updateBlogger);
+bloggersRouter.delete("/:id", authorization, bloggersController.deleteBlogger);
+bloggersRouter.get("/:bloggerId/posts", bloggersController.getBloggerPosts);
+bloggersRouter.get("/:bloggerId/posts", bloggersController.createBloggerPost);
 
 bloggersRouter.post(
   "/:bloggerId/posts",
@@ -78,5 +79,5 @@ bloggersRouter.post(
   shortDescriptionValidation,
   contentValidation,
   inputValidationMiddleware,
-  bloggerController.createBloggerPost
+  bloggersController.createBloggerPost
 );

@@ -31,9 +31,9 @@ class AuthController {
       httpOnly: true,
       secure: true,
     });
-    console.log(res.cookie);
+
     res.send({
-      token: accessToken,
+      accessToken
     });
   }
 
