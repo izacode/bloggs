@@ -2,7 +2,6 @@ import { Router, Request, Response } from "express";
 import { jwtService } from "../application/jwt-service";
 import { authService } from "../domain/auth-service";
 import { emailService } from "../domain/email-service";
-import { usersService } from "../domain/users-service";
 import { attemptsCheck, authentication, isConfirmed, isConfirmedCode, isEmailExists, userExistsCheck } from "../middleware/authMiddleware";
 import {
   codeValidation,
@@ -57,9 +56,8 @@ class AuthController {
     let cookies = req.cookies;
     if (!cookies?.refreshToken) return res.sendStatus(401);
     const refreshToken = cookies.refreshToken;
-    const decoded = await jwtService.checkRefreshToken(refreshToken);
-    const user = await usersService.findUserById(decoded.userId);
-    if (!user) return false;
+    const result = await jwtService.checkRefreshToken(refreshToken);
+    if (!result) return res.sendStatus(401);
     res.clearCookie("refreshToken", {
       httpOnly: true,
       secure: true,
