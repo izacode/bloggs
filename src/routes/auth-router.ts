@@ -1,7 +1,7 @@
 import { Router, Request, Response } from "express";
-import { jwtService } from "../application/jwt-service";
-import { authService } from "../domain/auth-service";
-import { emailService } from "../domain/email-service";
+import { JwtService } from "../application/jwt-service";
+import { AuthService} from "../domain/auth-service";
+import { EmailService } from "../domain/email-service";
 import { attemptsCheck, authentication, isConfirmed, isConfirmedCode, isEmailExists, userExistsCheck } from "../middleware/authMiddleware";
 import {
   codeValidation,
@@ -15,17 +15,31 @@ import { UserAccountDBType } from "../types/types";
 export const authRouter = Router();
 
 class AuthController {
+
+  authService: AuthService
+  jwtService: JwtService
+  emailService: EmailService
+
+
+  constructor(){
+    this.authService = new AuthService(),
+    this.jwtService = new JwtService(),
+    this.emailService = new EmailService()
+  }
+
+    
+
   async registerUser(req: Request, res: Response) {
-    const user: UserAccountDBType | null = await authService.createUser(req.body.login, req.body.email, req.body.password, req.ip);
+    const user: UserAccountDBType | null = await this.authService.createUser(req.body.login, req.body.email, req.body.password, req.ip);
     if (!user) return res.sendStatus(400);
     res.sendStatus(204);
   }
 
   async loginUser(req: Request, res: Response) {
-    const user: UserAccountDBType | null = await authService.checkCredentials(req.body.login, req.body.password);
+    const user: UserAccountDBType | null = await this.authService.checkCredentials(req.body.login, req.body.password);
     if (!user) return res.sendStatus(401);
-    const accessToken: string = await jwtService.createJWT(user);
-    const refreshToken: string = await jwtService.createRefreshJWT(user);
+    const accessToken: string = await this.jwtService.createJWT(user);
+    const refreshToken: string = await this.jwtService.createRefreshJWT(user);
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
@@ -41,10 +55,10 @@ class AuthController {
     let cookies = req.cookies;
     if (!cookies?.refreshToken) return res.sendStatus(401);
     const refreshToken = cookies.refreshToken;
-    const result = await jwtService.checkRefreshToken(refreshToken);
+    const result = await this.jwtService.checkRefreshToken(refreshToken);
     if (!result) return res.sendStatus(401);
-    const accessToken: string = await jwtService.createJWT(result);
-    const newRefreshToken: string = await jwtService.createRefreshJWT(result);
+    const accessToken: string = await this.jwtService.createJWT(result);
+    const newRefreshToken: string = await this.jwtService.createRefreshJWT(result);
     res.cookie("refreshToken", newRefreshToken, {
       httpOnly: true,
       secure: true,
@@ -56,7 +70,7 @@ class AuthController {
     let cookies = req.cookies;
     if (!cookies?.refreshToken) return res.sendStatus(401);
     const refreshToken = cookies.refreshToken;
-    const result = await jwtService.checkRefreshToken(refreshToken);
+    const result = await this.jwtService.checkRefreshToken(refreshToken);
     if (!result) return res.sendStatus(401);
     res.clearCookie("refreshToken", {
       httpOnly: true,
@@ -67,7 +81,7 @@ class AuthController {
   }
 
   async confirmRegistration(req: Request, res: Response) {
-    const result = await authService.confirmEmail(req.body.code);
+    const result = await this.authService.confirmEmail(req.body.code);
     if (result) {
       return res.sendStatus(204);
     } else {
@@ -76,13 +90,13 @@ class AuthController {
   }
 
   async resendConfirmaitionEmail(req: Request, res: Response) {
-    const result = await authService.reConfirmEmail(req.body.email);
+    const result = await this.authService.reConfirmEmail(req.body.email);
     if (!result) return res.sendStatus(400);
     res.sendStatus(204);
   }
 
   async sendRecoveryPassword(req: Request, res: Response) {
-    const info = await emailService.recoverPassword(req.body.email);
+    const info = await this.emailService.recoverPassword(req.body.email);
     res.send(info);
   }
 
@@ -108,22 +122,22 @@ authRouter.post(
   emailValidation,
   inputValidationMiddleware,
   userExistsCheck,
-  authController.registerUser
+  authController.registerUser.bind(authController)
 );
 
-authRouter.post("/login", attemptsCheck, loginValidation, passwordValidation, inputValidationMiddleware, authController.loginUser);
-authRouter.post("/refresh-token", authController.refreshTokens);
-authRouter.post("/logout", authController.logoutUser);
+authRouter.post("/login", attemptsCheck, loginValidation, passwordValidation, inputValidationMiddleware, authController.loginUser.bind(authController));
+authRouter.post("/refresh-token", authController.refreshTokens.bind(authController));
+authRouter.post("/logout", authController.logoutUser.bind(authController));
 
 authRouter.post(
   "/registration-confirmation",
   codeValidation,
   inputValidationMiddleware,
   isConfirmedCode,
-  authController.confirmRegistration
+  authController.confirmRegistration.bind(authController)
 );
 
-authRouter.post("/registration-email-resending", attemptsCheck, isConfirmed, isEmailExists, authController.resendConfirmaitionEmail);
-authRouter.post("/sendRecoveryPassword", authController.sendRecoveryPassword);
+authRouter.post("/registration-email-resending", attemptsCheck, isConfirmed, isEmailExists, authController.resendConfirmaitionEmail.bind(authController));
+authRouter.post("/sendRecoveryPassword", authController.sendRecoveryPassword.bind(authController));
 // authRouter.post("/me", authentication, authController.showUserInfo);
-authRouter.get("/me", authentication, authController.showUserInfo);
+authRouter.get("/me", authentication, authController.showUserInfo.bind(authController));

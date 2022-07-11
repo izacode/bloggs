@@ -5,10 +5,15 @@ import { ObjectId } from "mongodb";
 import { v4 as uuidv4 } from "uuid";
 import add from "date-fns/add";
 import { emailManager } from "../managers/email-manager";
-import { emailService } from "./email-service";
+import { EmailService} from "./email-service";
 
-class AuthService {
-  constructor(private usersRepository: UsersRepository) {}
+export class AuthService {
+  usersRepository: UsersRepository
+  emailService: EmailService
+  constructor( ) {
+    this.usersRepository = new UsersRepository()
+    this.emailService = new EmailService()
+  }
  
   async createUser(login: string, email: string, password: string, ip: string): Promise<UserAccountDBType | null> {
     
@@ -37,7 +42,7 @@ class AuthService {
     const createResult = await this.usersRepository.createUser(user);
 
     try {
-      const result = await emailService.sendEmailConfirmationMassage(user);
+      const result = await this.emailService.sendEmailConfirmationMassage(user);
       // const result = await emailManager.sendEmailConfirmationMassage(user);
       if (result) {
         await this.usersRepository.updateSentEmails(user._id);
@@ -80,7 +85,7 @@ class AuthService {
     if (!updatedUser) return false;
 
     try {
-      const result = await emailService.sendEmailConfirmationMassage(updatedUser);
+      const result = await this.emailService.sendEmailConfirmationMassage(updatedUser);
       // const result = await emailManager.sendEmailConfirmationMassage(user);
       if (result) {
         await this.usersRepository.updateSentEmails(user._id);
@@ -103,8 +108,8 @@ class AuthService {
   }
 }
 
-const usersRepository = new UsersRepository();
-export const authService = new AuthService(usersRepository);
+// const usersRepository = new UsersRepository();
+// export const authService = new AuthService(usersRepository);
 
 // export const authService = {
 //   async createUser(login: string, email: string, password: string): Promise<UserAccountDBType | null> {

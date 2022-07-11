@@ -6,8 +6,13 @@ import { settings } from "../settings/new-settings";
 // import { cookie } from "express-validator";
 import { UsersRepository } from "../repositories/users-db-repository";
 
-class JwtService {
-  constructor(private usersRepository: UsersRepository) {}
+export class JwtService {
+
+  usersRepository: UsersRepository
+  constructor() {
+    this.usersRepository = new UsersRepository()
+  }
+  
   async createJWT(user: UserAccountDBType) {
     const token = jwt.sign({ userId: user._id }, settings.JWT_SECRET, { expiresIn: settings.JWT_EXPIRATION });
     return token;
@@ -53,7 +58,7 @@ class JwtService {
     return user;
   }
 }
-const usersRepository = new UsersRepository();
-export const jwtService = new JwtService(usersRepository);
+// const usersRepository = new UsersRepository();
+// export const jwtService = new JwtService(usersRepository);
 
 
