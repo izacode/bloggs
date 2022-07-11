@@ -45,6 +45,7 @@ class JwtService {
   }
   async checkRefreshToken(refreshToken: string) {
     const decoded: any = jwt.verify(refreshToken, settings.REFRESH_JWT_SECRET, (err, decoded) => {
+      debugger
       if (err) return false;
       return decoded;
     });

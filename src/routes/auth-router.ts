@@ -59,6 +59,7 @@ class AuthController {
     const result = await jwtService.checkRefreshToken(refreshToken);
     if (!result) return res.sendStatus(401);
     res.clearCookie("refreshToken", {
+      path: "/auth/logout",
       httpOnly: true,
       secure: true,
     });
