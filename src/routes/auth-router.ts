@@ -57,7 +57,7 @@ class AuthController {
     if (!cookies?.refreshToken) return res.sendStatus(401);
     const refreshToken = cookies.refreshToken;
     const result = await jwtService.checkRefreshToken(refreshToken);
-    if (!result) res.sendStatus(401);
+    if (!result) return res.sendStatus(401);
     res.clearCookie("refreshToken", {
       httpOnly: true,
       secure: true,
@@ -125,5 +125,5 @@ authRouter.post(
 
 authRouter.post("/registration-email-resending", attemptsCheck, isConfirmed, isEmailExists, authController.resendConfirmaitionEmail);
 authRouter.post("/sendRecoveryPassword", authController.sendRecoveryPassword);
-authRouter.post("/me", authentication, authController.showUserInfo);
-// authRouter.get("/me", authentication, authController.showUserInfo);
+// authRouter.post("/me", authentication, authController.showUserInfo);
+authRouter.get("/me", authentication, authController.showUserInfo);
