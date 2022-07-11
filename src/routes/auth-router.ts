@@ -58,13 +58,13 @@ class AuthController {
     if (!cookies?.refreshToken) return res.sendStatus(401);
     const refreshToken = cookies.refreshToken;
     const decoded = await jwtService.checkRefreshToken(refreshToken);
-    if(!decoded)return res.sendStatus(401);
     const user = await usersService.findUserById(decoded.userId);
-    if (!user) return res.sendStatus(401);
+    if (!user) return false;
     res.clearCookie("refreshToken", {
       httpOnly: true,
       secure: true,
     });
+
     res.sendStatus(204);
   }
 
