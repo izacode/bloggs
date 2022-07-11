@@ -4,7 +4,7 @@ export const settings = {
   GMAIL_PASSWORD: "macethug87",
   MONGO_PASSWORD: "test1234",
   JWT_EXPIRATION: "10s",
-  JWT_REFRESH_EXPIRATION: "200s",
+  JWT_REFRESH_EXPIRATION: "20s",
   EMAIL_ADAPTER_USER: "izatestback@gmail.com",
   EMAIL_ADAPTER_PASSWORD: "vhlicfrkgldzvyba",
   EMAIL_ADAPTER_TEST_EMAIL_FROM: "Max Mace <izatestback@gmail.com>",
