@@ -68,7 +68,7 @@ export type UserAccountType = {
   passwordHash: string;
   createdAt: Date;
   ip: string;
-  revokedRefreshTokens: string[];
+  revokedRefreshTokens?: string[];
 };
 export type SentConfirmationEmailType = {
   sentDate: Date;
