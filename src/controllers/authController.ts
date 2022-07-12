@@ -39,6 +39,12 @@ export class AuthController {
     let cookies = req.cookies;
     if (!cookies?.refreshToken) return res.sendStatus(401);
     const refreshToken = cookies.refreshToken;
+
+    const _id = await this.jwtService.getUserIdByRefreshToken(refreshToken);
+    const isRevoked = await this.usersService.checkTokenList(refreshToken, _id);
+    if (isRevoked) res.sendStatus(401);
+    await this.usersService.updateTokenList(refreshToken, _id);
+
     const result = await this.jwtService.checkRefreshToken(refreshToken);
     if (!result) return res.sendStatus(401);
     const accessToken: string = await this.jwtService.createJWT(result);
