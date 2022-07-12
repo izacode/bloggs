@@ -8,10 +8,8 @@ import { ObjectId } from "mongodb";
 import { UserAccountDBModel } from "../models/models";
 
 export class UsersService {
-  usersRepository: UsersRepository
-  constructor(){
-    this.usersRepository = new UsersRepository()
-  }
+ 
+  constructor(protected usersRepository: UsersRepository){}
   
   async getAllUsers(pageNumber: any, pageSize: any): Promise<CustomResponseType> {
     return this.usersRepository.getAllUsers(+pageNumber, +pageSize);

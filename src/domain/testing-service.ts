@@ -3,24 +3,15 @@ import { CommentsRepository } from "../repositories/comments-db-repository";
 import { PostsRepository } from "../repositories/posts-db-repository";
 import { UsersRepository } from "../repositories/users-db-repository";
 
-
 export class TestingService {
-//  constructor(private postsRepository: PostsRepository, private bloggersRepository: BloggersRepository,private commentsRepository: CommentsRepository,private usersRepository: UsersRepository) {};
-  
-bloggersRepository: BloggersRepository
-commentsRepository: CommentsRepository
-postsRepository: PostsRepository
-usersRepository: UsersRepository
+  constructor(
+    private postsRepository: PostsRepository,
+    private bloggersRepository: BloggersRepository,
+    private commentsRepository: CommentsRepository,
+    private usersRepository: UsersRepository
+  ) {}
 
-constructor(){
-  this.bloggersRepository = new BloggersRepository()
-  this.commentsRepository = new CommentsRepository()
-  this.postsRepository = new PostsRepository()
-  this.usersRepository = new UsersRepository()
-}
-
-
-async deleteAllUsers(): Promise<boolean> {
+  async deleteAllUsers(): Promise<boolean> {
     const isDBCleared = await this.usersRepository.deleteAllUsers();
     return isDBCleared;
   }
@@ -48,7 +39,7 @@ async deleteAllUsers(): Promise<boolean> {
   //   const isDBCleared = await this.usersRepository.deleteAllRequests();
   //   return isDBCleared;
   // }
-};
+}
 
 // const postsRepository = new PostsRepository();
 // const commentsRepository = new CommentsRepository();

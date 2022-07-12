@@ -4,16 +4,11 @@ import { UserAccountDBType } from "../types/types";
 import { ObjectId } from "mongodb";
 import { v4 as uuidv4 } from "uuid";
 import add from "date-fns/add";
-import { emailManager } from "../managers/email-manager";
 import { EmailService} from "./email-service";
 
 export class AuthService {
-  usersRepository: UsersRepository
-  emailService: EmailService
-  constructor( ) {
-    this.usersRepository = new UsersRepository()
-    this.emailService = new EmailService()
-  }
+
+  constructor( protected usersRepository: UsersRepository,protected emailService: EmailService) {}
  
   async createUser(login: string, email: string, password: string, ip: string): Promise<UserAccountDBType | null> {
     

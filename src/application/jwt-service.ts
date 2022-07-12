@@ -3,15 +3,12 @@ import { UserAccountDBType, UserType } from "../types/types";
 // import { settings } from "../settings/settings";
 import { settings } from "../settings/new-settings";
 
-// import { cookie } from "express-validator";
+
 import { UsersRepository } from "../repositories/users-db-repository";
 
 export class JwtService {
 
-  usersRepository: UsersRepository
-  constructor() {
-    this.usersRepository = new UsersRepository()
-  }
+  constructor(protected usersRepository: UsersRepository) {}
   
   async createJWT(user: UserAccountDBType) {
     const token = jwt.sign({ userId: user._id }, settings.JWT_SECRET, { expiresIn: settings.JWT_EXPIRATION });
@@ -39,15 +36,7 @@ export class JwtService {
       return null;
     }
   }
-  // async checkAccessToken(accessToken: string) {
-  //   const decoded: any = jwt.verify(accessToken, settings.REFRESH_JWT_SECRET, (err, decoded) => {
-  //     if (err) return false;
-  //     return decoded;
-  //   });
-  //   const user = this.usersRepository.findUserById(decoded.userId);
-  //   if(!user) return false
-  //   return decoded;
-  // }
+  
   async checkRefreshToken(refreshToken: string) {
     const decoded: any = jwt.verify(refreshToken, settings.REFRESH_JWT_SECRET, (err, decoded) => {
       if (err) return false;
@@ -58,7 +47,6 @@ export class JwtService {
     return user;
   }
 }
-// const usersRepository = new UsersRepository();
-// export const jwtService = new JwtService(usersRepository);
+
 
 

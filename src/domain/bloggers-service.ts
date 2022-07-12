@@ -2,12 +2,10 @@ import { BloggersRepository } from "../repositories/bloggers-db-repository";
 import { CustomResponseType } from "../types/types";
 
 export class BloggersService {
-  // constructor(private bloggersRepository:BloggersRepository){}
+  
+  constructor(protected bloggersRepository:BloggersRepository){}
 
-  bloggersRepository: BloggersRepository
-  constructor() {
-    this.bloggersRepository = new BloggersRepository()
-  }
+ 
   async getAllBloggers(SearchNameTerm: any, pageNumber: any, pageSize: any) {
     return this.bloggersRepository.getAllBloggers(SearchNameTerm, pageNumber, pageSize);
   }

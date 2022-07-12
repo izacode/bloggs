@@ -1,17 +1,11 @@
-
 import { PostsRepository } from "../repositories/posts-db-repository";
 import { BloggersRepository } from "../repositories/bloggers-db-repository";
 import { PostType } from "../types/types";
 
-
 export class PostsService {
-   postsRepository: PostsRepository
-   bloggersRepository: BloggersRepository
-  constructor() {
-    this.postsRepository = new PostsRepository()
-    this.bloggersRepository = new BloggersRepository()
-  };
-async getAllPosts(SearchTitleTerm: any, pageNumber: any, pageSize: any) {
+  constructor(protected postsRepository: PostsRepository, protected bloggersRepository: BloggersRepository) {}
+
+  async getAllPosts(SearchTitleTerm: any, pageNumber: any, pageSize: any) {
     return this.postsRepository.getAllPosts(SearchTitleTerm, pageNumber, pageSize);
   }
 
@@ -41,18 +35,11 @@ async getAllPosts(SearchTitleTerm: any, pageNumber: any, pageSize: any) {
   async deletePost(postID: string): Promise<boolean> {
     return this.postsRepository.deletePost(postID);
   }
-
 }
-
 
 // const postsRepository = new PostsRepository();
 // const bloggersRepository = new BloggersRepository(); // Should I create it here or import from bloggesService since it's already  there
 // export const postsService = new PostsService(postsRepository,bloggersRepository)
-
-
-
-
-
 
 // export const postsService = {
 //   async getAllPosts(SearchTitleTerm: any, pageNumber: any, pageSize: any) {
