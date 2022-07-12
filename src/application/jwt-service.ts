@@ -49,13 +49,8 @@ export class JwtService {
   //   return decoded;
   // }
   async checkRefreshToken(refreshToken: string) {
-    const decoded: any = jwt.verify(refreshToken, settings.REFRESH_JWT_SECRET, (err, decoded) => {
-      if (err) return false;
-      return decoded;
-    });
-    const user = await this.usersRepository.findUserById(decoded.userId);
-    if(!user) return false
-    return user;
+    const decoded: any = jwt.verify(refreshToken, settings.REFRESH_JWT_SECRET)
+    return decoded
   }
 }
 // const usersRepository = new UsersRepository();
