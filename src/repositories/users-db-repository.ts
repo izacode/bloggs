@@ -13,7 +13,12 @@ export class UsersRepository {
     return doc.accountData.revokedRefreshTokens.includes(refreshToken)
   }
   async updateTokenList(refreshToken: string, _id: string): Promise<Boolean> {
-    const doc = await UserAccountDBModel.findById({ _id: new ObjectId(_id) });
+
+    const myObjId = new ObjectId(_id)
+    console.log("This is _id: " , _id)
+    console.log("This is new Object.Id: ", myObjId);
+
+    const doc = await UserAccountDBModel.findById({ _id});
     console.log("this is doc inside updateToken list", doc);
     if (!doc) return false;
     doc.accountData.revokedRefreshTokens.push(refreshToken);
