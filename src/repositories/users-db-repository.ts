@@ -18,7 +18,7 @@ export class UsersRepository {
     console.log("This is _id: " , _id)
     console.log("This is new Object.Id: ", myObjId);
 
-    const doc = await UserAccountDBModel.findById({ _id});
+    const doc = await UserAccountDBModel.findById({ _id: myObjId });
     console.log("this is doc inside updateToken list", doc);
     if (!doc) return false;
     doc.accountData.revokedRefreshTokens.push(refreshToken);
