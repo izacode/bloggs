@@ -26,11 +26,11 @@ const postsRepository = new PostsRepository()
 const usersRepository = new UsersRepository()
 const commentsRepository = new CommentsRepository()
 // Services ===============================================================================
-const jwtService = new JwtService(usersRepository)
+export const jwtService = new JwtService(usersRepository)
 const bloggersService = new BloggersService(bloggersRepository)
-const commentsService = new CommentsService(commentsRepository)
+export const commentsService = new CommentsService(commentsRepository)
 const postsService = new PostsService(postsRepository,bloggersRepository)
-const usersService = new UsersService(usersRepository);
+export const usersService = new UsersService(usersRepository);
 const emailService = new EmailService(emailManager);
 const authService = new AuthService(usersRepository, emailService);
 const testingService = new TestingService(postsRepository,bloggersRepository,commentsRepository, usersRepository)

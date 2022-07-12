@@ -1,17 +1,14 @@
 import { Request, Response, NextFunction } from "express";
 import { ObjectId } from "mongodb";
-import { JwtService } from "../application/jwt-service";
-import { CommentsService} from "../domain/comments-service";
-import { UsersService} from "../domain/users-service";
+
 // import { registrationIpCollection } from "../repositories/dbmongo";
 import { CommentType, AttemptType } from "../types/types";
 import sub from "date-fns/sub";
 import { UsersRepository } from "../repositories/users-db-repository";
 import { AttemptModel } from "../models/models";
+import { commentsService, jwtService, usersService } from "../composition-root";
 
-const jwtService = new JwtService()
-const commentsService = new CommentsService()
-const usersService = new UsersService()
+
 export const authorization = (req: Request, res: Response, next: NextFunction) => {
   if (!req.headers.authorization) return res.sendStatus(401);
   const authorizationType = req.headers.authorization.split(" ")[0];
