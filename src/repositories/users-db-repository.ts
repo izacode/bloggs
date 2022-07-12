@@ -9,13 +9,12 @@ export class UsersRepository {
     const doc = await UserAccountDBModel.findById({ _id: new ObjectId(_id) });
     console.log("this is doc inside checkTokenList list", doc);
     if (!doc) return false;
-    
-    return doc.accountData.revokedRefreshTokens.includes(refreshToken)
+
+    return doc.accountData.revokedRefreshTokens.includes(refreshToken);
   }
   async updateTokenList(refreshToken: string, _id: string): Promise<Boolean> {
-
-    const myObjId = new ObjectId(_id)
-    console.log("This is _id: " , _id)
+    const myObjId = new ObjectId(_id);
+    console.log("This is _id: ", _id);
     console.log("This is new Object.Id: ", myObjId);
 
     const doc = await UserAccountDBModel.findById({ _id: myObjId });
@@ -23,6 +22,8 @@ export class UsersRepository {
     if (!doc) return false;
     doc.accountData.revokedRefreshTokens.push(refreshToken);
     await doc.save();
+    const doc3 = await UserAccountDBModel.findById({ _id: myObjId });
+    console.log("this is doc3 inside updateToken list", doc3);
     return true;
   }
   async getAllUsers(pageNumber: number, pageSize: number): Promise<CustomResponseType> {
