@@ -8,9 +8,14 @@ import { ObjectId } from "mongodb";
 import { UserAccountDBModel } from "../models/models";
 
 export class UsersService {
- 
-  constructor(protected usersRepository: UsersRepository){}
-  
+  constructor(protected usersRepository: UsersRepository) {}
+  async checkTokenList(refreshToken: string,_id:string) {
+    return this.usersRepository.checkTokenList(refreshToken,_id)
+  }
+
+  async updateTokenList(refreshToken: string, _id: string): Promise<Boolean> {
+    return this.usersRepository.updateTokenList(refreshToken, _id);
+  }
   async getAllUsers(pageNumber: any, pageSize: any): Promise<CustomResponseType> {
     return this.usersRepository.getAllUsers(+pageNumber, +pageSize);
   }
@@ -50,7 +55,7 @@ export class UsersService {
   //   const user = await this.usersRepository.findUserById(_id)
   //   if(!user)return false
   //   c
-      
+
   //   return this.usersRepository.updateUser(updatedUser)
   // }
   async deleteUser(_id: ObjectId): Promise<boolean> {
@@ -60,8 +65,6 @@ export class UsersService {
     return await bcrypt.hash(password, 10);
   }
 }
-
-
 
 // export const usersService = {
 //   async getAllUsers(pageNumber: any, pageSize: any): Promise<CustomResponseType> {

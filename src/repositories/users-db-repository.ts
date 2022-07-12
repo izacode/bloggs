@@ -5,6 +5,21 @@ import { CustomResponseType, UserAccountDBType } from "../types/types";
 // import { registrationIpCollection, requestsCollection, usersAccountCollection, usersCollection } from "./dbmongo";
 
 export class UsersRepository {
+  async checkTokenList(refreshToken: string, _id: string): Promise<Boolean> {
+    const doc = await UserAccountDBModel.findById({ _id: new ObjectId(_id) });
+    console.log("this is doc inside checkTokenList list", doc);
+    if (!doc) return false;
+    
+    return doc.accountData.revokedRefreshTokens.includes(refreshToken)
+  }
+  async updateTokenList(refreshToken: string, _id: string): Promise<Boolean> {
+    const doc = await UserAccountDBModel.findById({ _id: new ObjectId(_id) });
+    console.log("this is doc inside updateToken list", doc);
+    if (!doc) return false;
+    doc.accountData.revokedRefreshTokens.push(refreshToken);
+    await doc.save();
+    return true;
+  }
   async getAllUsers(pageNumber: number, pageSize: number): Promise<CustomResponseType> {
     const users = await UserAccountDBModel.find({}, { projection: { _id: 0, passwordHash: 0, passwordSalt: 0 } })
       .skip((pageNumber - 1) * pageSize)
@@ -29,7 +44,6 @@ export class UsersRepository {
     return createdUser;
   }
   async findUserByLoginOrEmail(loginOrEmail: string): Promise<UserAccountDBType | null> {
-
     const user = await UserAccountDBModel.findOne({
       $or: [{ "accountData.userName": loginOrEmail }, { "accountData.email": loginOrEmail }],
     }).lean();
@@ -56,11 +70,11 @@ export class UsersRepository {
     return result.matchedCount === 1;
   }
   async updateSentEmails(_id: ObjectId): Promise<boolean> {
-    const doc = await UserAccountDBModel.findById({_id})
-    if(!doc)return false
-    doc.emailConfirmation.sentEmails.push({sentDate: new Date()})
-    await doc.save()
-    return true
+    const doc = await UserAccountDBModel.findById({ _id });
+    if (!doc) return false;
+    doc.emailConfirmation.sentEmails.push({ sentDate: new Date() });
+    await doc.save();
+    return true;
   }
   async deleteUser(_id: ObjectId): Promise<boolean> {
     const isDeleted = await UserAccountDBModel.deleteOne({ _id });

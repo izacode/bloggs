@@ -36,7 +36,7 @@ const authService = new AuthService(usersRepository, emailService);
 const testingService = new TestingService(postsRepository,bloggersRepository,commentsRepository, usersRepository)
 // Controllers ============================================================================
 export const usersController = new UsersController(usersService, authService);
-export const authController = new AuthController(authService,jwtService,emailService)
+export const authController = new AuthController(authService,jwtService,emailService,usersService)
 export const bloggersController = new BloggersController(bloggersService,postsService)
 export const postsController = new PostsController(postsService, commentsService);
 export const commentsController = new CommentsController(commentsService)

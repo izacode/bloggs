@@ -1,7 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import { ObjectId } from "mongodb";
-
-// import { registrationIpCollection } from "../repositories/dbmongo";
 import { CommentType, AttemptType } from "../types/types";
 import sub from "date-fns/sub";
 import { UsersRepository } from "../repositories/users-db-repository";

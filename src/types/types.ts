@@ -67,7 +67,8 @@ export type UserAccountType = {
   userName: string;
   passwordHash: string;
   createdAt: Date;
-  ip: string
+  ip: string;
+  revokedRefreshTokens: string[];
 };
 export type SentConfirmationEmailType = {
   sentDate: Date;
@@ -81,23 +82,8 @@ export type LoginAttemptType = {
 export type AttemptType = {
   ip: string;
   attemptDate: Date;
-  url: string
+  url: string;
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // export type GetBloggersQueryType = {
 //   SearchNameTerm: string | null;

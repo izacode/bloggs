@@ -25,6 +25,9 @@ const userAccountSchema = new Schema({
     type: String,
     required: true,
   },
+  revokedRefreshTokens: [{
+    type: String
+  }]
 });
 
 const loginAttemptSchema = new Schema([
@@ -72,4 +75,5 @@ export const userAccountDBSchema = new Schema<UserAccountDBType>({
   accountData: userAccountSchema,
   loginAttempts: [loginAttemptSchema],
   emailConfirmation: emailConfirmationSchema,
+ 
 });
