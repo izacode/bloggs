@@ -21,6 +21,7 @@ export class AuthService {
         passwordHash,
         createdAt: new Date(),
         ip,
+        revokedRefreshTokens: []
       },
       loginAttempts: [],
       emailConfirmation: {

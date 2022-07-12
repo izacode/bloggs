@@ -2,9 +2,6 @@ import { Request, Response } from "express";
 import { ObjectId } from "mongodb";
 import { AuthService } from "../domain/auth-service";
 import { UsersService } from "../domain/users-service";
-
-import { authentication, authorization } from "../middleware/authMiddleware";
-import { inputValidationMiddleware, userLoginValidation, userPasswordValidation } from "../middleware/inputValidation";
 import { QueryType } from "../types/types";
 
 export class UsersController {
