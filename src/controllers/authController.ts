@@ -42,7 +42,7 @@ export class AuthController {
 
     const _id = await this.jwtService.getUserIdByRefreshToken(refreshToken);
     const isRevoked = await this.usersService.checkTokenList(refreshToken, _id);
-    if (isRevoked) res.sendStatus(401);
+    if (isRevoked) return res.sendStatus(401);
     await this.usersService.updateTokenList(refreshToken, _id);
 
     const result = await this.jwtService.checkRefreshToken(refreshToken);
@@ -62,7 +62,7 @@ export class AuthController {
     const refreshToken = cookies.refreshToken;
     const _id = await this.jwtService.getUserIdByRefreshToken(refreshToken);
     const isRevoked = await this.usersService.checkTokenList(refreshToken, _id);
-    if (isRevoked) res.sendStatus(401);
+    if (isRevoked) return res.sendStatus(401);
     const result = await this.jwtService.checkRefreshToken(refreshToken);
     if (!result) return res.sendStatus(401);
 
